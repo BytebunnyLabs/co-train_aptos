@@ -5,7 +5,7 @@ const isVercel = process.env.VERCEL === "1";
 const nextConfig = {
   // Remove static export for Vercel deployment
   // output: "export", 
-  reactStrictMode: true,
+  reactStrictMode: false,
   transpilePackages: ["wallet-adapter-react", "wallet-adapter-plugin"],
   // Remove assetPrefix and basePath for Vercel deployment
   // assetPrefix: isProd ? "/aptos-wallet-adapter" : "",
@@ -18,6 +18,13 @@ const nextConfig = {
   images: {
     unoptimized: false,
   },
+  // Disable static generation for problematic pages
+  experimental: {
+    missingSuspenseWithCSRBailout: false,
+  },
+  // Force dynamic rendering
+  trailingSlash: false,
+  generateStaticParams: false,
 };
 
 export default nextConfig;

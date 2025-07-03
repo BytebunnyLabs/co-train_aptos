@@ -41,7 +41,10 @@ export const useWalletAuth = (): UseWalletAuthReturn => {
       const message = `Sign this message to authenticate with Co-Train Aptos.\n\nWallet: ${account.address}\nTimestamp: ${timestamp}`;
 
       // Sign the message
-      const response = await signMessage({ message });
+      const response = await signMessage({ 
+        message,
+        nonce: timestamp.toString()
+      });
       
       if (!response || !response.signature) {
         throw new Error('Failed to sign message');

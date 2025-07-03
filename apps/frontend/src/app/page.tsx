@@ -70,6 +70,7 @@ import { DocsPage } from "@/components/cotrain/pages/docs-page"
 import { TerminalPage } from "@/components/cotrain/pages/terminal-page"
 import { TrainingPage } from "@/components/cotrain/pages/training-page"
 import { HistoryPage } from "@/components/cotrain/pages/history-page"
+import { Web3Dashboard } from "@/components/dashboard/web3-dashboard"
 import { ErrorBoundary } from "@/components/cotrain/ui/error-boundary"
 import { NotificationContainer } from "@/components/cotrain/ui/notification"
 import { useAppStore, initializeStores } from "@/store"
@@ -206,6 +207,8 @@ export default function Home() {
         return <DocsPage />
       case "about":
         return <AboutPage />
+      case "dashboard":
+        return <Web3Dashboard />
       default:
         return (
           <LandingPage

@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import { useWallet } from '@aptos-labs/wallet-adapter-react';
+import { InputTransactionData } from '@aptos-labs/wallet-adapter-core';
 import { Aptos, AptosConfig, Network } from '@aptos-labs/ts-sdk';
 
 // Contract address and configuration
@@ -64,16 +65,17 @@ export const useAptosContract = () => {
     setError(null);
 
     try {
-      const transaction = {
-        type: 'entry_function_payload' as const,
-        function: `${CONTRACT_ADDRESS}::training_rewards::create_training_session`,
-        arguments: [
-          params.name,
-          params.rewardAmount,
-          params.maxParticipants,
-          params.description || '',
-          params.duration || 0,
-        ],
+      const transaction: InputTransactionData = {
+        data: {
+          function: `${CONTRACT_ADDRESS}::training_rewards::create_training_session`,
+          functionArguments: [
+            params.name,
+            params.rewardAmount,
+            params.maxParticipants,
+            params.description || '',
+            params.duration || 0,
+          ],
+        },
       };
 
       const response = await signAndSubmitTransaction(transaction);
@@ -111,10 +113,11 @@ export const useAptosContract = () => {
     setError(null);
 
     try {
-      const transaction = {
-        type: 'entry_function_payload' as const,
-        function: `${CONTRACT_ADDRESS}::training_rewards::register_participant`,
-        arguments: [sessionId, account.address],
+      const transaction: InputTransactionData = {
+        data: {
+          function: `${CONTRACT_ADDRESS}::training_rewards::register_participant`,
+          functionArguments: [sessionId, account.address],
+        },
       };
 
       const response = await signAndSubmitTransaction(transaction);
@@ -154,16 +157,17 @@ export const useAptosContract = () => {
     setError(null);
 
     try {
-      const transaction = {
-        type: 'entry_function_payload' as const,
-        function: `${CONTRACT_ADDRESS}::training_rewards::submit_contribution`,
-        arguments: [
-          sessionId,
-          account.address,
-          score,
-          contributionHash || '',
-          metadata || '',
-        ],
+      const transaction: InputTransactionData = {
+        data: {
+          function: `${CONTRACT_ADDRESS}::training_rewards::submit_contribution`,
+          functionArguments: [
+            sessionId,
+            account.address,
+            score,
+            contributionHash || '',
+            metadata || '',
+          ],
+        },
       };
 
       const response = await signAndSubmitTransaction(transaction);
@@ -200,10 +204,11 @@ export const useAptosContract = () => {
     setError(null);
 
     try {
-      const transaction = {
-        type: 'entry_function_payload' as const,
-        function: `${CONTRACT_ADDRESS}::training_rewards::complete_training_session`,
-        arguments: [sessionId],
+      const transaction: InputTransactionData = {
+        data: {
+          function: `${CONTRACT_ADDRESS}::training_rewards::complete_training_session`,
+          functionArguments: [sessionId],
+        },
       };
 
       const response = await signAndSubmitTransaction(transaction);

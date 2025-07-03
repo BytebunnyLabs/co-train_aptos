@@ -21,6 +21,14 @@ interface SessionFormData {
   duration: number;
 }
 
+interface SessionFormErrors {
+  name?: string;
+  description?: string;
+  rewardAmount?: string;
+  maxParticipants?: string;
+  duration?: string;
+}
+
 export default function CreateTrainingSession() {
   const router = useRouter();
   const { toast } = useToast();
@@ -35,10 +43,10 @@ export default function CreateTrainingSession() {
     duration: 3600, // 1 hour in seconds
   });
 
-  const [formErrors, setFormErrors] = useState<Partial<SessionFormData>>({});
+  const [formErrors, setFormErrors] = useState<SessionFormErrors>({});
 
   const validateForm = (): boolean => {
-    const errors: Partial<SessionFormData> = {};
+    const errors: SessionFormErrors = {};
 
     if (!formData.name.trim()) {
       errors.name = 'Session name is required';

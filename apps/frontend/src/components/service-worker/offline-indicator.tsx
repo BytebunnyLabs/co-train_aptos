@@ -291,7 +291,7 @@ export function ServiceWorkerStatus() {
                     {cacheName.replace(/cotrain-|v\d+/g, '').replace(/-/g, ' ')}
                   </span>
                   <Badge variant="secondary" className="text-xs">
-                    {count} items
+                    {String(count)} items
                   </Badge>
                 </div>
               ))}

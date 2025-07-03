@@ -271,7 +271,7 @@ export const BalanceDisplay: React.FC<BalanceDisplayProps> = ({
             </Badge>
           </div>
           <p className="text-sm text-muted-foreground">
-            Address: {account?.address?.slice(0, 8)}...{account?.address?.slice(-6)}
+            Address: {account?.address?.toString().slice(0, 8)}...{account?.address?.toString().slice(-6)}
           </p>
         </div>
 

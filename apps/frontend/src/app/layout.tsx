@@ -14,6 +14,10 @@ import { ConditionalNavigation } from "@/components/ConditionalNavigation";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { AppProvider } from "@/contexts/AppContext";
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 const fontSans = FontSans({
   subsets: ["latin"],
   variable: "--font-sans",

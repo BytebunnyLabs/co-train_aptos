@@ -217,7 +217,7 @@ export function SecuritySettingsDialog({ trigger }: SecuritySettingsDialogProps)
                 <span className="text-sm font-medium">Connected Wallet</span>
                 <span className="text-sm text-muted-foreground">
                   {account?.address ? 
-                    `${account.address.slice(0, 6)}...${account.address.slice(-4)}` : 
+                    `${account.address.toString().slice(0, 6)}...${account.address.toString().slice(-4)}` : 
                     'Not connected'
                   }
                 </span>

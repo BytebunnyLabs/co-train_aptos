@@ -1,11 +1,12 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/cotrain/ui/button";
 import { Badge } from "@/components/cotrain/ui/badge";
 import { History, Calendar, Award, TrendingUp, Clock, CheckCircle2, ImageIcon } from "lucide-react";
 
-export default function HistoryPage() {
+function HistoryPageContent() {
   const router = useRouter();
 
   const handleNavigate = (page: string) => {
@@ -117,3 +118,9 @@ export default function HistoryPage() {
     </div>
   );
 }
+
+const HistoryPage = dynamic(() => Promise.resolve(HistoryPageContent), {
+  ssr: false
+});
+
+export default HistoryPage;

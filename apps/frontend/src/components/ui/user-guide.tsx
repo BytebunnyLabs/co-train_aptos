@@ -154,58 +154,59 @@ export const UserGuideComponent: React.FC<UserGuideProps> = ({
   isOpen,
   onClose,
   onComplete,
-}) => {
+}: UserGuideProps) => {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
-  const [highlightedElement, setHighlightedElement] = useState<HTMLElement | null>(null);
+  const [highlightedElement, setHighlightedElement] = useState<Element | null>(null);
 
   const currentStep = guide.steps[currentStepIndex];
   const isLastStep = currentStepIndex === guide.steps.length - 1;
+  const isFirstStep = currentStepIndex === 0;
   const progress = ((currentStepIndex + 1) / guide.steps.length) * 100;
 
-  // Highlight target element
+  // Handle element highlighting
   useEffect(() => {
-    if (currentStep?.target && isOpen) {
-      const element = document.querySelector(currentStep.target) as HTMLElement;
-      if (element) {
-        setHighlightedElement(element);
-        element.classList.add('guide-highlight');
-        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
+    if (!isOpen || !currentStep?.target) {
+      setHighlightedElement(null);
+      return;
     }
 
-    return () => {
-      if (highlightedElement) {
-        highlightedElement.classList.remove('guide-highlight');
-      }
-    };
-  }, [currentStep, isOpen, highlightedElement]);
-
-  // Auto-advance steps
-  useEffect(() => {
-    if (currentStep?.autoNext && currentStep.delayMs) {
-      const timer = setTimeout(() => {
-        handleNext();
-      }, currentStep.delayMs);
-      return () => clearTimeout(timer);
+    const element = document.querySelector(currentStep.target);
+    if (element) {
+      setHighlightedElement(element);
+      element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      
+      // Add highlight class
+      element.classList.add('guide-highlight');
+      
+      return () => {
+        element.classList.remove('guide-highlight');
+      };
     }
-  }, [currentStep]);
+  }, [currentStep, isOpen]);
+
+  // Auto-advance for steps with autoNext
+  useEffect(() => {
+    if (!isOpen || !currentStep?.autoNext) return;
+
+    const timer = setTimeout(() => {
+      if (!isLastStep) {
+        setCurrentStepIndex((prev: number) => prev + 1);
+      }
+    }, currentStep.delayMs || 3000);
+
+    return () => clearTimeout(timer);
+  }, [currentStep, isLastStep, isOpen]);
 
   const handleNext = () => {
-    if (isLastStep) {
-      handleComplete();
-    } else {
-      setCurrentStepIndex(prev => prev + 1);
+    if (!isLastStep) {
+      setCurrentStepIndex((prev: number) => prev + 1);
     }
   };
 
   const handlePrevious = () => {
-    if (currentStepIndex > 0) {
-      setCurrentStepIndex(prev => prev - 1);
+    if (!isFirstStep) {
+      setCurrentStepIndex((prev: number) => prev - 1);
     }
-  };
-
-  const handleSkip = () => {
-    onClose();
   };
 
   const handleComplete = () => {
@@ -213,122 +214,127 @@ export const UserGuideComponent: React.FC<UserGuideProps> = ({
     onClose();
   };
 
-  const handleStepAction = () => {
-    if (currentStep?.action) {
-      currentStep.action.onClick();
-    }
-    handleNext();
+  const handleSkip = () => {
+    onClose();
   };
 
   if (!isOpen) return null;
 
   return (
     <>
-      {/* Overlay */}
-      <div className="fixed inset-0 bg-black/60 z-50" onClick={onClose} />
+      {/* Overlay for highlighting */}
+      {highlightedElement && (
+        <div className="fixed inset-0 pointer-events-none z-40">
+          <div className="absolute inset-0 bg-black/60" />
+        </div>
+      )}
       
-      {/* Guide Dialog */}
       <Dialog open={isOpen} onOpenChange={onClose}>
         <DialogContent className="sm:max-w-md z-50">
           <DialogHeader>
             <div className="flex items-center justify-between">
-              <DialogTitle className="flex items-center gap-2">
-                <Lightbulb className="h-5 w-5 text-yellow-500" />
-                {guide.title}
-              </DialogTitle>
-              <Badge variant="outline">
-                {currentStepIndex + 1} / {guide.steps.length}
+              <DialogTitle>{guide.title}</DialogTitle>
+              <Badge variant="outline" className="">
+                {currentStepIndex + 1} of {guide.steps.length}
               </Badge>
             </div>
           </DialogHeader>
-
+          
           <div className="space-y-4">
-            {/* Progress */}
+            {/* Progress bar */}
             <div>
               <div className="flex justify-between text-sm mb-2">
-                <span className="font-medium">{currentStep.title}</span>
+                <span className="font-medium">Progress</span>
                 <span className="text-muted-foreground">{Math.round(progress)}%</span>
               </div>
               <Progress value={progress} className="h-2" />
             </div>
 
-            {/* Step Content */}
-            <div className="py-4">
-              <p className="text-muted-foreground leading-relaxed">
-                {currentStep.content}
-              </p>
-            </div>
+            {/* Current step content */}
+            <Card className="bg-blue-50 dark:bg-blue-950 border-blue-200 dark:border-blue-800">
+              <CardContent className="p-4">
+                <div className="flex items-start gap-3">
+                  <div className="flex-shrink-0 mt-1">
+                    <div className="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
+                      <Lightbulb className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                    </div>
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-sm mb-2">{currentStep.title}</h3>
+                    <p className="text-sm text-gray-600 dark:text-gray-300">
+                      {currentStep.content}
+                    </p>
+                    
+                    {/* Step action button */}
+                    {currentStep.action && (
+                      <Button
+                        size="sm"
+                        className="mt-3"
+                        onClick={currentStep.action.onClick}
+                      >
+                        {currentStep.action.label}
+                        <ArrowRight className="w-3 h-3 ml-1" />
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
 
-            {/* Action Button */}
-            {currentStep.action && (
-              <Card className="bg-blue-50 dark:bg-blue-950 border-blue-200 dark:border-blue-800">
-                <CardContent className="p-4">
-                  <Button 
-                    onClick={handleStepAction}
-                    className="w-full"
-                    size="sm"
-                  >
-                    {currentStep.action.label}
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                </CardContent>
-              </Card>
-            )}
-
-            {/* Navigation */}
-            <div className="flex items-center justify-between pt-4 border-t">
+            {/* Navigation buttons */}
+            <div className="flex justify-between items-center">
               <div className="flex gap-2">
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={handlePrevious}
-                  disabled={currentStepIndex === 0}
+                  disabled={isFirstStep}
                 >
-                  <ChevronLeft className="h-4 w-4 mr-1" />
+                  <ChevronLeft className="w-4 h-4 mr-1" />
                   Previous
                 </Button>
                 
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleSkip}
-                >
-                  <SkipForward className="h-4 w-4 mr-1" />
-                  Skip
-                </Button>
-              </div>
-
-              <Button onClick={handleNext} size="sm">
-                {isLastStep ? (
-                  <>
-                    <Check className="h-4 w-4 mr-1" />
-                    Complete
-                  </>
-                ) : (
-                  <>
+                {!isLastStep ? (
+                  <Button
+                    size="sm"
+                    onClick={handleNext}
+                  >
                     Next
-                    <ChevronRight className="h-4 w-4 ml-1" />
-                  </>
+                    <ChevronRight className="w-4 h-4 ml-1" />
+                  </Button>
+                ) : (
+                  <Button
+                    size="sm"
+                    onClick={handleComplete}
+                  >
+                    <Check className="w-4 h-4 mr-1" />
+                    Complete
+                  </Button>
                 )}
+              </div>
+              
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleSkip}
+                className="text-gray-500"
+              >
+                <SkipForward className="w-4 h-4 mr-1" />
+                Skip
               </Button>
             </div>
           </div>
         </DialogContent>
       </Dialog>
-
-      {/* Highlight styles */}
+      
+      {/* Global styles for highlighting */}
       <style jsx global>{`
         .guide-highlight {
           position: relative;
-          z-index: 51;
-          box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.5);
-          border-radius: 8px;
-          animation: guide-pulse 2s infinite;
-        }
-        
-        @keyframes guide-pulse {
-          0%, 100% { box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.5); }
-          50% { box-shadow: 0 0 0 8px rgba(59, 130, 246, 0.3); }
+          z-index: 45;
+          box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.5), 0 0 0 8px rgba(59, 130, 246, 0.2);
+          border-radius: 4px;
+          transition: all 0.3s ease;
         }
       `}</style>
     </>
@@ -429,13 +435,13 @@ interface HelpButtonProps {
 export const HelpButton: React.FC<HelpButtonProps> = ({
   onClick,
   className,
-}) => {
+}: HelpButtonProps) => {
   return (
     <Button
       variant="outline"
       size="sm"
       onClick={onClick}
-      className={cn('', className)}
+      className={className}
     >
       <HelpCircle className="h-4 w-4 mr-1" />
       Help

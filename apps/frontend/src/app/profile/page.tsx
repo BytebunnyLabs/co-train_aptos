@@ -17,7 +17,7 @@ const ProfilePage: React.FC = () => {
 
   const copyAddress = () => {
     if (account?.address) {
-      navigator.clipboard.writeText(account.address);
+      navigator.clipboard.writeText(account.address.toString());
       toast.success('Wallet address copied to clipboard!');
     }
   };
@@ -119,7 +119,7 @@ const ProfilePage: React.FC = () => {
                     </label>
                     <div className="flex items-center gap-2 p-3 bg-muted rounded-lg">
                       <span className="font-mono text-sm flex-1">
-                        {account?.address}
+                        {account?.address.toString()}
                       </span>
                       <Button
                         variant="outline"

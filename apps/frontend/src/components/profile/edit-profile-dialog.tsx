@@ -15,14 +15,12 @@ interface EditProfileDialogProps {
 }
 
 export function EditProfileDialog({ trigger }: EditProfileDialogProps) {
-  const { user, updateUser } = useAuth();
+  const { user, setUser, accessToken } = useAuth();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     username: user?.username || '',
     email: user?.email || '',
-    bio: user?.bio || '',
-    displayName: user?.displayName || '',
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -48,8 +46,22 @@ export function EditProfileDialog({ trigger }: EditProfileDialogProps) {
         return;
       }
 
-      // Update user profile
-      await updateUser(formData);
+      // Update user profile via API
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users/profile`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update profile');
+      }
+
+      const updatedUser = await response.json();
+      setUser(updatedUser);
       
       toast.success('Profile updated successfully!');
       setOpen(false);
@@ -72,8 +84,6 @@ export function EditProfileDialog({ trigger }: EditProfileDialogProps) {
     setFormData({
       username: user?.username || '',
       email: user?.email || '',
-      bio: user?.bio || '',
-      displayName: user?.displayName || '',
     });
   };
 
@@ -110,19 +120,6 @@ export function EditProfileDialog({ trigger }: EditProfileDialogProps) {
             />
           </div>
 
-          {/* Display Name */}
-          <div className="space-y-2">
-            <Label htmlFor="displayName">Display Name</Label>
-            <Input
-              id="displayName"
-              type="text"
-              value={formData.displayName}
-              onChange={(e) => handleInputChange('displayName', e.target.value)}
-              placeholder="Enter your display name"
-              disabled={loading}
-            />
-          </div>
-
           {/* Email */}
           <div className="space-y-2">
             <Label htmlFor="email">Email *</Label>
@@ -134,20 +131,6 @@ export function EditProfileDialog({ trigger }: EditProfileDialogProps) {
               placeholder="Enter your email"
               required
               disabled={loading}
-            />
-          </div>
-
-          {/* Bio */}
-          <div className="space-y-2">
-            <Label htmlFor="bio">Bio</Label>
-            <Textarea
-              id="bio"
-              value={formData.bio}
-              onChange={(e) => handleInputChange('bio', e.target.value)}
-              placeholder="Tell us about yourself..."
-              rows={3}
-              disabled={loading}
-              className="resize-none"
             />
           </div>
 

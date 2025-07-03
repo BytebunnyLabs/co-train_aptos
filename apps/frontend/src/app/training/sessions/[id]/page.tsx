@@ -99,6 +99,9 @@ export default function SessionDetails() {
     completeSession
   } = useAptosContract();
   const { trackTransaction, pendingTransactions } = useTransactionStatus();
+  
+  const sessionId = params.id as string;
+  
   const { 
     sessionData: realtimeData, 
     isConnected: wsConnected, 
@@ -116,15 +119,13 @@ export default function SessionDetails() {
   const [isCompleting, setIsCompleting] = useState(false);
   const [userParticipation, setUserParticipation] = useState<ParticipantInfo | null>(null);
 
-  const sessionId = params.id as string;
-
   useEffect(() => {
     loadSessionData();
   }, [sessionId]);
 
   useEffect(() => {
     if (session && account) {
-      const participation = session.participants.find(p => p.address === account.address);
+      const participation = session.participants.find(p => p.address === account.address.toString());
       setUserParticipation(participation || null);
     }
   }, [session, account]);
@@ -206,7 +207,7 @@ export default function SessionDetails() {
   const handleCompleteSession = async () => {
     if (!connected || !account || !session) return;
 
-    if (session.creator !== account.address) {
+    if (session.creator !== account.address.toString()) {
       toast({
         title: "Access Denied",
         description: "Only the session creator can complete the session.",
@@ -281,7 +282,7 @@ export default function SessionDetails() {
   // Use real-time participant count if available, fallback to session data
   const currentParticipants = liveParticipantCount > 0 ? liveParticipantCount : session?.currentParticipants || 0;
   const participationProgress = session ? (currentParticipants / session.maxParticipants) * 100 : 0;
-  const isCreator = session && account && session.creator === account.address;
+  const isCreator = session && account && session.creator === account.address.toString();
   const isParticipant = !!userParticipation;
   const canJoin = session && session.status === 'active' && !isParticipant && session.currentParticipants < session.maxParticipants;
 
@@ -400,7 +401,7 @@ export default function SessionDetails() {
                         <div>
                           <div className="font-medium">
                             {formatAddress(participant.address)}
-                            {participant.address === account?.address && (
+                            {participant.address === account?.address.toString() && (
                               <Badge variant="outline" className="ml-2">You</Badge>
                             )}
                           </div>

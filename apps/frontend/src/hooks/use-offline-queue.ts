@@ -31,7 +31,7 @@ export function useOfflineQueue(options: UseOfflineQueueOptions = {}) {
 
   // Add action to queue
   const addToQueue = React.useCallback(async (
-    action: Omit<QueuedAction, 'id' | 'timestamp'>,
+    action: Omit<QueuedAction, 'id'>,
     executeImmediately = true
   ) => {
     const queuedAction: QueuedAction = {
@@ -54,8 +54,7 @@ export function useOfflineQueue(options: UseOfflineQueueOptions = {}) {
           url: action.url,
           method: action.method,
           headers: action.headers,
-          body: action.body,
-          timestamp: queuedAction.timestamp
+          body: action.body
         });
       } catch (error) {
         console.error('Failed to queue offline action:', error);
@@ -179,7 +178,8 @@ export function useOfflineQueue(options: UseOfflineQueueOptions = {}) {
         ...fetchOptions.headers as Record<string, string>
       },
       body: fetchOptions.body as string,
-      description
+      description,
+      timestamp: Date.now()
     });
   }, [addToQueue]);
 

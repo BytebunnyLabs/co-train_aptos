@@ -224,17 +224,11 @@ export function useHivemindWebSocket(options: UseHivemindWebSocketOptions = {}) 
   };
 
   // Custom event listeners
-  const on = <K extends keyof HivemindEvents>(
-    event: K,
-    listener: HivemindEvents[K]
-  ) => {
+  const on = (event: string, listener: (...args: any[]) => void) => {
     socketRef.current?.on(event, listener);
   };
 
-  const off = <K extends keyof HivemindEvents>(
-    event: K,
-    listener: HivemindEvents[K]
-  ) => {
+  const off = (event: string, listener: (...args: any[]) => void) => {
     socketRef.current?.off(event, listener);
   };
 

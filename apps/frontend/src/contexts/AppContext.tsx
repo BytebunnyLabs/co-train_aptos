@@ -75,7 +75,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     isInitialized: false,
     theme: 'system',
     sidebarOpen: false,
-    debugMode: process.env.NEXT_PUBLIC_DEBUG_MODE === 'true',
+    debugMode: typeof window !== 'undefined' && process.env.NEXT_PUBLIC_DEBUG_MODE === 'true',
   });
 
   const [showNotificationToasts, setShowNotificationToasts] = useState(true);
@@ -85,6 +85,8 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   useEffect(() => {
     const initializeApp = async () => {
       try {
+        if (typeof window === 'undefined') return;
+        
         // Load saved preferences
         const savedTheme = localStorage.getItem('cotrain-theme') as AppState['theme'];
         const savedSidebar = localStorage.getItem('cotrain-sidebar-open') === 'true';
@@ -141,12 +143,14 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
       const updated = { ...prev, ...newState };
       
       // Save to localStorage
-      if (newState.theme) {
-        localStorage.setItem('cotrain-theme', newState.theme);
-        applyTheme(newState.theme);
-      }
-      if (newState.sidebarOpen !== undefined) {
-        localStorage.setItem('cotrain-sidebar-open', newState.sidebarOpen.toString());
+      if (typeof window !== 'undefined') {
+        if (newState.theme) {
+          localStorage.setItem('cotrain-theme', newState.theme);
+          applyTheme(newState.theme);
+        }
+        if (newState.sidebarOpen !== undefined) {
+          localStorage.setItem('cotrain-sidebar-open', newState.sidebarOpen.toString());
+        }
       }
       
       return updated;
@@ -154,6 +158,8 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   };
 
   const applyTheme = (theme: AppState['theme']) => {
+    if (typeof window === 'undefined') return;
+    
     const root = document.documentElement;
     
     if (theme === 'dark') {
@@ -173,7 +179,9 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
 
   const refreshData = () => {
     // Trigger refresh of all data
-    window.location.reload();
+    if (typeof window !== 'undefined') {
+      window.location.reload();
+    }
   };
 
   const toggleSidebar = () => {
@@ -199,12 +207,14 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
 
   const handleNotificationToastSettings = (show: boolean) => {
     setShowNotificationToasts(show);
-    localStorage.setItem('cotrain-notification-toasts', show.toString());
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('cotrain-notification-toasts', show.toString());
+    }
   };
 
   // Listen for system theme changes
   useEffect(() => {
-    if (appState.theme === 'system') {
+    if (appState.theme === 'system' && typeof window !== 'undefined') {
       const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
       const handleChange = () => applyTheme('system');
       

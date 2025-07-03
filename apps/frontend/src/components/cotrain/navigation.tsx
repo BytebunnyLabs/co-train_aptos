@@ -7,6 +7,7 @@ import Link from "next/link"
 import { NotificationBell } from "@/components/ui/notification-center"
 import { HelpButton } from "@/components/ui/user-guide"
 import { useAppContext } from "@/contexts/AppContext"
+import { useUserGuide } from "@/components/ui/user-guide"
 import { WalletSelector } from "@/components/WalletSelector"
 
 interface NavigationProps {
@@ -16,10 +17,11 @@ interface NavigationProps {
 
 export function Navigation({ currentPage, onPageChange }: NavigationProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const { startGuide, guides } = useAppContext()
+  const { guides, startGuide } = useUserGuide()
 
   const navItems = [
     { id: "home", label: "Home", href: "/" },
+    { id: "dashboard", label: "Dashboard", href: "/dashboard" },
     { id: "terminal", label: "Terminal", href: "/terminal" },
     { id: "training", label: "Training", href: "/training" },
     { id: "rewards", label: "Rewards", href: "/rewards" },

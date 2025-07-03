@@ -451,7 +451,7 @@ export const BatchClaimRewards: React.FC<BatchClaimRewardsProps> = ({
                 <SelectItem value="all">All Rewards</SelectItem>
                 <SelectItem value="expiring-soon">Expiring Soon</SelectItem>
                 <SelectItem value="high-value">High Value (≥10 APT)</SelectItem>
-                <SelectItem value="low-value">Low Value (<10 APT)</SelectItem>
+                <SelectItem value="low-value">Low Value (&lt;10 APT)</SelectItem>
               </SelectContent>
             </Select>
           </div>
