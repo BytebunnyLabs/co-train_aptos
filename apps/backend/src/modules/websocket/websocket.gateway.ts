@@ -38,11 +38,11 @@ interface UserSocket extends Socket {
   },
   namespace: '/sessions',
 })
-export class WebSocketGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
+export class SessionWebSocketGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   server: Server;
 
-  private readonly logger = new Logger(WebSocketGateway.name);
+  private readonly logger = new Logger(SessionWebSocketGateway.name);
   private readonly sessionRooms = new Map<string, SessionRoom>();
   private readonly userSockets = new Map<string, Set<string>>(); // userId -> Set of socketIds
   private readonly socketUsers = new Map<string, string>(); // socketId -> userId

@@ -245,7 +245,7 @@ export class RewardDistributorService {
       const aptosTransaction = await this.aptos.transaction.build.simple({
         sender: reward.user.walletAddress,
         data: {
-          function: transaction.payload.function,
+          function: transaction.payload.function as `${string}::${string}::${string}`,
           functionArguments: transaction.payload.arguments,
         },
       });
@@ -338,7 +338,7 @@ export class RewardDistributorService {
       const aptosTransaction = await this.aptos.transaction.build.simple({
         sender: this.adminAccount.accountAddress,
         data: {
-          function: transaction.payload.function,
+          function: transaction.payload.function as `${string}::${string}::${string}`,
           functionArguments: transaction.payload.arguments,
         },
       });

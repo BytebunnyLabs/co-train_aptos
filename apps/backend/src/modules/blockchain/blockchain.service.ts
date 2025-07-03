@@ -545,4 +545,114 @@ export class BlockchainService implements OnModuleInit {
       throw new Error(`Failed to get account balance: ${error.message}`);
     }
   }
+
+  /**
+   * Get reward statistics for an address
+   */
+  async getRewardStats(address: string): Promise<any> {
+    try {
+      this.logger.log(`Getting reward stats for address: ${address}`);
+      
+      if (!isValidAptosAddress(address)) {
+        throw new Error('Invalid address format');
+      }
+
+      const normalizedAddress = normalizeAptosAddress(address);
+
+      // Get participant resource from contract
+      try {
+        const participantResource = await this.aptos.getAccountResource({
+          accountAddress: this.contractAddress,
+          resourceType: `${this.contractAddress}::training_rewards::ParticipantStats`,
+        });
+
+        const participantData = (participantResource.data as any).participants?.[normalizedAddress];
+        
+        if (participantData) {
+          return {
+            totalRewards: parseInt(participantData.total_rewards || '0'),
+            pendingRewards: parseInt(participantData.pending_rewards || '0'),
+            claimedRewards: parseInt(participantData.claimed_rewards || '0'),
+            participationCount: parseInt(participantData.participation_count || '0'),
+            averageScore: parseFloat(participantData.average_score || '0'),
+            lastClaimDate: participantData.last_claim_date ? new Date(parseInt(participantData.last_claim_date) * 1000) : null,
+            rewardHistory: participantData.reward_history || [],
+          };
+        }
+      } catch (resourceError) {
+        this.logger.warn(`Participant resource not found for ${normalizedAddress}, returning default stats`);
+      }
+
+      // Return default stats if no data found
+      return {
+        totalRewards: 0,
+        pendingRewards: 0,
+        claimedRewards: 0,
+        participationCount: 0,
+        averageScore: 0,
+        lastClaimDate: null,
+        rewardHistory: [],
+      };
+    } catch (error) {
+      this.logger.error('Failed to get reward stats:', error);
+      throw new Error(`Failed to get reward stats: ${error.message}`);
+    }
+  }
+
+  /**
+   * Register a P2P node on the blockchain
+   */
+  async registerP2PNode(
+    nodeId: string,
+    publicKey: string,
+    computeCapacity: number,
+    bandwidth: number
+  ): Promise<any> {
+    try {
+      this.logger.log(`Registering P2P node: ${nodeId}`);
+      
+      if (!nodeId || !publicKey) {
+        throw new Error('Node ID and public key are required');
+      }
+
+      // Build transaction to register P2P node
+      const transaction = await this.aptos.transaction.build.simple({
+        sender: this.adminAccount.accountAddress,
+        data: {
+          function: `${this.contractAddress}::p2p_network::register_node`,
+          functionArguments: [
+            nodeId,
+            publicKey,
+            computeCapacity,
+            bandwidth,
+          ],
+        },
+      });
+
+      // Sign and submit transaction
+      const committedTxn = await this.aptos.signAndSubmitTransaction({
+        signer: this.adminAccount,
+        transaction,
+      });
+
+      // Wait for transaction confirmation
+      const executedTransaction = await this.aptos.waitForTransaction({
+        transactionHash: committedTxn.hash,
+      });
+
+      this.logger.log(`P2P node registered successfully: ${nodeId}, hash: ${executedTransaction.hash}`);
+      
+      return {
+        success: true,
+        transactionHash: executedTransaction.hash,
+        nodeId,
+        publicKey,
+        computeCapacity,
+        bandwidth,
+      };
+    } catch (error) {
+      this.logger.error('Failed to register P2P node:', error);
+      throw new Error(`Failed to register P2P node: ${error.message}`);
+    }
+  }
 }

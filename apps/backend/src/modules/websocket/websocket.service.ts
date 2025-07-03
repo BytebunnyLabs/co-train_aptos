@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { WebSocketGateway } from './websocket.gateway';
+import { SessionWebSocketGateway } from './websocket.gateway';
 
 export interface SessionUpdateEvent {
   sessionId: string;
@@ -20,7 +20,7 @@ export interface NotificationEvent {
 export class WebSocketService {
   private readonly logger = new Logger(WebSocketService.name);
 
-  constructor(private readonly wsGateway: WebSocketGateway) {}
+  constructor(private readonly wsGateway: SessionWebSocketGateway) {}
 
   /**
    * Send session update to all participants in a session

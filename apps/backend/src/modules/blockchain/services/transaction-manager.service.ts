@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
-import { AptosClient, Types } from 'aptos';
+import { Aptos, AptosConfig, Network } from '@aptos-labs/ts-sdk';
 import { Transaction, TransactionType, TransactionStatus } from '../entities/transaction.entity';
 import { User } from '../../users/entities/user.entity';
 import { TrainingSession } from '../../training/entities/training-session.entity';
@@ -25,7 +25,7 @@ export interface TransactionRequest {
 @Injectable()
 export class TransactionManagerService {
   private readonly logger = new Logger(TransactionManagerService.name);
-  private aptosClient: AptosClient;
+  private aptos: Aptos;
 
   constructor(
     @InjectRepository(Transaction)
@@ -37,8 +37,27 @@ export class TransactionManagerService {
     private configService: ConfigService,
     private webSocketService: WebSocketService,
   ) {
-    const nodeUrl = this.configService.get<string>('APTOS_NODE_URL');
-    this.aptosClient = new AptosClient(nodeUrl);
+    this.initializeAptos();
+  }
+
+  private async initializeAptos() {
+    try {
+      const network = this.configService.get<string>('APTOS_NETWORK', 'testnet') as Network;
+      const nodeUrl = this.configService.get<string>('APTOS_NODE_URL');
+      
+      let config: AptosConfig;
+      if (nodeUrl) {
+        config = new AptosConfig({ fullnode: nodeUrl });
+      } else {
+        config = new AptosConfig({ network });
+      }
+      
+      this.aptos = new Aptos(config);
+      this.logger.log(`Transaction manager initialized with Aptos ${network}`);
+    } catch (error) {
+      this.logger.error('Failed to initialize Aptos client:', error);
+      throw error;
+    }
   }
 
   async createTransaction(request: TransactionRequest): Promise<Transaction> {
@@ -142,9 +161,10 @@ export class TransactionManagerService {
 
     try {
       // Check transaction status on blockchain
-      const txnStatus = await this.aptosClient.getTransactionByHash(transaction.hash);
+      const txnStatus = await this.aptos.getTransactionByHash({ transactionHash: transaction.hash });
       
-      if (txnStatus.success) {
+      // Check if transaction was executed successfully
+      if ((txnStatus as any).success !== false) {
         await this.confirmTransaction(transaction, txnStatus);
       } else {
         await this.failTransaction(transaction, 'Transaction failed on blockchain');

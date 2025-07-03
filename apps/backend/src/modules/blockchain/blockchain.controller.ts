@@ -25,17 +25,15 @@ export class BlockchainController {
 
   @Post('sessions')
   @ApiOperation({ summary: 'Create a new training session on blockchain' })
-  @ApiResponse({
-    status: 201,
-    description: 'Training session created successfully',
-    type: TransactionResponseDto,
-  })
-  @ApiResponse({ status: 400, description: 'Bad request' })
+  @ApiResponse({ status: 201, description: 'Session created successfully', type: TransactionResponseDto })
+  @ApiResponse({ status: 400, description: 'Invalid input data' })
   @ApiResponse({ status: 500, description: 'Internal server error' })
   async createSession(@Body() createSessionDto: CreateSessionDto): Promise<TransactionResponseDto> {
     try {
       this.logger.log(`Creating session: ${createSessionDto.name}`);
-      const result = await this.blockchainService.createSession(createSessionDto);
+      // TODO: Get userId from authenticated user context
+      const userId = 'admin'; // Temporary hardcoded value
+      const result = await this.blockchainService.createSession({ ...createSessionDto, userId });
       return result;
     } catch (error) {
       this.logger.error(`Failed to create session: ${error.message}`);

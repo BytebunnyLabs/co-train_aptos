@@ -30,7 +30,14 @@ module.exports = {
     ecmaFeatures: {
       jsx: true,
     },
-    project: ['./tsconfig.json', './apps/*/tsconfig.json', './packages/*/tsconfig.json', './libs/*/tsconfig.json'],
+    project: [
+      './tsconfig.json',
+      './apps/backend/tsconfig.json',
+      './apps/frontend/tsconfig.json',
+      './packages/shared-config/tsconfig.json',
+      './packages/shared-types/tsconfig.json',
+      './packages/shared-utils/tsconfig.json'
+    ],
     tsconfigRootDir: __dirname,
   },
   settings: {
@@ -40,7 +47,14 @@ module.exports = {
     'import/resolver': {
       typescript: {
         alwaysTryTypes: true,
-        project: ['./tsconfig.json', './apps/*/tsconfig.json', './packages/*/tsconfig.json', './libs/*/tsconfig.json'],
+        project: [
+          './tsconfig.json',
+          './apps/backend/tsconfig.json',
+          './apps/frontend/tsconfig.json',
+          './packages/shared-config/tsconfig.json',
+          './packages/shared-types/tsconfig.json',
+          './packages/shared-utils/tsconfig.json'
+        ],
       },
       node: {
         extensions: ['.js', '.jsx', '.ts', '.tsx'],

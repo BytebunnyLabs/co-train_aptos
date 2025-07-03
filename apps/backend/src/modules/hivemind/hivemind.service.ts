@@ -53,15 +53,18 @@ export class HivemindService {
       // Track contribution locally
       await this.contributionTracker.recordContribution(contribution);
       
-      // Submit to blockchain
-      await this.blockchainService.submitDetailedContribution(
-        contribution.sessionId,
-        contribution.participant,
-        contribution.computeTime,
-        contribution.gradientQuality,
-        contribution.dataTransmitted,
-        contribution.uptimeRatio,
-      );
+      // Submit to blockchain using the available submitContribution method
+      await this.blockchainService.submitContribution({
+        sessionId: contribution.sessionId.toString(),
+        participantAddress: contribution.participant,
+        score: contribution.gradientQuality,
+        contributionHash: '',
+        metadata: JSON.stringify({
+          computeTime: contribution.computeTime,
+          dataTransmitted: contribution.dataTransmitted,
+          uptimeRatio: contribution.uptimeRatio,
+        }),
+      });
       
       this.logger.log(`Contribution submitted for session ${contribution.sessionId}`);
     } catch (error) {

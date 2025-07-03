@@ -22,6 +22,8 @@ export const CONTRACT_FUNCTIONS = {
   SUBMIT_CONTRIBUTION: 'submit_contribution',
   COMPLETE_SESSION: 'complete_session',
   CLAIM_REWARD: 'claim_reward',
+  DISTRIBUTE_REWARDS: 'distribute_rewards',
+  BATCH_CLAIM_REWARDS: 'batch_claim_rewards',
   GET_SESSION_DETAILS: 'get_session_details',
   GET_PARTICIPANT_SCORE: 'get_participant_score',
   GET_CLAIMABLE_REWARDS: 'get_claimable_rewards',

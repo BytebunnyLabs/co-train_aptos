@@ -250,4 +250,75 @@ export class TrainingService {
       successRate: total > 0 ? (completed / total) * 100 : 0,
     };
   }
+
+  async getTrainingHistory(userId: string, page: number = 1, limit: number = 10) {
+    const skip = (page - 1) * limit;
+    
+    const [sessions, total] = await this.trainingRepository.findAndCount({
+      where: { userId },
+      relations: ['participants', 'participants.user'],
+      order: { createdAt: 'DESC' },
+      skip,
+      take: limit,
+    });
+
+    return {
+      data: sessions,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
+  }
+
+  async joinSession(sessionId: string, userId: string): Promise<TrainingSession> {
+    const session = await this.trainingRepository.findOne({
+      where: { id: sessionId },
+      relations: ['participants', 'participants.user'],
+    });
+
+    if (!session) {
+      throw new NotFoundException('Training session not found');
+    }
+
+    if (session.status !== TrainingStatus.PENDING) {
+      throw new BadRequestException('Cannot join session that is not pending');
+    }
+
+    // Check if user is already a participant
+    const isAlreadyParticipant = session.participants.some(
+      participant => participant.user.id === userId
+    );
+
+    if (isAlreadyParticipant) {
+      throw new BadRequestException('User is already a participant in this session');
+    }
+
+    // Check if session has reached maximum participants
+    if (session.participants.length >= session.maxParticipants) {
+      throw new BadRequestException('Session has reached maximum participants');
+    }
+
+    // Create new participant (assuming you have a participant entity)
+    // This is a simplified implementation - you may need to adjust based on your participant entity structure
+    const participant = {
+      sessionId: session.id,
+      userId: userId,
+      joinedAt: new Date(),
+      status: 'active',
+    };
+
+    // Add participant to session
+    // Note: This assumes you have a participants repository or service
+    // You may need to inject and use it here
+    
+    // Emit event for user joining session
+    this.eventEmitter.emit('training.userJoined', {
+      sessionId: session.id,
+      userId: userId,
+      session: session,
+    });
+
+    return session;
+  }
 }

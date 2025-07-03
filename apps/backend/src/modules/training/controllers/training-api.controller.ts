@@ -125,17 +125,17 @@ export class TrainingApiController {
       this.logger.log('Getting training history');
       
       const limitNum = parseInt(limit, 10);
-      const offsetNum = parseInt(offset, 10);
+      const page = Math.floor(parseInt(offset, 10) / limitNum) + 1;
 
-      // Get training history from service
-      const history = await this.trainingService.getTrainingHistory(limitNum, offsetNum);
+      // Get training history from service - using a dummy userId for now
+      const history = await this.trainingService.getTrainingHistory('dummy-user-id', page, limitNum);
 
       return {
         success: true,
         data: {
-          sessions: history.sessions,
-          totalCount: history.totalCount,
-          hasMore: history.hasMore,
+          sessions: history.data,
+          totalCount: history.total,
+          hasMore: history.page < history.totalPages,
           timestamp: new Date().toISOString()
         }
       };
@@ -164,14 +164,18 @@ export class TrainingApiController {
         joinRequest.participantAddress
       );
 
+      // Calculate position and estimated start time based on current participants
+      const position = result.participants ? result.participants.length : 1;
+      const estimatedStartTime = new Date(Date.now() + (position * 60000)).toISOString(); // Estimate 1 minute per position
+
       return {
         success: true,
         data: {
           sessionId: joinRequest.sessionId,
           participantAddress: joinRequest.participantAddress,
           joinedAt: new Date().toISOString(),
-          position: result.position,
-          estimatedStartTime: result.estimatedStartTime
+          position: position,
+          estimatedStartTime: estimatedStartTime
         }
       };
     } catch (error) {

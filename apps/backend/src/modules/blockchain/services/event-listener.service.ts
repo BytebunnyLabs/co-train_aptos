@@ -2,7 +2,7 @@ import { Injectable, Logger, OnModuleInit, OnModuleDestroy } from '@nestjs/commo
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
-import { AptosClient, Types } from 'aptos';
+import { Aptos, AptosConfig, Network } from '@aptos-labs/ts-sdk';
 import { EventLog, EventType, EventStatus } from '../entities/event-log.entity';
 import { Transaction, TransactionStatus } from '../entities/transaction.entity';
 import { Reward, RewardStatus, RewardType } from '../entities/reward.entity';
@@ -13,7 +13,7 @@ import { WebSocketService } from '../../websocket/websocket.service';
 @Injectable()
 export class EventListenerService implements OnModuleInit, OnModuleDestroy {
   private readonly logger = new Logger(EventListenerService.name);
-  private aptosClient: AptosClient;
+  private aptos: Aptos;
   private contractAddress: string;
   private isListening = false;
   private listenerInterval: NodeJS.Timeout;
@@ -33,9 +33,22 @@ export class EventListenerService implements OnModuleInit, OnModuleDestroy {
     private configService: ConfigService,
     private webSocketService: WebSocketService,
   ) {
-    const nodeUrl = this.configService.get<string>('APTOS_NODE_URL');
-    this.aptosClient = new AptosClient(nodeUrl);
+    this.initializeAptos();
     this.contractAddress = this.configService.get<string>('CONTRACT_ADDRESS');
+  }
+
+  private initializeAptos() {
+    const network = this.configService.get<string>('APTOS_NETWORK') || 'testnet';
+    const nodeUrl = this.configService.get<string>('APTOS_NODE_URL');
+    
+    let aptosConfig: AptosConfig;
+    if (nodeUrl) {
+      aptosConfig = new AptosConfig({ fullnode: nodeUrl });
+    } else {
+      aptosConfig = new AptosConfig({ network: network as Network });
+    }
+    
+    this.aptos = new Aptos(aptosConfig);
   }
 
   async onModuleInit() {
@@ -92,34 +105,33 @@ export class EventListenerService implements OnModuleInit, OnModuleDestroy {
   private async pollForEvents() {
     try {
       // Get account events from the contract
-      const events = await this.aptosClient.getEventsByEventHandle(
-        this.contractAddress,
-        '0x1::account::Account',
-        'events',
-        {
-          start: this.lastProcessedVersion,
+      const events = await this.aptos.getAccountEventsByEventType({
+        accountAddress: this.contractAddress,
+        eventType: '0x1::account::Account',
+        minimumLedgerVersion: this.lastProcessedVersion,
+        options: {
           limit: 100,
-        }
-      );
+        },
+      });
 
       for (const event of events) {
         await this.processEvent(event);
       }
 
       if (events.length > 0) {
-        this.lastProcessedVersion = parseInt(events[events.length - 1].version);
+        this.lastProcessedVersion = parseInt(events[events.length - 1].transaction_version);
       }
     } catch (error) {
       this.logger.error('Failed to poll for events:', error);
     }
   }
 
-  private async processEvent(event: Types.Event) {
+  private async processEvent(event: any) {
     try {
       // Check if event is already processed
       const existingEvent = await this.eventLogRepository.findOne({
         where: {
-          eventGuid: event.guid.id,
+          eventGuid: event.guid?.creation_number || event.creation_number,
           sequenceNumber: event.sequence_number,
         },
       });
@@ -137,9 +149,9 @@ export class EventListenerService implements OnModuleInit, OnModuleDestroy {
       // Create event log entry
       const eventLog = this.eventLogRepository.create({
         eventType,
-        transactionHash: event.guid.account_address, // This should be the actual transaction hash
-        blockHeight: event.version,
-        eventGuid: event.guid.id,
+        transactionHash: event.transaction_version, // Use transaction version as hash
+        blockHeight: event.transaction_version,
+        eventGuid: event.guid?.creation_number || event.creation_number,
         sequenceNumber: event.sequence_number,
         eventData: {
           type: event.type,
@@ -153,13 +165,13 @@ export class EventListenerService implements OnModuleInit, OnModuleDestroy {
       // Process the event
       await this.handleEvent(eventLog);
 
-      this.logger.log(`Processed event: ${eventType} (${event.guid.id})`);
+      this.logger.log(`Processed event: ${eventType} (${event.guid?.creation_number || event.creation_number})`);
     } catch (error) {
-      this.logger.error(`Failed to process event ${event.guid.id}:`, error);
+      this.logger.error(`Failed to process event ${event.guid?.creation_number || event.creation_number}:`, error);
     }
   }
 
-  private determineEventType(event: Types.Event): EventType | null {
+  private determineEventType(event: any): EventType | null {
     const eventType = event.type;
 
     if (eventType.includes('SessionCreated')) {
