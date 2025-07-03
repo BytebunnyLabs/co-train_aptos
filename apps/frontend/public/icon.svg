@@ -1,0 +1,39 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background gradient -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="iconGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f8fafc;stop-opacity:0.9" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="256" cy="256" r="256" fill="url(#bgGradient)"/>
+  
+  <!-- Network nodes (circles) -->
+  <circle cx="200" cy="150" r="20" fill="url(#iconGradient)" opacity="0.8"/>
+  <circle cx="312" cy="150" r="20" fill="url(#iconGradient)" opacity="0.8"/>
+  <circle cx="150" cy="250" r="20" fill="url(#iconGradient)" opacity="0.8"/>
+  <circle cx="256" cy="250" r="25" fill="url(#iconGradient)"/>
+  <circle cx="362" cy="250" r="20" fill="url(#iconGradient)" opacity="0.8"/>
+  <circle cx="200" cy="350" r="20" fill="url(#iconGradient)" opacity="0.8"/>
+  <circle cx="312" cy="350" r="20" fill="url(#iconGradient)" opacity="0.8"/>
+  
+  <!-- Network connections (lines) -->
+  <line x1="200" y1="150" x2="256" y2="250" stroke="url(#iconGradient)" stroke-width="3" opacity="0.6"/>
+  <line x1="312" y1="150" x2="256" y2="250" stroke="url(#iconGradient)" stroke-width="3" opacity="0.6"/>
+  <line x1="150" y1="250" x2="256" y2="250" stroke="url(#iconGradient)" stroke-width="3" opacity="0.6"/>
+  <line x1="362" y1="250" x2="256" y2="250" stroke="url(#iconGradient)" stroke-width="3" opacity="0.6"/>
+  <line x1="200" y1="350" x2="256" y2="250" stroke="url(#iconGradient)" stroke-width="3" opacity="0.6"/>
+  <line x1="312" y1="350" x2="256" y2="250" stroke="url(#iconGradient)" stroke-width="3" opacity="0.6"/>
+  
+  <!-- Central brain/AI symbol -->
+  <path d="M256 220 C270 220, 280 230, 280 244 C280 250, 275 255, 268 257 C275 260, 280 265, 280 272 C280 286, 270 296, 256 296 C242 296, 232 286, 232 272 C232 265, 237 260, 244 257 C237 255, 232 250, 232 244 C232 230, 242 220, 256 220 Z" fill="url(#iconGradient)" opacity="0.9"/>
+  
+  <!-- CoTrain text -->
+  <text x="256" y="420" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="url(#iconGradient)" text-anchor="middle">CoTrain</text>
+</svg>

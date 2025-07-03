@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoTrain - Offline</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .offline-container {
+            text-align: center;
+            max-width: 500px;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .offline-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-Content: center;
+        }
+
+        .offline-icon svg {
+            width: 40px;
+            height: 40px;
+            stroke: white;
+            stroke-width: 2;
+            fill: none;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        p {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .retry-button {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 0.75rem 2rem;
+            border-radius: 30px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            margin: 0.5rem;
+        }
+
+        .retry-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .features-list {
+            margin-top: 2rem;
+            text-align: left;
+        }
+
+        .features-list h3 {
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.8rem;
+            padding: 0.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+        }
+
+        .feature-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 0.8rem;
+            stroke: #4ade80;
+            stroke-width: 2;
+            fill: none;
+        }
+
+        .network-status {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            border-left: 4px solid #f59e0b;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+            background: #ef4444;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .online .status-indicator {
+            background: #10b981;
+            animation: none;
+        }
+
+        @media (max-width: 600px) {
+            .offline-container {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            p {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="offline-container">
+        <div class="offline-icon">
+            <svg viewBox="0 0 24 24">
+                <path d="M17 14v6l-2-1.5L13 20v-6"></path>
+                <path d="M8 14c0 4.418 0 8 0 8"></path>
+                <path d="M12 14c0 4.418 0 8 0 8"></path>
+                <path d="M2 14h20l-4-7H6l-4 7z"></path>
+            </svg>
+        </div>
+        
+        <h1>You're Offline</h1>
+        <p>Don't worry! Some features of CoTrain are available offline. Once you're back online, your progress will sync automatically.</p>
+        
+        <button class="retry-button" onclick="location.reload()">Try Again</button>
+        <a href="/" class="retry-button">Go Home</a>
+        
+        <div class="network-status" id="networkStatus">
+            <span class="status-indicator"></span>
+            <span>Network Status: Offline</span>
+        </div>
+        
+        <div class="features-list">
+            <h3>Available Offline:</h3>
+            <div class="feature-item">
+                <svg class="feature-icon" viewBox="0 0 24 24">
+                    <path d="M9 11l3 3l8-8"></path>
+                </svg>
+                <span>View cached training sessions</span>
+            </div>
+            <div class="feature-item">
+                <svg class="feature-icon" viewBox="0 0 24 24">
+                    <path d="M9 11l3 3l8-8"></path>
+                </svg>
+                <span>Browse reward history</span>
+            </div>
+            <div class="feature-item">
+                <svg class="feature-icon" viewBox="0 0 24 24">
+                    <path d="M9 11l3 3l8-8"></path>
+                </svg>
+                <span>View network statistics</span>
+            </div>
+            <div class="feature-item">
+                <svg class="feature-icon" viewBox="0 0 24 24">
+                    <path d="M9 11l3 3l8-8"></path>
+                </svg>
+                <span>Queue actions for when online</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Monitor network status
+        function updateNetworkStatus() {
+            const statusElement = document.getElementById('networkStatus');
+            const isOnline = navigator.onLine;
+            
+            if (isOnline) {
+                statusElement.innerHTML = '<span class="status-indicator"></span><span>Network Status: Online</span>';
+                statusElement.className = 'network-status online';
+                
+                // Auto-reload after a short delay when back online
+                setTimeout(() => {
+                    if (navigator.onLine) {
+                        location.reload();
+                    }
+                }, 2000);
+            } else {
+                statusElement.innerHTML = '<span class="status-indicator"></span><span>Network Status: Offline</span>';
+                statusElement.className = 'network-status';
+            }
+        }
+
+        // Listen for network status changes
+        window.addEventListener('online', updateNetworkStatus);
+        window.addEventListener('offline', updateNetworkStatus);
+        
+        // Initial status check
+        updateNetworkStatus();
+
+        // Service worker registration check
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.ready.then((registration) => {
+                console.log('Service Worker is ready');
+                
+                // Listen for service worker updates
+                registration.addEventListener('updatefound', () => {
+                    const newWorker = registration.installing;
+                    newWorker.addEventListener('statechange', () => {
+                        if (newWorker.state === 'installed') {
+                            if (navigator.serviceWorker.controller) {
+                                // New update available
+                                if (confirm('A new version is available. Reload to update?')) {
+                                    window.location.reload();
+                                }
+                            }
+                        }
+                    });
+                });
+            });
+        }
+
+        // Handle retry with exponential backoff
+        let retryCount = 0;
+        function retryConnection() {
+            if (navigator.onLine) {
+                location.reload();
+            } else {
+                retryCount++;
+                const delay = Math.min(1000 * Math.pow(2, retryCount), 30000);
+                setTimeout(retryConnection, delay);
+            }
+        }
+
+        // Start retry mechanism
+        setTimeout(retryConnection, 5000);
+    </script>
+</body>
+</html>

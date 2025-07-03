@@ -1,0 +1,81 @@
+{
+  "name": "CoTrain - Distributed AI Training",
+  "short_name": "CoTrain",
+  "description": "Blockchain-based distributed AI training platform with Hivemind P2P network integration",
+  "version": "1.0.0",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#667eea",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["productivity", "education", "utilities"],
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Training Sessions",
+      "short_name": "Sessions",
+      "description": "View and manage training sessions",
+      "url": "/sessions",
+      "icons": [
+        {
+          "src": "/favicon.ico",
+          "sizes": "32x32"
+        }
+      ]
+    },
+    {
+      "name": "Rewards",
+      "short_name": "Rewards",
+      "description": "View and claim rewards",
+      "url": "/rewards",
+      "icons": [
+        {
+          "src": "/favicon.ico",
+          "sizes": "32x32"
+        }
+      ]
+    },
+    {
+      "name": "P2P Network",
+      "short_name": "Hivemind",
+      "description": "Monitor P2P network status",
+      "url": "/hivemind",
+      "icons": [
+        {
+          "src": "/favicon.ico",
+          "sizes": "32x32"
+        }
+      ]
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false,
+  "serviceworker": {
+    "src": "/sw.js",
+    "scope": "/",
+    "update_via_cache": "none"
+  },
+  "offline_capable": true,
+  "features": [
+    "offline-functionality",
+    "background-sync",
+    "push-notifications",
+    "service-worker"
+  ],
+  "screenshots": []
+}
