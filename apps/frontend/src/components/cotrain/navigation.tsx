@@ -7,6 +7,7 @@ import Link from "next/link"
 import { NotificationBell } from "@/components/ui/notification-center"
 import { HelpButton } from "@/components/ui/user-guide"
 import { useAppContext } from "@/contexts/AppContext"
+import { WalletSelector } from "@/components/WalletSelector"
 
 interface NavigationProps {
   currentPage: string
@@ -91,6 +92,11 @@ export function Navigation({ currentPage, onPageChange }: NavigationProps) {
             <HelpButton onClick={() => startGuide(guides.wallet)} />
           </div>
 
+          {/* Wallet Selector */}
+          <div className="hidden md:flex items-center space-x-2">
+            <WalletSelector />
+          </div>
+
           {/* Social Links & CTA */}
           <div className="hidden md:flex items-center space-x-4">
             {socialLinks.map((social) => (
@@ -159,6 +165,10 @@ export function Navigation({ currentPage, onPageChange }: NavigationProps) {
                   {link.label}
                 </Link>
               ))}
+            </div>
+            
+            <div className="px-3 py-2">
+              <WalletSelector />
             </div>
             
             <div className="flex items-center space-x-4 px-3 py-2">

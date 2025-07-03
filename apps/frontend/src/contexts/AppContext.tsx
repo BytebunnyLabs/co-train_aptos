@@ -3,8 +3,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useWallet } from '@aptos-labs/wallet-adapter-react';
 import { useWebSocket } from '@/hooks/useWebSocket';
-import { useUserGuide, UserGuide } from '@/components/ui/user-guide';
-import { UserGuideComponent } from '@/components/ui/user-guide';
+import { useUserGuide, UserGuide, UserGuideComponent } from '@/components/ui/user-guide';
 import { NotificationToast } from '@/components/ui/notification-center';
 import { useToast } from '@/components/cotrain/ui/use-toast';
 

@@ -10,7 +10,7 @@ import {
   Lightbulb,
   Target,
   Play,
-  Skip
+  SkipForward
 } from 'lucide-react';
 import { Button } from '@/components/cotrain/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/cotrain/ui/card';
@@ -293,7 +293,7 @@ export const UserGuideComponent: React.FC<UserGuideProps> = ({
                   size="sm"
                   onClick={handleSkip}
                 >
-                  <Skip className="h-4 w-4 mr-1" />
+                  <SkipForward className="h-4 w-4 mr-1" />
                   Skip
                 </Button>
               </div>

@@ -4,10 +4,10 @@ import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useWallet } from '@aptos-labs/wallet-adapter-react';
 import ProtectedRoute from '@/components/ProtectedRoute';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/cotrain/ui/card';
+import { Badge } from '@/components/cotrain/ui/badge';
+import { Button } from '@/components/cotrain/ui/button';
+import { Separator } from '@/components/cotrain/ui/separator';
 import { User, Wallet, Mail, Calendar, Shield, Copy } from 'lucide-react';
 import { toast } from 'sonner';
 
