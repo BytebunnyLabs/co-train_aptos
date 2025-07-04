@@ -3,8 +3,8 @@
 import React, { ReactNode } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useWallet } from '@aptos-labs/wallet-adapter-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/cotrain/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/cotrain/ui/card';
 import { WalletSelector } from '@/components/WalletSelector';
 import { Loader2, Wallet, Shield } from 'lucide-react';
 

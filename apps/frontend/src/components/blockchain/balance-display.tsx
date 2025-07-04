@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/cotrain/u
 import { Button } from '@/components/cotrain/ui/button';
 import { Badge } from '@/components/cotrain/ui/badge';
 import { Skeleton } from '@/components/cotrain/ui/skeleton';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Alert, AlertDescription } from '@/components/cotrain/ui/alert';
 import {
   RefreshCw,
   Wallet,

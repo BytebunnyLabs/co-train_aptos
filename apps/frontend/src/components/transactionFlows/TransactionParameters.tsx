@@ -3,9 +3,9 @@ import {
   InputTransactionData,
   useWallet,
 } from "@aptos-labs/wallet-adapter-react";
-import { Button } from "../ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import { useToast } from "../ui/use-toast";
+import { Button } from "@/components/cotrain/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/cotrain/ui/card";
+import { useToast } from "@/components/cotrain/ui/use-toast";
 
 const APTOS_COIN = "0x1::aptos_coin::AptosCoin";
 const MaxGasAMount = 10000;

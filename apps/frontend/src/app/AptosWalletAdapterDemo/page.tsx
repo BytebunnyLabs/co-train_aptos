@@ -8,17 +8,17 @@ import { MultiAgent } from "@/components/transactionFlows/MultiAgent";
 import { SingleSigner } from "@/components/transactionFlows/SingleSigner";
 import { Sponsor } from "@/components/transactionFlows/Sponsor";
 import { TransactionParameters } from "@/components/transactionFlows/TransactionParameters";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Alert, AlertDescription, AlertTitle } from "@/components/cotrain/ui/alert";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Switch } from "@/components/ui/switch";
+} from "@/components/cotrain/ui/card";
+import { Label } from "@/components/cotrain/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/cotrain/ui/radio-group";
+import { Switch } from "@/components/cotrain/ui/switch";
 import { isMainnet } from "@/utils";
 import { Network } from "@aptos-labs/ts-sdk";
 import { WalletSelector as AntdWalletSelector } from "@aptos-labs/wallet-adapter-ant-design";

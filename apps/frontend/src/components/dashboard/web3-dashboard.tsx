@@ -20,7 +20,7 @@ import {
   AlertCircle,
   BarChart3
 } from 'lucide-react';
-import { apiClient } from '@/lib/api';
+import { apiClient } from '@/services/api';
 import { formatAPT, formatNumber } from '@/utils/formatters';
 
 interface DashboardStats {
@@ -70,17 +70,17 @@ export function Web3Dashboard() {
       ]);
 
       setStats({
-        walletBalance: balanceRes.data.balance || 0,
-        totalRewards: rewardsRes.data.totalRewards || 0,
-        pendingRewards: rewardsRes.data.pendingRewards || 0,
-        completedSessions: rewardsRes.data.participationCount || 0,
-        networkParticipants: networkRes.data.totalNodes || 0,
-        myRanking: rewardsRes.data.ranking || 0,
-        avgPerformance: rewardsRes.data.averageScore || 0,
+        walletBalance: (balanceRes.data as any)?.balance || 0,
+        totalRewards: (rewardsRes.data as any)?.totalRewards || 0,
+        pendingRewards: (rewardsRes.data as any)?.pendingRewards || 0,
+        completedSessions: (rewardsRes.data as any)?.participationCount || 0,
+        networkParticipants: (networkRes.data as any)?.totalNodes || 0,
+        myRanking: (rewardsRes.data as any)?.ranking || 0,
+        avgPerformance: (rewardsRes.data as any)?.averageScore || 0,
       });
 
       // 处理最近活动数据
-      const activities: RecentActivity[] = activityRes.data.sessions?.map((session: any) => ({
+      const activities: RecentActivity[] = (activityRes.data as any)?.sessions?.map((session: any) => ({
         id: session.id,
         type: 'training' as const,
         description: `Participated in ${session.name}`,

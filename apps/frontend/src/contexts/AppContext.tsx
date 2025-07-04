@@ -3,8 +3,8 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useWallet } from '@aptos-labs/wallet-adapter-react';
 import { useWebSocket } from '@/hooks/useWebSocket';
-import { useUserGuide, UserGuide, UserGuideComponent } from '@/components/ui/user-guide';
-import { NotificationToast } from '@/components/ui/notification-center';
+// import { useUserGuide, UserGuide } from '@/components/cotrain/ui/user-guide';
+// import UserGuideComponent from '@/components/cotrain/ui/user-guide';
 import { useToast } from '@/components/cotrain/ui/use-toast';
 
 interface AppState {
@@ -24,10 +24,10 @@ interface AppContextType {
   wsError: string | null;
   
   // User guide
-  activeGuide: UserGuide | null;
-  startGuide: (guide: UserGuide) => void;
-  closeGuide: () => void;
-  isGuideCompleted: (guideId: string) => boolean;
+  // activeGuide: UserGuide | null;
+  // startGuide: (guide: UserGuide) => void;
+  // closeGuide: () => void;
+  // isGuideCompleted: (guideId: string) => boolean;
   
   // Notifications
   showNotificationToasts: boolean;
@@ -62,13 +62,13 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     connect: connectWS,
     disconnect: disconnectWS 
   } = useWebSocket();
-  const { 
-    activeGuide, 
-    startGuide, 
-    closeGuide, 
-    completeGuide, 
-    isGuideCompleted 
-  } = useUserGuide();
+  // const { 
+  //   activeGuide, 
+  //   startGuide, 
+  //   closeGuide, 
+  //   completeGuide, 
+  //   isGuideCompleted 
+  // } = useUserGuide();
   const { toast } = useToast();
 
   const [appState, setAppStateInternal] = useState<AppState>({
@@ -195,15 +195,15 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     setAppState({ theme: nextTheme });
   };
 
-  const handleCompleteGuide = (guide: UserGuide) => {
-    completeGuide(guide);
-    
-    // Show completion toast
-    toast({
-      title: "Guide Completed",
-      description: `You've completed the ${guide.title} guide!`,
-    });
-  };
+  // const handleCompleteGuide = (guide: UserGuide) => {
+  //   completeGuide(guide);
+  //   
+  //   // Show completion toast
+  //   toast({
+  //     title: "Guide Completed",
+  //     description: `You've completed the ${guide.title} guide!`,
+  //   });
+  // };
 
   const handleNotificationToastSettings = (show: boolean) => {
     setShowNotificationToasts(show);
@@ -233,10 +233,10 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     wsError,
     
     // User guide
-    activeGuide,
-    startGuide,
-    closeGuide,
-    isGuideCompleted,
+    // activeGuide,
+    // startGuide,
+    // closeGuide,
+    // isGuideCompleted,
     
     // Notifications
     showNotificationToasts,
@@ -253,14 +253,14 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
       {children}
       
       {/* User Guide Modal */}
-      {activeGuide && (
+      {/* {activeGuide && (
         <UserGuideComponent
           guide={activeGuide}
           isOpen={!!activeGuide}
           onClose={closeGuide}
           onComplete={() => handleCompleteGuide(activeGuide)}
         />
-      )}
+      )} */}
       
       {/* Debug Panel */}
       {appState.debugMode && (

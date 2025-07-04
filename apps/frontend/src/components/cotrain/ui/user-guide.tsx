@@ -229,114 +229,113 @@ export const UserGuideComponent: React.FC<UserGuideProps> = ({
         </div>
       )}
       
-      <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="sm:max-w-md z-50">
-          <DialogHeader>
-            <div className="flex items-center justify-between">
-              <DialogTitle>{guide.title}</DialogTitle>
-              <Badge variant="outline" className="">
-                {currentStepIndex + 1} of {guide.steps.length}
-              </Badge>
-            </div>
-          </DialogHeader>
+      <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center">
+        <div className="bg-white p-6 rounded-lg max-w-md w-full mx-4 shadow-lg">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold">{guide.title}</h2>
+            <span className="text-xs bg-gray-100 px-2 py-1 rounded">
+              {currentStepIndex + 1} of {guide.steps.length}
+            </span>
+          </div>
           
           <div className="space-y-4">
             {/* Progress bar */}
             <div>
               <div className="flex justify-between text-sm mb-2">
                 <span className="font-medium">Progress</span>
-                <span className="text-muted-foreground">{Math.round(progress)}%</span>
+                <span className="text-gray-500">{Math.round(progress)}%</span>
               </div>
-              <Progress value={progress} className="h-2" />
+              <div className="w-full bg-gray-200 rounded-full h-2">
+                <div 
+                  className="bg-blue-600 h-2 rounded-full transition-all"
+                  style={{ width: `${progress}%` }}
+                />
+              </div>
             </div>
 
             {/* Current step content */}
-            <Card className="bg-blue-50 dark:bg-blue-950 border-blue-200 dark:border-blue-800">
-              <CardContent className="p-4">
-                <div className="flex items-start gap-3">
-                  <div className="flex-shrink-0 mt-1">
-                    <div className="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
-                      <Lightbulb className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-                    </div>
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="font-semibold text-sm mb-2">{currentStep.title}</h3>
-                    <p className="text-sm text-gray-600 dark:text-gray-300">
-                      {currentStep.content}
-                    </p>
-                    
-                    {/* Step action button */}
-                    {currentStep.action && (
-                      <Button
-                        size="sm"
-                        className="mt-3"
-                        onClick={currentStep.action.onClick}
-                      >
-                        {currentStep.action.label}
-                        <ArrowRight className="w-3 h-3 ml-1" />
-                      </Button>
-                    )}
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <div className="flex items-start gap-3">
+                <div className="flex-shrink-0 mt-1">
+                  <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
+                    <Lightbulb className="w-4 h-4 text-blue-600" />
                   </div>
                 </div>
-              </CardContent>
-            </Card>
+                <div className="flex-1">
+                  <h3 className="font-semibold text-sm mb-2">{currentStep.title}</h3>
+                  <p className="text-sm text-gray-600">
+                    {currentStep.content}
+                  </p>
+                  
+                  {/* Step action button */}
+                  {currentStep.action && (
+                    <button
+                      className="mt-3 px-4 py-2 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 flex items-center gap-1"
+                      onClick={currentStep.action.onClick}
+                    >
+                      {currentStep.action.label}
+                      <ArrowRight className="w-3 h-3" />
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
 
             {/* Navigation buttons */}
             <div className="flex justify-between items-center">
               <div className="flex gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
+                <button
+                  className="px-4 py-2 text-sm border rounded hover:bg-gray-50 flex items-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
                   onClick={handlePrevious}
                   disabled={isFirstStep}
                 >
-                  <ChevronLeft className="w-4 h-4 mr-1" />
+                  <ChevronLeft className="w-4 h-4" />
                   Previous
-                </Button>
+                </button>
                 
                 {!isLastStep ? (
-                  <Button
-                    size="sm"
+                  <button
+                    className="px-4 py-2 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 flex items-center gap-1"
                     onClick={handleNext}
                   >
                     Next
-                    <ChevronRight className="w-4 h-4 ml-1" />
-                  </Button>
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
                 ) : (
-                  <Button
-                    size="sm"
+                  <button
+                    className="px-4 py-2 text-sm bg-green-600 text-white rounded hover:bg-green-700 flex items-center gap-1"
                     onClick={handleComplete}
                   >
-                    <Check className="w-4 h-4 mr-1" />
+                    <Check className="w-4 h-4" />
                     Complete
-                  </Button>
+                  </button>
                 )}
               </div>
               
-              <Button
-                variant="ghost"
-                size="sm"
+              <button
+                className="px-4 py-2 text-sm text-gray-500 hover:text-gray-700 flex items-center gap-1"
                 onClick={handleSkip}
-                className="text-gray-500"
               >
-                <SkipForward className="w-4 h-4 mr-1" />
+                <SkipForward className="w-4 h-4" />
                 Skip
-              </Button>
+              </button>
             </div>
           </div>
-        </DialogContent>
-      </Dialog>
+        </div>
+      </div>
       
       {/* Global styles for highlighting */}
-      <style jsx global>{`
-        .guide-highlight {
-          position: relative;
-          z-index: 45;
-          box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.5), 0 0 0 8px rgba(59, 130, 246, 0.2);
-          border-radius: 4px;
-          transition: all 0.3s ease;
-        }
-      `}</style>
+      <style dangerouslySetInnerHTML={{
+        __html: `
+          .guide-highlight {
+            position: relative !important;
+            z-index: 45 !important;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.5), 0 0 0 8px rgba(59, 130, 246, 0.2) !important;
+            border-radius: 4px !important;
+            transition: all 0.3s ease !important;
+          }
+        `
+      }} />
     </>
   );
 };
@@ -406,7 +405,7 @@ export const useUserGuide = () => {
       const nextGuide = firstVisitGuides.sort((a, b) => a.priority - b.priority)[0];
       setTimeout(() => startGuide(nextGuide), 1000); // Delay to ensure UI is ready
     }
-  }, [completedGuides, activeGuide]);
+  }, [completedGuides, activeGuide, isGuideCompleted]);
 
   return {
     activeGuide,
@@ -448,3 +447,6 @@ export const HelpButton: React.FC<HelpButtonProps> = ({
     </Button>
   );
 };
+
+// Export the main component
+export default UserGuideComponent;

@@ -24,26 +24,26 @@ import {
   User,
 } from "lucide-react";
 import { useCallback, useState, useEffect } from "react";
-import { Button } from "./ui/button";
+import { Button } from "@/components/cotrain/ui/button";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "./ui/collapsible";
+} from "@/components/cotrain/ui/collapsible";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "./ui/dialog";
+} from "@/components/cotrain/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
-import { useToast } from "./ui/use-toast";
+} from "@/components/cotrain/ui/dropdown-menu";
+import { useToast } from "@/components/cotrain/ui/use-toast";
 import { useWalletAuth } from "@/hooks/useWalletAuth";
 import { useAuth } from "@/contexts/AuthContext";
 

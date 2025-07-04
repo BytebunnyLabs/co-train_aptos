@@ -11,13 +11,9 @@ import {
 } from '../types/cotrain'
 import { handleError } from '../utils/error-handler'
 import { globalCache } from '../utils/performance'
-import { API_CONFIG, CACHE_CONFIG } from '../config/constants'
+import { API_CONFIG, CACHE_CONFIG } from '../config'
 
-// Base API configuration
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api'
-const API_TIMEOUT = API_CONFIG.TIMEOUT
-
-// HTTP client with error handling
+// HTTP client with error handling and auth support
 class ApiClient {
   private baseURL: string
   private timeout: number
@@ -27,31 +23,130 @@ class ApiClient {
     this.timeout = timeout
   }
 
+  private async getAuthHeaders(): Promise<Record<string, string>> {
+    const accessToken = localStorage.getItem('accessToken')
+    if (!accessToken) {
+      throw new Error('No access token found')
+    }
+
+    return {
+      'Authorization': `Bearer ${accessToken}`,
+    }
+  }
+
+  private async refreshTokenIfNeeded(): Promise<boolean> {
+    const refreshToken = localStorage.getItem('refreshToken')
+    if (!refreshToken) {
+      return false
+    }
+
+    try {
+      const response = await fetch(`${this.baseURL}/auth/refresh`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ refreshToken }),
+      })
+
+      if (!response.ok) {
+        return false
+      }
+
+      const data = await response.json()
+      localStorage.setItem('accessToken', data.accessToken)
+      return true
+    } catch (error) {
+      console.error('Token refresh failed:', error)
+      return false
+    }
+  }
+
   private async request<T>(
     endpoint: string, 
-    options: RequestInit = {}
+    options: RequestInit & { requireAuth?: boolean } = {}
   ): Promise<ApiResponse<T>> {
+    const { requireAuth = false, ...requestOptions } = options
     const url = `${this.baseURL}${endpoint}`
     const controller = new AbortController()
     const timeoutId = setTimeout(() => controller.abort(), this.timeout)
 
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+      ...(requestOptions.headers as Record<string, string> || {}),
+    }
+
+    // Add auth headers if required
+    if (requireAuth) {
+      try {
+        const authHeaders = await this.getAuthHeaders()
+        Object.assign(headers, authHeaders)
+      } catch (error) {
+        // Try to refresh token
+        const refreshed = await this.refreshTokenIfNeeded()
+        if (refreshed) {
+          const authHeaders = await this.getAuthHeaders()
+          Object.assign(headers, authHeaders)
+        } else {
+          throw new Error('Authentication required')
+        }
+      }
+    }
+
     try {
       const response = await fetch(url, {
-        ...options,
+        ...requestOptions,
         signal: controller.signal,
-        headers: {
-          'Content-Type': 'application/json',
-          ...options.headers,
-        },
+        headers,
       })
 
       clearTimeout(timeoutId)
 
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+      // Handle 401 errors by trying to refresh token
+      if (response.status === 401 && requireAuth) {
+        const refreshed = await this.refreshTokenIfNeeded()
+        if (refreshed) {
+          // Retry the request with new token
+          const authHeaders = await this.getAuthHeaders()
+          Object.assign(headers, authHeaders)
+          const retryResponse = await fetch(url, {
+            ...requestOptions,
+            headers,
+          })
+          
+          if (!retryResponse.ok) {
+            throw new Error(`HTTP error! status: ${retryResponse.status}`)
+          }
+          
+          const retryData = await retryResponse.json()
+          return {
+            success: true,
+            data: retryData,
+            timestamp: new Date().toISOString()
+          }
+        } else {
+          // Clear auth data
+          localStorage.removeItem('accessToken')
+          localStorage.removeItem('refreshToken')
+          localStorage.removeItem('user')
+          throw new Error('Authentication failed')
+        }
       }
 
-      const data = await response.json()
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(errorData.message || `HTTP error! status: ${response.status}`)
+      }
+
+      // Handle empty responses
+      const contentType = response.headers.get('content-type')
+      let data
+      if (contentType && contentType.includes('application/json')) {
+        data = await response.json()
+      } else {
+        data = await response.text()
+      }
+
       return {
         success: true,
         data,
@@ -68,31 +163,50 @@ class ApiClient {
     }
   }
 
-  async get<T>(endpoint: string): Promise<ApiResponse<T>> {
-    return this.request<T>(endpoint, { method: 'GET' })
+  async get<T>(endpoint: string, requireAuth = false): Promise<ApiResponse<T>> {
+    return this.request<T>(endpoint, { method: 'GET', requireAuth })
   }
 
-  async post<T>(endpoint: string, data?: any): Promise<ApiResponse<T>> {
+  async post<T>(endpoint: string, data?: any, requireAuth = false): Promise<ApiResponse<T>> {
     return this.request<T>(endpoint, {
       method: 'POST',
       body: data ? JSON.stringify(data) : undefined,
+      requireAuth,
     })
   }
 
-  async put<T>(endpoint: string, data?: any): Promise<ApiResponse<T>> {
+  async put<T>(endpoint: string, data?: any, requireAuth = false): Promise<ApiResponse<T>> {
     return this.request<T>(endpoint, {
       method: 'PUT',
       body: data ? JSON.stringify(data) : undefined,
+      requireAuth,
     })
   }
 
-  async delete<T>(endpoint: string): Promise<ApiResponse<T>> {
-    return this.request<T>(endpoint, { method: 'DELETE' })
+  async delete<T>(endpoint: string, requireAuth = false): Promise<ApiResponse<T>> {
+    return this.request<T>(endpoint, { method: 'DELETE', requireAuth })
+  }
+
+  async patch<T>(endpoint: string, data?: any, requireAuth = false): Promise<ApiResponse<T>> {
+    return this.request<T>(endpoint, {
+      method: 'PATCH',
+      body: data ? JSON.stringify(data) : undefined,
+      requireAuth,
+    })
   }
 }
 
-// Create API client instance
-const apiClient = new ApiClient(API_BASE_URL, API_TIMEOUT)
+// Create API client instances
+const apiClient = new ApiClient(API_CONFIG.BASE_URL, API_CONFIG.TIMEOUT)
+const authApiClient = new ApiClient(API_CONFIG.BACKEND_URL, API_CONFIG.TIMEOUT)
+
+// Export types for external use
+export interface ApiRequestOptions {
+  method?: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH'
+  headers?: Record<string, string>
+  body?: any
+  requireAuth?: boolean
+}
 
 // Training API
 export const trainingApi = {
@@ -293,4 +407,8 @@ export const smartApi = {
   }
 }
 
+// Export unified API client (backward compatibility)
 export default apiClient
+
+// Export individual clients
+export { apiClient, authApiClient }

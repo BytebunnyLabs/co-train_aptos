@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/cotrain/u
 import { Button } from '@/components/cotrain/ui/button';
 import { Badge } from '@/components/cotrain/ui/badge';
 import { Checkbox } from '@/components/cotrain/ui/checkbox';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Alert, AlertDescription } from '@/components/cotrain/ui/alert';
 import { Progress } from '@/components/cotrain/ui/progress';
 import { Separator } from '@/components/cotrain/ui/separator';
 import { ScrollArea } from '@/components/cotrain/ui/scroll-area';

@@ -2,7 +2,7 @@ import { useWallet } from '@aptos-labs/wallet-adapter-react';
 import { useState, useCallback } from 'react';
 import { toast } from 'sonner';
 import { useAuth } from '@/contexts/AuthContext';
-import { apiClient } from '@/lib/api';
+import { apiClient } from '@/services/api';
 
 interface WalletAuthResponse {
   user: {
@@ -51,11 +51,17 @@ export const useWalletAuth = (): UseWalletAuthReturn => {
       }
 
       // Send login request to backend using API client
-      const authData: WalletAuthResponse = await apiClient.post('/api/v1/auth/wallet-login', {
+      const authResponse = await apiClient.post('/api/v1/auth/wallet-login', {
         walletAddress: account.address,
         signature: response.signature,
         message: message,
       });
+
+      if (!authResponse.success || !authResponse.data) {
+        throw new Error(authResponse.error || 'Authentication failed');
+      }
+
+      const authData = authResponse.data as WalletAuthResponse;
 
       // Store tokens in localStorage
       localStorage.setItem('accessToken', authData.accessToken);

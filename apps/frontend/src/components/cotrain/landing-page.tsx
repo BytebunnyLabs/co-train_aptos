@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { Button } from "@/components/cotrain/ui/button"
-import { Brain, Zap, Globe, Users, TrendingUp, Shield, ArrowRight, Play, Star } from "lucide-react"
+import { Brain, Zap, Globe, Users, TrendingUp, Shield, ArrowRight, Play, Star, Database, Network, Coins, ExternalLink } from "lucide-react"
 
 interface LandingPageProps {
   onNavigate: (page: string) => void
@@ -292,6 +292,100 @@ export function LandingPage({ onNavigate, isConnecting, contributors, logs, curr
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Shelby Integration Roadmap */}
+      <section className="py-20 bg-gradient-to-br from-blue-900/20 via-black to-purple-900/20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+              下一步集成计划：<span className="text-blue-400">Shelby</span>
+            </h2>
+            <p className="text-xl text-gray-400 max-w-3xl mx-auto mb-6">
+              Web3 首个云存储革命，重新定义数据服务。由 Aptos Labs 和 Jump Crypto 联合打造的开创性去中心化热存储协议。
+            </p>
+            <div className="flex justify-center gap-4 mb-8">
+              <a 
+                href="https://shelby.xyz/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="inline-flex items-center text-blue-400 hover:text-blue-300 transition-colors"
+              >
+                官方网站 <ExternalLink className="w-4 h-4 ml-1" />
+              </a>
+              <a 
+                href="https://x.com/shelbyserves" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="inline-flex items-center text-blue-400 hover:text-blue-300 transition-colors"
+              >
+                Twitter <ExternalLink className="w-4 h-4 ml-1" />
+              </a>
+            </div>
+          </div>
+
+          {/* Shelby Core Features */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+            <div className="bg-gray-800/50 border border-blue-500/30 rounded-lg p-6 hover:border-blue-400/50 transition-all duration-300">
+              <div className="text-blue-400 mb-4">
+                <Network className="w-8 h-8" />
+              </div>
+              <h3 className="text-xl font-semibold text-white mb-3">专用光纤网络</h3>
+              <p className="text-gray-400">提供亚秒级响应速度，媲美 CDN 性能，支持 10-100 Gbps 高带宽数据传输</p>
+            </div>
+            
+            <div className="bg-gray-800/50 border border-blue-500/30 rounded-lg p-6 hover:border-blue-400/50 transition-all duration-300">
+              <div className="text-blue-400 mb-4">
+                <Coins className="w-8 h-8" />
+              </div>
+              <h3 className="text-xl font-semibold text-white mb-3">数据货币化</h3>
+              <p className="text-gray-400">每次数据访问都能产生收入，打破传统静态存储逻辑，实现动态价值创造</p>
+            </div>
+            
+            <div className="bg-gray-800/50 border border-blue-500/30 rounded-lg p-6 hover:border-blue-400/50 transition-all duration-300">
+              <div className="text-blue-400 mb-4">
+                <Database className="w-8 h-8" />
+              </div>
+              <h3 className="text-xl font-semibold text-white mb-3">节点激励机制</h3>
+              <p className="text-gray-400">首创对提供数据服务的节点进行奖励，激励生态系统高效运行</p>
+            </div>
+          </div>
+
+          {/* Integration Benefits */}
+          <div className="bg-gradient-to-r from-blue-900/30 to-purple-900/30 border border-blue-500/30 rounded-xl p-8">
+            <h3 className="text-2xl font-bold text-white mb-6 text-center">CoTrain × Shelby 集成优势</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-4">
+                <div className="flex items-start space-x-3">
+                  <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
+                  <p className="text-gray-300">为 AI 训练数据提供高性能存储和分发服务</p>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
+                  <p className="text-gray-300">通过数据访问货币化增加训练参与者收益</p>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
+                  <p className="text-gray-300">利用全球光纤网络加速模型训练数据传输</p>
+                </div>
+              </div>
+              <div className="space-y-4">
+                <div className="flex items-start space-x-3">
+                  <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
+                  <p className="text-gray-300">支持流媒体和实时 AI 推理场景</p>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
+                  <p className="text-gray-300">基于 Aptos 区块链的透明结算和激励机制</p>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
+                  <p className="text-gray-300">为代币门控内容和 AI 游戏提供基础设施</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>

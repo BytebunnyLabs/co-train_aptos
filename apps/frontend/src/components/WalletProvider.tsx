@@ -7,7 +7,7 @@ import { PropsWithChildren } from "react";
 import { Network } from "@aptos-labs/ts-sdk";
 import { useClaimSecretKey } from "@/hooks/useClaimSecretKey";
 import { useAutoConnect } from "./AutoConnectProvider";
-import { useToast } from "./ui/use-toast";
+import { useToast } from "@/components/cotrain/ui/use-toast";
 
 const searchParams =
   typeof window !== "undefined"

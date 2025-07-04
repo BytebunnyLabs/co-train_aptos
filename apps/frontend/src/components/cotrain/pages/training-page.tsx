@@ -2,10 +2,10 @@
 
 import type React from "react"
 import { Brain, Zap, Database, Code, Image as ImageIcon, MessageSquare, Loader2 } from "lucide-react"
-import { Button } from "../ui/button"
-import { Badge } from "../ui/badge"
+import { Button } from "@/components/cotrain/ui/button"
+import { Badge } from "@/components/cotrain/ui/badge"
 import { TrainingOption, Notification } from "../../../types/cotrain"
-import { ERROR_MESSAGES, SUCCESS_MESSAGES, THEME_CONFIG } from "../../../config/constants"
+import { ERROR_MESSAGES, SUCCESS_MESSAGES, THEME_CONFIG } from "@/config/index"
 import { handleError } from "../../../utils/error-handler"
 import { useDebounce } from "../../../utils/performance"
 

@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/cotrain/u
 import { Badge } from "@/components/cotrain/ui/badge"
 import { Input } from "@/components/cotrain/ui/input"
 import { Book, Search, Code, Terminal, Cpu, Zap, ChevronRight, ExternalLink, Download, Play } from "lucide-react"
-import { HARDWARE_REQUIREMENTS } from "@/constants/cotrain"
+import { HARDWARE_REQUIREMENTS } from "@/config/index"
 
 interface DocsPageProps {
   onNavigate?: (page: string) => void
@@ -145,19 +145,19 @@ export function DocsPage({ onNavigate = () => {} }: DocsPageProps) {
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
                       <span className="text-gray-400">GPU:</span>
-                      <span className="text-white">{specs.gpu}</span>
+                      <span className="text-white">{specs.GPU}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-400">RAM:</span>
-                      <span className="text-white">{specs.ram}</span>
+                      <span className="text-gray-400">Memory:</span>
+                      <span className="text-white">{specs.MEMORY}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-400">Storage:</span>
-                      <span className="text-white">{specs.storage}</span>
+                      <span className="text-white">{specs.STORAGE}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-400">Bandwidth:</span>
-                      <span className="text-white">{specs.bandwidth}</span>
+                      <span className="text-white">{specs.BANDWIDTH}</span>
                     </div>
                   </div>
                 </div>

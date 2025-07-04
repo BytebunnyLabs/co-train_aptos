@@ -2,9 +2,9 @@ import { isSendableNetwork, aptosClient } from "@/utils";
 import { parseTypeTag, AccountAddress, U64 } from "@aptos-labs/ts-sdk";
 import { InputTransactionData } from "@aptos-labs/wallet-adapter-core";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
-import { Button } from "../ui/button";
-import { Card, CardHeader, CardTitle, CardContent } from "../ui/card";
-import { useToast } from "../ui/use-toast";
+import { Button } from "@/components/cotrain/ui/button";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/cotrain/ui/card";
+import { useToast } from "@/components/cotrain/ui/use-toast";
 import { TransactionHash } from "../TransactionHash";
 
 const APTOS_COIN = "0x1::aptos_coin::AptosCoin";

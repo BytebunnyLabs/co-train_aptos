@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { Navigation } from "@/components/Navigation";
+import { Navigation } from "@/components/shared/Navigation";
 
 export function ConditionalNavigation() {
   const pathname = usePathname();
