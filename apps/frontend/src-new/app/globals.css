@@ -1,0 +1,228 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --font-inter: 'Inter', system-ui, sans-serif;
+    --font-jetbrains-mono: 'JetBrains Mono', monospace;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  /* Custom scrollbar styles */
+  ::-webkit-scrollbar {
+    @apply w-2;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-background;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-divider rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-foreground/20;
+  }
+
+  /* Focus styles for accessibility */
+  :focus-visible {
+    @apply outline-none ring-2 ring-primary ring-offset-2 ring-offset-background;
+  }
+
+  /* Animation utilities */
+  .animate-in {
+    animation-name: enter;
+    animation-duration: var(--animation-duration, 0.25s);
+    animation-fill-mode: both;
+  }
+
+  .animate-out {
+    animation-name: exit;
+    animation-duration: var(--animation-duration, 0.25s);
+    animation-fill-mode: both;
+  }
+
+  @keyframes enter {
+    from {
+      opacity: 0;
+      transform: translateY(var(--enter-translate-y, 0)) scale(var(--enter-scale, 1));
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @keyframes exit {
+    from {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(var(--exit-translate-y, 0)) scale(var(--exit-scale, 1));
+    }
+  }
+
+  /* Slide in animations */
+  .slide-in-from-top {
+    --enter-translate-y: -100%;
+  }
+
+  .slide-in-from-bottom {
+    --enter-translate-y: 100%;
+  }
+
+  .slide-in-from-left {
+    --enter-translate-x: -100%;
+  }
+
+  .slide-in-from-right {
+    --enter-translate-x: 100%;
+  }
+
+  /* Fade and scale animations */
+  .fade-in {
+    --enter-scale: 0.95;
+  }
+
+  .zoom-in {
+    --enter-scale: 0.8;
+  }
+
+  /* Loading spinner */
+  .loading-spinner {
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* Pulse animation for loading states */
+  .loading-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+  }
+
+  /* Gradient text */
+  .gradient-text {
+    @apply bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent;
+  }
+
+  /* CoTrain brand gradient */
+  .cotrain-gradient {
+    @apply bg-gradient-to-r from-purple-500 via-cyan-500 to-blue-500;
+  }
+
+  .cotrain-gradient-text {
+    @apply bg-gradient-to-r from-purple-500 via-cyan-500 to-blue-500 bg-clip-text text-transparent;
+  }
+
+  /* Glassmorphism effect */
+  .glass {
+    @apply bg-background/80 backdrop-blur-lg border border-divider;
+  }
+
+  /* Card hover effects */
+  .card-hover {
+    @apply transition-all duration-200 hover:shadow-lg hover:scale-[1.02] hover:border-primary/50;
+  }
+
+  /* Button focus ring */
+  .btn-focus {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background;
+  }
+
+  /* Text selection */
+  ::selection {
+    @apply bg-primary/20 text-primary-foreground;
+  }
+
+  /* Print styles */
+  @media print {
+    .no-print {
+      display: none !important;
+    }
+    
+    .print-only {
+      display: block !important;
+    }
+  }
+
+  /* Reduced motion preferences */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* High contrast mode */
+  @media (prefers-contrast: high) {
+    .card {
+      @apply border-2;
+    }
+    
+    .btn {
+      @apply border-2;
+    }
+  }
+
+  /* Dark mode adjustments */
+  .dark {
+    color-scheme: dark;
+  }
+
+  /* Mobile-specific styles */
+  @media (max-width: 768px) {
+    .mobile-padding {
+      @apply px-4;
+    }
+    
+    .mobile-text {
+      @apply text-sm;
+    }
+  }
+
+  /* Tablet-specific styles */
+  @media (min-width: 768px) and (max-width: 1024px) {
+    .tablet-padding {
+      @apply px-6;
+    }
+  }
+
+  /* Desktop-specific styles */
+  @media (min-width: 1024px) {
+    .desktop-padding {
+      @apply px-8;
+    }
+  }
+}

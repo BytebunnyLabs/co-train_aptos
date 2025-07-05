@@ -1,84 +1,191 @@
-import type { Config } from "tailwindcss";
-import { fontFamily } from "tailwindcss/defaultTheme";
+import { heroui } from '@heroui/theme';
+import type { Config } from 'tailwindcss';
 
-const config = {
-  darkMode: ["class"],
+const config: Config = {
   content: [
-    "./pages/**/*.{ts,tsx}",
-    "./components/**/*.{ts,tsx}",
-    "./app/**/*.{ts,tsx}",
-    "./src/**/*.{ts,tsx}",
+    './src/**/*.{js,ts,jsx,tsx,mdx}',
+    './node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}',
   ],
-  prefix: "",
   theme: {
-    container: {
-      center: true,
-      padding: "2rem",
-      screens: {
-        "2xl": "1400px",
-      },
-    },
     extend: {
       fontFamily: {
-        sans: ["var(--font-sans)", ...fontFamily.sans],
-      },
-      colors: {
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
-        primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
-        },
-        secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
-        },
-        destructive: {
-          DEFAULT: "hsl(var(--destructive))",
-          foreground: "hsl(var(--destructive-foreground))",
-        },
-        muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
-        },
-        accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
-        },
-        popover: {
-          DEFAULT: "hsl(var(--popover))",
-          foreground: "hsl(var(--popover-foreground))",
-        },
-        card: {
-          DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))",
-        },
-      },
-      borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
-      },
-      keyframes: {
-        "accordion-down": {
-          from: { height: "0" },
-          to: { height: "var(--radix-accordion-content-height)" },
-        },
-        "accordion-up": {
-          from: { height: "var(--radix-accordion-content-height)" },
-          to: { height: "0" },
-        },
-      },
-      animation: {
-        "accordion-down": "accordion-down 0.2s ease-out",
-        "accordion-up": "accordion-up 0.2s ease-out",
+        sans: ['Inter', 'system-ui', 'sans-serif'],
+        mono: ['JetBrains Mono', 'monospace'],
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
-} satisfies Config;
+  darkMode: 'class',
+  plugins: [
+    heroui({
+      prefix: 'heroui',
+      addCommonColors: false,
+      defaultTheme: 'light',
+      defaultExtendTheme: 'light',
+      layout: {},
+      themes: {
+        light: {
+          layout: {},
+          colors: {
+            background: '#FFFFFF',
+            foreground: '#11181C',
+            primary: {
+              50: '#e6f1fe',
+              100: '#cce3fd',
+              200: '#99c7fb',
+              300: '#66aaf9',
+              400: '#338ef7',
+              500: '#006FEE',
+              600: '#005bc4',
+              700: '#004493',
+              800: '#002e62',
+              900: '#001731',
+              DEFAULT: '#006FEE',
+              foreground: '#ffffff',
+            },
+            secondary: {
+              50: '#f2f2f3',
+              100: '#e6e6e6',
+              200: '#cccccd',
+              300: '#b3b3b4',
+              400: '#99999b',
+              500: '#7c7c80',
+              600: '#666668',
+              700: '#4d4d4f',
+              800: '#333335',
+              900: '#1a1a1c',
+              DEFAULT: '#7c7c80',
+              foreground: '#ffffff',
+            },
+            success: {
+              50: '#e8fdf4',
+              100: '#d1fae5',
+              200: '#a7f3d0',
+              300: '#6ee7b7',
+              400: '#34d399',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857',
+              800: '#065f46',
+              900: '#064e3b',
+              DEFAULT: '#10b981',
+              foreground: '#ffffff',
+            },
+            warning: {
+              50: '#fefce8',
+              100: '#fef9c3',
+              200: '#fef08a',
+              300: '#fde047',
+              400: '#facc15',
+              500: '#eab308',
+              600: '#ca8a04',
+              700: '#a16207',
+              800: '#854d0e',
+              900: '#713f12',
+              DEFAULT: '#eab308',
+              foreground: '#000000',
+            },
+            danger: {
+              50: '#fef2f2',
+              100: '#fee2e2',
+              200: '#fecaca',
+              300: '#fca5a5',
+              400: '#f87171',
+              500: '#ef4444',
+              600: '#dc2626',
+              700: '#b91c1c',
+              800: '#991b1b',
+              900: '#7f1d1d',
+              DEFAULT: '#ef4444',
+              foreground: '#ffffff',
+            },
+          },
+        },
+        dark: {
+          layout: {},
+          colors: {
+            background: '#000000',
+            foreground: '#ECEDEE',
+            primary: {
+              50: '#001731',
+              100: '#002e62',
+              200: '#004493',
+              300: '#005bc4',
+              400: '#006FEE',
+              500: '#338ef7',
+              600: '#66aaf9',
+              700: '#99c7fb',
+              800: '#cce3fd',
+              900: '#e6f1fe',
+              DEFAULT: '#006FEE',
+              foreground: '#ffffff',
+            },
+            secondary: {
+              50: '#1a1a1c',
+              100: '#333335',
+              200: '#4d4d4f',
+              300: '#666668',
+              400: '#7c7c80',
+              500: '#99999b',
+              600: '#b3b3b4',
+              700: '#cccccd',
+              800: '#e6e6e6',
+              900: '#f2f2f3',
+              DEFAULT: '#7c7c80',
+              foreground: '#000000',
+            },
+          },
+        },
+        // CoTrain 品牌主题
+        cotrain: {
+          extend: 'dark',
+          colors: {
+            background: '#0D1117',
+            foreground: '#F0F6FC',
+            primary: {
+              DEFAULT: '#7C3AED',
+              foreground: '#FFFFFF',
+              50: '#F3E8FF',
+              100: '#E9D5FF',
+              200: '#D8B4FE',
+              300: '#C084FC',
+              400: '#A855F7',
+              500: '#9333EA',
+              600: '#7C3AED',
+              700: '#6D28D9',
+              800: '#5B21B6',
+              900: '#4C1D95',
+            },
+            secondary: {
+              DEFAULT: '#06B6D4',
+              foreground: '#FFFFFF',
+              50: '#ECFEFF',
+              100: '#CFFAFE',
+              200: '#A5F3FC',
+              300: '#67E8F9',
+              400: '#22D3EE',
+              500: '#06B6D4',
+              600: '#0891B2',
+              700: '#0E7490',
+              800: '#155E75',
+              900: '#164E63',
+            },
+            success: {
+              DEFAULT: '#10B981',
+              foreground: '#FFFFFF',
+            },
+            warning: {
+              DEFAULT: '#F59E0B',
+              foreground: '#000000',
+            },
+            danger: {
+              DEFAULT: '#EF4444',
+              foreground: '#FFFFFF',
+            },
+          },
+        },
+      },
+    }),
+  ],
+};
 
 export default config;
