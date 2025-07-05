@@ -54,7 +54,12 @@
     "docker:logs": "docker-compose logs -f",
     "contracts:build": "cd contracts && aptos move compile",
     "contracts:test": "cd contracts && aptos move test",
-    "contracts:deploy": "cd contracts && aptos move publish"
+    "contracts:deploy": "cd contracts && aptos move publish",
+    "dev:hivemind": "docker-compose up hivemind-service",
+    "dev:all-with-hivemind": "docker-compose up",
+    "build:hivemind": "docker-compose build hivemind-service",
+    "logs:hivemind": "docker-compose logs -f hivemind-service",
+    "test:hivemind": "cd apps/hivemind-service && python -m pytest"
   },
   "devDependencies": {
     "@types/jest": "^29.5.8",

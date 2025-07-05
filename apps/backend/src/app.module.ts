@@ -18,6 +18,8 @@ import { TrainingModule } from './modules/training/training.module';
 import { ContributorsModule } from './modules/contributors/contributors.module';
 import { BlockchainModule } from './modules/blockchain/blockchain.module';
 import { WebSocketModule } from './modules/websocket/websocket.module';
+import { HivemindModule } from './modules/hivemind/hivemind.module';
+import { HivemindProxyModule } from './modules/hivemind-proxy/hivemind-proxy.module';
 // import { ComputeModule } from './modules/compute/compute.module';
 // import { AnalyticsModule } from './modules/analytics/analytics.module';
 // import { NotificationsModule } from './modules/notifications/notifications.module';
@@ -69,6 +71,8 @@ import { AppService } from './app.service';
     ContributorsModule,
     BlockchainModule,
     WebSocketModule,
+    HivemindModule,
+    HivemindProxyModule,
     // ComputeModule,
     // AnalyticsModule,
     // NotificationsModule,
