@@ -5,6 +5,7 @@ import { HeroUIProvider } from '@heroui/react';
 import { ThemeProvider as NextThemesProvider } from 'next-themes';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { AptosWalletAdapterProvider } from '@aptos-labs/wallet-adapter-react';
 import { useStoreInitialization } from '@/lib/stores';
 
 interface ProvidersProps {
@@ -93,22 +94,39 @@ export function Providers({ children }: ProvidersProps) {
       }),
   );
 
+  // Wallet configuration - let the adapter auto-detect available wallets
+  const wallets = [];
+
   return (
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
-        <NextThemesProvider
-          attribute="class"
-          defaultTheme="light"
-          themes={['light', 'dark', 'cotrain']}
-          enableSystem={false}
-          disableTransitionOnChange
+        <AptosWalletAdapterProvider 
+          plugins={wallets} 
+          autoConnect={true}
+          dappConfig={{
+            network: 'testnet', // or 'mainnet', 'devnet'
+            mizuwallet: {
+              manifestURL: 'https://assets.mz.xyz/static/config/mizuwallet-connect-manifest.json',
+            }
+          }}
+          onError={(error) => {
+            console.warn('Wallet adapter error:', error);
+          }}
         >
-          <HeroUIProvider>
-            <StoreInitializer>
-              {children}
-            </StoreInitializer>
-          </HeroUIProvider>
-        </NextThemesProvider>
+          <NextThemesProvider
+            attribute="class"
+            defaultTheme="light"
+            themes={['light', 'dark', 'cotrain']}
+            enableSystem={false}
+            disableTransitionOnChange
+          >
+            <HeroUIProvider>
+              <StoreInitializer>
+                {children}
+              </StoreInitializer>
+            </HeroUIProvider>
+          </NextThemesProvider>
+        </AptosWalletAdapterProvider>
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </ErrorBoundary>
