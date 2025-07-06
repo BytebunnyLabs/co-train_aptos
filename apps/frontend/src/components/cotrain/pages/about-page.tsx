@@ -1,8 +1,6 @@
 "use client"
 
-import { Button } from "@/components/cotrain/ui/button"
-import { Card, CardContent } from "@/components/cotrain/ui/card"
-import { Badge } from "@/components/cotrain/ui/badge"
+import { Button, Card, CardBody, Chip, Avatar } from "@heroui/react"
 import { Users, Target, Lightbulb, Globe, Shield, Twitter, Linkedin } from "lucide-react"
 import { mockTeamMembers } from "@/data/mock-data"
 
@@ -97,7 +95,7 @@ export function AboutPage({ onNavigate = () => {} }: AboutPageProps) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <Card className="bg-gray-800 border-gray-700">
-              <CardContent className="p-8">
+              <CardBody className="p-8">
                 <div className="flex items-center mb-4">
                   <Target className="w-8 h-8 text-green-400 mr-3" />
                   <h2 className="text-2xl font-bold text-white">Our Mission</h2>
@@ -107,11 +105,11 @@ export function AboutPage({ onNavigate = () => {} }: AboutPageProps) {
                   compute power and participate in training the next generation of AI models. We believe that AI
                   development should be accessible, transparent, and community-driven.
                 </p>
-              </CardContent>
+              </CardBody>
             </Card>
 
             <Card className="bg-gray-800 border-gray-700">
-              <CardContent className="p-8">
+              <CardBody className="p-8">
                 <div className="flex items-center mb-4">
                   <Lightbulb className="w-8 h-8 text-blue-400 mr-3" />
                   <h2 className="text-2xl font-bold text-white">Our Vision</h2>
@@ -121,7 +119,7 @@ export function AboutPage({ onNavigate = () => {} }: AboutPageProps) {
                   Where researchers, developers, and enthusiasts worldwide can collaborate to create powerful AI models
                   that benefit humanity as a whole.
                 </p>
-              </CardContent>
+              </CardBody>
             </Card>
           </div>
         </div>
@@ -137,12 +135,12 @@ export function AboutPage({ onNavigate = () => {} }: AboutPageProps) {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {values.map((value, index) => (
-              <Card key={index} className="bg-gray-800 border-gray-700 hover:border-green-400/50 transition-all">
-                <CardContent className="p-6 text-center">
+              <Card key={index} className="bg-gray-800 border-gray-700" isHoverable>
+                <CardBody className="p-6 text-center">
                   <div className="text-green-400 mb-4 flex justify-center">{value.icon}</div>
                   <h3 className="text-lg font-semibold text-white mb-3">{value.title}</h3>
                   <p className="text-gray-400">{value.description}</p>
-                </CardContent>
+                </CardBody>
               </Card>
             ))}
           </div>
@@ -164,11 +162,11 @@ export function AboutPage({ onNavigate = () => {} }: AboutPageProps) {
                 <div key={index} className={`flex items-center ${index % 2 === 0 ? "flex-row" : "flex-row-reverse"}`}>
                   <div className={`w-1/2 ${index % 2 === 0 ? "pr-8 text-right" : "pl-8"}`}>
                     <Card className="bg-gray-800 border-gray-700">
-                      <CardContent className="p-6">
-                        <Badge className="mb-3 bg-green-600">{milestone.year}</Badge>
+                      <CardBody className="p-6">
+                        <Chip className="mb-3" color="success" variant="solid">{milestone.year}</Chip>
                         <h3 className="text-lg font-semibold text-white mb-2">{milestone.title}</h3>
                         <p className="text-gray-400">{milestone.description}</p>
-                      </CardContent>
+                      </CardBody>
                     </Card>
                   </div>
                   <div className="w-4 h-4 bg-green-400 rounded-full border-4 border-black relative z-10"></div>
@@ -190,31 +188,39 @@ export function AboutPage({ onNavigate = () => {} }: AboutPageProps) {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {mockTeamMembers.map((member, index) => (
-              <Card key={index} className="bg-gray-800 border-gray-700 hover:border-green-400/50 transition-all">
-                <CardContent className="p-6 text-center">
-                  <img
+              <Card key={index} className="bg-gray-800 border-gray-700" isHoverable>
+                <CardBody className="p-6 text-center">
+                  <Avatar 
                     src={member.avatar || "/placeholder.svg"}
                     alt={member.name}
-                    className="w-24 h-24 rounded-full mx-auto mb-4"
+                    className="w-24 h-24 mx-auto mb-4"
                   />
                   <h3 className="text-lg font-semibold text-white mb-1">{member.name}</h3>
-                  <p className="text-green-400 mb-3">{member.role}</p>
+                  <Chip className="mb-3" color="success" variant="solid">{member.role}</Chip>
                   <p className="text-gray-400 text-sm mb-4">{member.bio}</p>
                   <div className="flex justify-center space-x-3">
-                    <a
+                    <Button
+                      as="a"
                       href={`https://twitter.com/${member.social.twitter}`}
+                      size="sm"
+                      variant="light"
                       className="text-gray-400 hover:text-blue-400"
+                      isIconOnly
                     >
                       <Twitter className="w-5 h-5" />
-                    </a>
-                    <a
+                    </Button>
+                    <Button
+                      as="a"
                       href={`https://linkedin.com/in/${member.social.linkedin}`}
+                      size="sm"
+                      variant="light"
                       className="text-gray-400 hover:text-blue-600"
+                      isIconOnly
                     >
                       <Linkedin className="w-5 h-5" />
-                    </a>
+                    </Button>
                   </div>
-                </CardContent>
+                </CardBody>
               </Card>
             ))}
           </div>
@@ -230,17 +236,18 @@ export function AboutPage({ onNavigate = () => {} }: AboutPageProps) {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button
-              onClick={() => onNavigate("terminal")}
-              className="bg-green-600 hover:bg-green-700 text-white px-8 py-3"
+              onPress={() => onNavigate("terminal")}
+              color="success"
               size="lg"
+              className="text-white px-8 py-3"
             >
               Start Contributing
             </Button>
             <Button
-              onClick={() => onNavigate("training")}
-              variant="outline"
-              className="border-gray-600 text-gray-300 hover:bg-gray-700 px-8 py-3"
+              onPress={() => onNavigate("training")}
+              variant="bordered"
               size="lg"
+              className="border-gray-600 text-gray-300 px-8 py-3"
             >
               View Training Projects
             </Button>

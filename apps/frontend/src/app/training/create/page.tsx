@@ -2,12 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/cotrain/ui/card';
-import { Button } from '@/components/cotrain/ui/button';
-import { Input } from '@/components/cotrain/ui/input';
-import { Label } from '@/components/cotrain/ui/label';
-import { Textarea } from '@/components/cotrain/ui/textarea';
-import { Alert, AlertDescription } from '@/components/cotrain/ui/alert';
+import { Card, CardBody, CardHeader, Button, Input, Textarea } from '@heroui/react';
 import { useToast } from '@/components/cotrain/ui/use-toast';
 import { useAptosContract } from '@/hooks/useAptosContract';
 import { useTransactionStatus } from '@/hooks/useTransactionStatus';
@@ -165,16 +160,16 @@ export default function CreateTrainingSession() {
         {/* Header */}
         <div className="flex items-center gap-4 mb-8">
           <Button
-            variant="ghost"
+            variant="light"
             size="sm"
-            onClick={() => router.back()}
+            onPress={() => router.back()}
+            startContent={<ArrowLeft className="h-4 w-4" />}
           >
-            <ArrowLeft className="h-4 w-4 mr-2" />
             Back
           </Button>
           <div>
             <h1 className="text-3xl font-bold">Create Training Session</h1>
-            <p className="text-muted-foreground">
+            <p className="text-default-400">
               Set up a new AI training session with rewards for participants
             </p>
           </div>
@@ -182,40 +177,44 @@ export default function CreateTrainingSession() {
 
         {/* Wallet Connection Status */}
         {!connected && (
-          <Alert className="mb-6">
-            <AlertCircle className="h-4 w-4" />
-            <AlertDescription>
-              You need to connect your wallet to create a training session.
-            </AlertDescription>
-          </Alert>
+          <Card className="mb-6 border-warning bg-warning-50">
+            <CardBody className="flex flex-row items-center gap-3">
+              <AlertCircle className="h-4 w-4 text-warning" />
+              <p className="text-warning-700">
+                You need to connect your wallet to create a training session.
+              </p>
+            </CardBody>
+          </Card>
         )}
 
         {/* Pending Transactions */}
         {pendingTransactions.length > 0 && (
-          <Alert className="mb-6">
-            <Loader2 className="h-4 w-4 animate-spin" />
-            <AlertDescription>
-              {pendingTransactions.length} transaction(s) pending...
-            </AlertDescription>
-          </Alert>
+          <Card className="mb-6 border-primary bg-primary-50">
+            <CardBody className="flex flex-row items-center gap-3">
+              <Loader2 className="h-4 w-4 animate-spin text-primary" />
+              <p className="text-primary-700">
+                {pendingTransactions.length} transaction(s) pending...
+              </p>
+            </CardBody>
+          </Card>
         )}
 
         {/* Form */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <h3 className="text-lg font-semibold flex items-center gap-2">
               <Plus className="h-5 w-5" />
               Session Details
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-default-400">
               Configure your training session parameters
-            </CardDescription>
+            </p>
           </CardHeader>
-          <CardContent>
+          <CardBody>
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Session Name */}
               <div className="space-y-2">
-                <Label htmlFor="name">Session Name *</Label>
+                <label htmlFor="name" className="text-sm font-medium">Session Name *</label>
                 <Input
                   id="name"
                   placeholder="e.g., Advanced NLP Model Training"
@@ -230,7 +229,7 @@ export default function CreateTrainingSession() {
 
               {/* Description */}
               <div className="space-y-2">
-                <Label htmlFor="description">Description *</Label>
+                <label htmlFor="description" className="text-sm font-medium">Description *</label>
                 <Textarea
                   id="description"
                   placeholder="Describe the training objectives, requirements, and expectations..."
@@ -246,7 +245,7 @@ export default function CreateTrainingSession() {
 
               {/* Reward Amount */}
               <div className="space-y-2">
-                <Label htmlFor="rewardAmount">Reward Pool (APT) *</Label>
+                <label htmlFor="rewardAmount" className="text-sm font-medium">Reward Pool (APT) *</label>
                 <Input
                   id="rewardAmount"
                   type="number"
@@ -254,11 +253,11 @@ export default function CreateTrainingSession() {
                   max="10000"
                   step="0.1"
                   placeholder="100"
-                  value={formData.rewardAmount}
+                  value={formData.rewardAmount.toString()}
                   onChange={(e) => handleInputChange('rewardAmount', parseFloat(e.target.value) || 0)}
                   className={formErrors.rewardAmount ? 'border-red-500' : ''}
                 />
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-default-400">
                   Total APT tokens to be distributed as rewards
                 </p>
                 {formErrors.rewardAmount && (
@@ -268,14 +267,14 @@ export default function CreateTrainingSession() {
 
               {/* Max Participants */}
               <div className="space-y-2">
-                <Label htmlFor="maxParticipants">Maximum Participants *</Label>
+                <label htmlFor="maxParticipants" className="text-sm font-medium">Maximum Participants *</label>
                 <Input
                   id="maxParticipants"
                   type="number"
                   min="1"
                   max="1000"
                   placeholder="10"
-                  value={formData.maxParticipants}
+                  value={formData.maxParticipants.toString()}
                   onChange={(e) => handleInputChange('maxParticipants', parseInt(e.target.value) || 0)}
                   className={formErrors.maxParticipants ? 'border-red-500' : ''}
                 />
@@ -286,18 +285,18 @@ export default function CreateTrainingSession() {
 
               {/* Duration */}
               <div className="space-y-2">
-                <Label htmlFor="duration">Session Duration (seconds) *</Label>
+                <label htmlFor="duration" className="text-sm font-medium">Session Duration (seconds) *</label>
                 <Input
                   id="duration"
                   type="number"
                   min="300"
                   max="604800"
                   placeholder="3600"
-                  value={formData.duration}
+                  value={formData.duration.toString()}
                   onChange={(e) => handleInputChange('duration', parseInt(e.target.value) || 0)}
                   className={formErrors.duration ? 'border-red-500' : ''}
                 />
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-default-400">
                   Duration: {formatDuration(formData.duration)} (Min: 5 minutes, Max: 7 days)
                 </p>
                 {formErrors.duration && (
@@ -307,75 +306,69 @@ export default function CreateTrainingSession() {
 
               {/* Error Display */}
               {error && (
-                <Alert variant="destructive">
-                  <AlertCircle className="h-4 w-4" />
-                  <AlertDescription>{error}</AlertDescription>
-                </Alert>
+                <Card className="border-danger bg-danger-50">
+                  <CardBody className="flex flex-row items-center gap-3">
+                    <AlertCircle className="h-4 w-4 text-danger" />
+                    <p className="text-danger-700">{error}</p>
+                  </CardBody>
+                </Card>
               )}
 
               {/* Submit Button */}
               <div className="flex gap-4">
                 <Button
                   type="button"
-                  variant="outline"
-                  onClick={() => router.back()}
-                  disabled={isLoading}
+                  variant="bordered"
+                  onPress={() => router.back()}
+                  isDisabled={isLoading}
                 >
                   Cancel
                 </Button>
                 <Button
                   type="submit"
-                  disabled={!connected || isLoading}
+                  color="primary"
+                  isDisabled={!connected || isLoading}
                   className="flex-1"
+                  startContent={isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
                 >
-                  {isLoading ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Creating Session...
-                    </>
-                  ) : (
-                    <>
-                      <Plus className="mr-2 h-4 w-4" />
-                      Create Training Session
-                    </>
-                  )}
+                  {isLoading ? 'Creating Session...' : 'Create Training Session'}
                 </Button>
               </div>
             </form>
-          </CardContent>
+          </CardBody>
         </Card>
 
         {/* Preview Card */}
         <Card className="mt-6">
           <CardHeader>
-            <CardTitle className="text-lg">Preview</CardTitle>
+            <h3 className="text-lg font-semibold">Preview</h3>
           </CardHeader>
-          <CardContent className="space-y-2">
+          <CardBody className="space-y-2">
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
                 <span className="font-medium">Session Name:</span>
-                <p className="text-muted-foreground">{formData.name || 'Untitled Session'}</p>
+                <p className="text-default-400">{formData.name || 'Untitled Session'}</p>
               </div>
               <div>
                 <span className="font-medium">Reward Pool:</span>
-                <p className="text-muted-foreground">{formData.rewardAmount} APT</p>
+                <p className="text-default-400">{formData.rewardAmount} APT</p>
               </div>
               <div>
                 <span className="font-medium">Max Participants:</span>
-                <p className="text-muted-foreground">{formData.maxParticipants} users</p>
+                <p className="text-default-400">{formData.maxParticipants} users</p>
               </div>
               <div>
                 <span className="font-medium">Duration:</span>
-                <p className="text-muted-foreground">{formatDuration(formData.duration)}</p>
+                <p className="text-default-400">{formatDuration(formData.duration)}</p>
               </div>
             </div>
             {formData.description && (
               <div>
                 <span className="font-medium">Description:</span>
-                <p className="text-muted-foreground text-sm mt-1">{formData.description}</p>
+                <p className="text-default-400 text-sm mt-1">{formData.description}</p>
               </div>
             )}
-          </CardContent>
+          </CardBody>
         </Card>
       </div>
     </div>

@@ -3,9 +3,12 @@ node_modules/
 **/node_modules/
 /.pnp
 .pnp.js
-.pnpm-store/
-.pnpm-debug.log*
-lerna-debug.log*
+
+# Package managers
+# npm
+npm-debug.log*
+npm-error.log*
+package-lock.json
 
 # Yarn
 .yarn/install-state.gz
@@ -16,13 +19,14 @@ lerna-debug.log*
 yarn-error.log*
 yarn.lock
 
-# npm
-npm-debug.log*
-npm-error.log*
-package-lock.json
-
 # pnpm
+.pnpm-store/
+.pnpm-debug.log*
 pnpm-lock.yaml
+
+# Monorepo
+lerna-debug.log*
+.rush/
 
 # Build outputs
 dist/
@@ -162,6 +166,12 @@ k8s/secrets/
 .movement/
 build/
 
+# Move language specific
+move/build/
+move/.aptos/
+*.mv
+*.mvir
+
 # AI/ML specific
 models/
 checkpoints/
@@ -174,6 +184,40 @@ datasets/
 *.pb
 *.onnx
 *.tflite
+
+# AI Agent configurations (keep important configs)
+.clinerules/
+.cursor/
+.roo/
+.trae/
+.windsurf/
+.roomodes
+!.cursor/mcp.json
+!.roo/mcp.json
+!.windsurf/mcp.json
+!.trae/rules/
+
+# Task management (uncomment if needed)
+# tasks.json
+# tasks/
+# .taskmaster/
+
+# HeroUI 迁移相关文件
+# 迁移过程中的临时文件和备份
+*.migration-backup
+*.shadcn-backup
+migration-temp/
+ui-migration-logs/
+component-migration-report.json
+# 组件迁移状态文件
+.heroui-migration-state
+.component-migration-cache
+
+# Uploads and user content
+user-uploads/
+temp-uploads/
+static/uploads/
+public/uploads/
 
 # Backup files
 *.bak
@@ -286,8 +330,10 @@ Temporary Items
 .Trash-*
 .nfs*
 
-# Sass
+# CSS frameworks
 .sass-cache/
+.tailwindcss-cache
+*.css.map
 
 # Connect
 .connect.lock
@@ -392,6 +438,14 @@ public/sw.js
 public/sw.js.map
 public/workbox-*.js
 public/workbox-*.js.map
+public/worker-*.js
+public/worker-*.js.map
+**/public/sw.js
+**/public/workbox-*.js
+**/public/worker-*.js
+**/public/sw.js.map
+**/public/workbox-*.js.map
+**/public/worker-*.js.map
 
 # Bundle analyzer
 .next/analyze/
@@ -409,6 +463,19 @@ src-tauri/target/
 
 # Electron
 dist_electron/
+
+# Development tools and configs
+.history/
+.vscode-test/
+
+# Performance and debugging
+*.trace
+*.map
+*.sourcemap
+profile-*
+speed-measure-plugin.json
+
+
 
 # Keep some important files
 !.vscode/extensions.json

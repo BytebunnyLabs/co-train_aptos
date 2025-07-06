@@ -2,12 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/cotrain/ui/card';
-import { Button } from '@/components/cotrain/ui/button';
-import { Badge } from '@/components/cotrain/ui/badge';
-import { Input } from '@/components/cotrain/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/cotrain/ui/select';
-import { Alert, AlertDescription } from '@/components/cotrain/ui/alert';
+import { Card, CardBody, CardHeader, Chip, Input, Select, SelectItem, Alert } from '@heroui/react';
+import { Button } from '@/components/heroui/button';
 import { useToast } from '@/components/cotrain/ui/use-toast';
 import { useAptosContract } from '@/hooks/useAptosContract';
 import { 
@@ -107,13 +103,13 @@ export default function TrainingSessions() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'active':
-        return <Badge variant="default" className="bg-green-500">Active</Badge>;
+        return <Chip color="success" variant="flat">Active</Chip>;
       case 'completed':
-        return <Badge variant="secondary">Completed</Badge>;
+        return <Chip color="default" variant="flat">Completed</Chip>;
       case 'pending':
-        return <Badge variant="outline">Pending</Badge>;
+        return <Chip variant="bordered">Pending</Chip>;
       default:
-        return <Badge variant="outline">{status}</Badge>;
+        return <Chip variant="bordered">{status}</Chip>;
     }
   };
 
@@ -153,11 +149,11 @@ export default function TrainingSessions() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div>
           <h1 className="text-3xl font-bold">Training Sessions</h1>
-          <p className="text-muted-foreground">
+          <p className="text-default-400">
             Discover and participate in AI training sessions
           </p>
         </div>
-        <Button onClick={() => router.push('/training/create')} disabled={!connected}>
+        <Button onPress={() => router.push('/training/create')} isDisabled={!connected}>
           <Plus className="mr-2 h-4 w-4" />
           Create Session
         </Button>
@@ -165,21 +161,23 @@ export default function TrainingSessions() {
 
       {/* Wallet Connection Status */}
       {!connected && (
-        <Alert className="mb-6">
-          <AlertCircle className="h-4 w-4" />
-          <AlertDescription>
-            Connect your wallet to create sessions and participate in training.
-          </AlertDescription>
+        <Alert 
+          color="warning" 
+          variant="flat" 
+          className="mb-6"
+          startContent={<AlertCircle className="h-4 w-4" />}
+        >
+          Connect your wallet to create sessions and participate in training.
         </Alert>
       )}
 
       {/* Filters */}
       <Card className="mb-6">
-        <CardContent className="pt-6">
+        <CardBody className="pt-6">
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="flex-1">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-default-400" />
                 <Input
                   placeholder="Search sessions..."
                   value={searchQuery}
@@ -189,21 +187,20 @@ export default function TrainingSessions() {
               </div>
             </div>
             <div className="w-full sm:w-48">
-              <Select value={statusFilter} onValueChange={(value) => setStatusFilter(value as SessionStatus)}>
-                <SelectTrigger>
-                  <Filter className="mr-2 h-4 w-4" />
-                  <SelectValue placeholder="Filter by status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Sessions</SelectItem>
-                  <SelectItem value="active">Active</SelectItem>
-                  <SelectItem value="completed">Completed</SelectItem>
-                  <SelectItem value="pending">Pending</SelectItem>
-                </SelectContent>
+              <Select 
+                selectedKeys={[statusFilter]} 
+                onSelectionChange={(keys) => setStatusFilter(Array.from(keys)[0] as SessionStatus)}
+                placeholder="Filter by status"
+                startContent={<Filter className="h-4 w-4" />}
+              >
+                <SelectItem key="all">All Sessions</SelectItem>
+                <SelectItem key="active">Active</SelectItem>
+                <SelectItem key="completed">Completed</SelectItem>
+                <SelectItem key="pending">Pending</SelectItem>
               </Select>
             </div>
           </div>
-        </CardContent>
+        </CardBody>
       </Card>
 
       {/* Sessions Grid */}
@@ -214,8 +211,8 @@ export default function TrainingSessions() {
         </div>
       ) : filteredSessions.length === 0 ? (
         <Card>
-          <CardContent className="py-12 text-center">
-            <div className="text-muted-foreground">
+          <CardBody className="py-12 text-center">
+            <div className="text-default-400">
               {searchQuery || statusFilter !== 'all' ? 
                 'No sessions match your criteria.' : 
                 'No training sessions available yet.'
@@ -225,13 +222,13 @@ export default function TrainingSessions() {
               <Button 
                 variant="outline" 
                 className="mt-4"
-                onClick={() => router.push('/training/create')}
+                onPress={() => router.push('/training/create')}
               >
                 <Plus className="mr-2 h-4 w-4" />
                 Create First Session
               </Button>
             )}
-          </CardContent>
+          </CardBody>
         </Card>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -243,14 +240,14 @@ export default function TrainingSessions() {
             >
               <CardHeader className="pb-3">
                 <div className="flex justify-between items-start">
-                  <CardTitle className="text-lg line-clamp-2">{session.name}</CardTitle>
+                  <h3 className="text-lg font-semibold line-clamp-2">{session.name}</h3>
                   {getStatusBadge(session.status)}
                 </div>
-                <CardDescription className="line-clamp-3">
+                <p className="text-default-400 line-clamp-3">
                   {session.description}
-                </CardDescription>
+                </p>
               </CardHeader>
-              <CardContent>
+              <CardBody>
                 <div className="space-y-3">
                   {/* Reward and Participants */}
                   <div className="flex justify-between items-center">
@@ -265,13 +262,13 @@ export default function TrainingSessions() {
                   </div>
 
                   {/* Duration */}
-                  <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                  <div className="flex items-center gap-1 text-sm text-default-400">
                     <Clock className="h-4 w-4" />
                     <span>Duration: {formatDuration(session.duration)}</span>
                   </div>
 
                   {/* Created Date */}
-                  <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                  <div className="flex items-center gap-1 text-sm text-default-400">
                     <Calendar className="h-4 w-4" />
                     <span>Created: {session.createdAt.toLocaleDateString()}</span>
                   </div>
@@ -282,8 +279,7 @@ export default function TrainingSessions() {
                       variant={session.status === 'active' ? 'default' : 'outline'} 
                       size="sm" 
                       className="w-full"
-                      onClick={(e) => {
-                        e.stopPropagation();
+                      onPress={() => {
                         handleSessionClick(session.id);
                       }}
                     >
@@ -292,7 +288,7 @@ export default function TrainingSessions() {
                     </Button>
                   </div>
                 </div>
-              </CardContent>
+              </CardBody>
             </Card>
           ))}
         </div>
@@ -301,36 +297,36 @@ export default function TrainingSessions() {
       {/* Statistics */}
       <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-4">
         <Card>
-          <CardContent className="p-4 text-center">
+          <CardBody className="p-4 text-center">
             <div className="text-2xl font-bold text-green-600">
               {sessions.filter(s => s.status === 'active').length}
             </div>
-            <div className="text-sm text-muted-foreground">Active Sessions</div>
-          </CardContent>
+            <div className="text-sm text-default-500">Active Sessions</div>
+          </CardBody>
         </Card>
         <Card>
-          <CardContent className="p-4 text-center">
+          <CardBody className="p-4 text-center">
             <div className="text-2xl font-bold text-blue-600">
               {sessions.reduce((acc, s) => acc + s.currentParticipants, 0)}
             </div>
-            <div className="text-sm text-muted-foreground">Total Participants</div>
-          </CardContent>
+            <div className="text-sm text-default-500">Total Participants</div>
+          </CardBody>
         </Card>
         <Card>
-          <CardContent className="p-4 text-center">
+          <CardBody className="p-4 text-center">
             <div className="text-2xl font-bold text-yellow-600">
               {sessions.reduce((acc, s) => acc + s.rewardAmount, 0) / 100000000} APT
             </div>
-            <div className="text-sm text-muted-foreground">Total Rewards</div>
-          </CardContent>
+            <div className="text-sm text-default-500">Total Rewards</div>
+          </CardBody>
         </Card>
         <Card>
-          <CardContent className="p-4 text-center">
+          <CardBody className="p-4 text-center">
             <div className="text-2xl font-bold text-purple-600">
               {sessions.filter(s => s.status === 'completed').length}
             </div>
-            <div className="text-sm text-muted-foreground">Completed</div>
-          </CardContent>
+            <div className="text-sm text-default-500">Completed</div>
+          </CardBody>
         </Card>
       </div>
     </div>

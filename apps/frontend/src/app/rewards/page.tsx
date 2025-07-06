@@ -1,11 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/cotrain/ui/card';
-import { Button } from '@/components/cotrain/ui/button';
-import { Badge } from '@/components/cotrain/ui/badge';
-import { Progress } from '@/components/cotrain/ui/progress';
-import { Alert, AlertDescription } from '@/components/cotrain/ui/alert';
+import { Card, CardBody, CardHeader, Button, Chip, Progress } from '@heroui/react';
 import { useToast } from '@/components/cotrain/ui/use-toast';
 import { useAptosContract } from '@/hooks/useAptosContract';
 import { useTransactionStatus } from '@/hooks/useTransactionStatus';
@@ -232,13 +228,13 @@ export default function RewardsPage() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'claimable':
-        return <Badge variant="default" className="bg-green-500">Claimable</Badge>;
+        return <Chip color="success" variant="solid">Claimable</Chip>;
       case 'claimed':
-        return <Badge variant="secondary">Claimed</Badge>;
+        return <Chip color="default" variant="flat">Claimed</Chip>;
       case 'pending':
-        return <Badge variant="outline">Pending</Badge>;
+        return <Chip color="warning" variant="bordered">Pending</Chip>;
       default:
-        return <Badge variant="outline">{status}</Badge>;
+        return <Chip color="default" variant="bordered">{status}</Chip>;
     }
   };
 
@@ -250,12 +246,14 @@ export default function RewardsPage() {
       <div className="container mx-auto py-8 px-4">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-3xl font-bold mb-8">My Rewards</h1>
-          <Alert>
-            <AlertCircle className="h-4 w-4" />
-            <AlertDescription>
-              Please connect your wallet to view your rewards.
-            </AlertDescription>
-          </Alert>
+          <Card className="border-warning-200 bg-warning-50">
+            <CardBody className="flex flex-row items-center gap-2">
+              <AlertCircle className="h-4 w-4 text-warning-600" />
+              <span className="text-warning-800">
+                Please connect your wallet to view your rewards.
+              </span>
+            </CardBody>
+          </Card>
         </div>
       </div>
     );
@@ -268,16 +266,17 @@ export default function RewardsPage() {
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
           <div>
             <h1 className="text-3xl font-bold">My Rewards</h1>
-            <p className="text-muted-foreground">
+            <p className="text-default-400">
               Track and claim your training rewards
             </p>
           </div>
           {claimableRewards.length > 0 && (
             <Button 
-              onClick={handleBatchClaim}
-              disabled={selectedRewards.length === 0}
+              color="primary"
+              onPress={handleBatchClaim}
+              isDisabled={selectedRewards.length === 0}
+              startContent={<Download className="h-4 w-4" />}
             >
-              <Download className="mr-2 h-4 w-4" />
               Claim Selected ({selectedRewards.length})
             </Button>
           )}
@@ -285,80 +284,82 @@ export default function RewardsPage() {
 
         {/* Pending Transactions */}
         {pendingTransactions.length > 0 && (
-          <Alert className="mb-6">
-            <Loader2 className="h-4 w-4 animate-spin" />
-            <AlertDescription>
-              {pendingTransactions.length} transaction(s) pending...
-            </AlertDescription>
-          </Alert>
+          <Card className="mb-6 border-primary-200 bg-primary-50">
+            <CardBody className="flex flex-row items-center gap-2">
+              <Loader2 className="h-4 w-4 animate-spin text-primary-600" />
+              <span className="text-primary-800">
+                {pendingTransactions.length} transaction(s) pending...
+              </span>
+            </CardBody>
+          </Card>
         )}
 
         {/* Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <Card>
-            <CardContent className="p-6">
+            <CardBody className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground">Current Balance</p>
+                  <p className="text-sm font-medium text-default-400">Current Balance</p>
                   <p className="text-2xl font-bold">{accountBalance.toFixed(2)} APT</p>
                 </div>
                 <Wallet className="h-8 w-8 text-blue-500" />
               </div>
-            </CardContent>
+            </CardBody>
           </Card>
 
           <Card>
-            <CardContent className="p-6">
+            <CardBody className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground">Total Claimable</p>
+                  <p className="text-sm font-medium text-default-400">Total Claimable</p>
                   <p className="text-2xl font-bold text-green-600">
                     {formatAmount(summary.totalClaimable)}
                   </p>
                 </div>
                 <Download className="h-8 w-8 text-green-500" />
               </div>
-            </CardContent>
+            </CardBody>
           </Card>
 
           <Card>
-            <CardContent className="p-6">
+            <CardBody className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground">Total Earned</p>
+                  <p className="text-sm font-medium text-default-400">Total Earned</p>
                   <p className="text-2xl font-bold text-purple-600">
                     {formatAmount(summary.totalEarned)}
                   </p>
                 </div>
                 <Trophy className="h-8 w-8 text-purple-500" />
               </div>
-            </CardContent>
+            </CardBody>
           </Card>
 
           <Card>
-            <CardContent className="p-6">
+            <CardBody className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground">Average Score</p>
+                  <p className="text-sm font-medium text-default-400">Average Score</p>
                   <p className="text-2xl font-bold text-yellow-600">
                     {summary.averageScore.toFixed(1)}
                   </p>
                 </div>
                 <Star className="h-8 w-8 text-yellow-500" />
               </div>
-            </CardContent>
+            </CardBody>
           </Card>
         </div>
 
         {/* Progress Overview */}
         <Card className="mb-8">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <h3 className="text-lg font-semibold flex items-center gap-2">
               <TrendingUp className="h-5 w-5" />
               Rewards Progress
-            </CardTitle>
+            </h3>
           </CardHeader>
-          <CardContent>
+          <CardBody>
             <div className="space-y-4">
               <div>
                 <div className="flex justify-between text-sm mb-2">
@@ -368,24 +369,25 @@ export default function RewardsPage() {
                 <Progress 
                   value={(summary.totalClaimed / summary.totalEarned) * 100} 
                   className="w-full"
+                  color="success"
                 />
               </div>
               <div className="grid grid-cols-3 gap-4 text-center">
                 <div>
                   <div className="text-2xl font-bold text-blue-600">{summary.sessionsParticipated}</div>
-                  <div className="text-sm text-muted-foreground">Sessions</div>
+                  <div className="text-sm text-default-400">Sessions</div>
                 </div>
                 <div>
                   <div className="text-2xl font-bold text-green-600">{claimedRewards.length}</div>
-                  <div className="text-sm text-muted-foreground">Claimed</div>
+                  <div className="text-sm text-default-400">Claimed</div>
                 </div>
                 <div>
                   <div className="text-2xl font-bold text-orange-600">{claimableRewards.length}</div>
-                  <div className="text-sm text-muted-foreground">Pending</div>
+                  <div className="text-sm text-default-400">Pending</div>
                 </div>
               </div>
             </div>
-          </CardContent>
+          </CardBody>
         </Card>
 
         {/* Rewards List */}
@@ -393,17 +395,17 @@ export default function RewardsPage() {
           {/* Claimable Rewards */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+              <h3 className="text-lg font-semibold flex items-center gap-2">
                 <Download className="h-5 w-5 text-green-500" />
                 Claimable Rewards ({claimableRewards.length})
-              </CardTitle>
-              <CardDescription>
+              </h3>
+              <p className="text-sm text-default-400">
                 Rewards ready to be claimed
-              </CardDescription>
+              </p>
             </CardHeader>
-            <CardContent>
+            <CardBody>
               {claimableRewards.length === 0 ? (
-                <div className="text-center py-8 text-muted-foreground">
+                <div className="text-center py-8 text-default-400">
                   No claimable rewards at the moment
                 </div>
               ) : (
@@ -411,7 +413,7 @@ export default function RewardsPage() {
                   {claimableRewards.map((reward) => (
                     <div 
                       key={reward.sessionId} 
-                      className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors"
+                      className="flex items-center justify-between p-4 border rounded-lg hover:bg-default-100 transition-colors"
                     >
                       <div className="flex items-center gap-3">
                         <input
@@ -428,7 +430,7 @@ export default function RewardsPage() {
                         />
                         <div>
                           <div className="font-medium">{reward.sessionName}</div>
-                          <div className="text-sm text-muted-foreground">
+                          <div className="text-sm text-default-400">
                             Score: {reward.score} • Earned: {reward.earnedAt.toLocaleDateString()}
                           </div>
                         </div>
@@ -439,7 +441,8 @@ export default function RewardsPage() {
                         </div>
                         <Button 
                           size="sm" 
-                          onClick={() => handleClaimReward(reward.sessionId)}
+                          color="success"
+                          onPress={() => handleClaimReward(reward.sessionId)}
                           className="mt-1"
                         >
                           Claim
@@ -449,23 +452,23 @@ export default function RewardsPage() {
                   ))}
                 </div>
               )}
-            </CardContent>
+            </CardBody>
           </Card>
 
           {/* Claimed Rewards History */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+              <h3 className="text-lg font-semibold flex items-center gap-2">
                 <History className="h-5 w-5 text-gray-500" />
                 Claimed Rewards ({claimedRewards.length})
-              </CardTitle>
-              <CardDescription>
+              </h3>
+              <p className="text-sm text-default-400">
                 Your reward claim history
-              </CardDescription>
+              </p>
             </CardHeader>
-            <CardContent>
+            <CardBody>
               {claimedRewards.length === 0 ? (
-                <div className="text-center py-8 text-muted-foreground">
+                <div className="text-center py-8 text-default-400">
                   No claimed rewards yet
                 </div>
               ) : (
@@ -479,7 +482,7 @@ export default function RewardsPage() {
                         <CheckCircle className="h-5 w-5 text-green-500" />
                         <div>
                           <div className="font-medium">{reward.sessionName}</div>
-                          <div className="text-sm text-muted-foreground">
+                          <div className="text-sm text-default-400">
                             Score: {reward.score} • Claimed: {reward.claimedAt?.toLocaleDateString()}
                           </div>
                         </div>
@@ -494,37 +497,43 @@ export default function RewardsPage() {
                   ))}
                 </div>
               )}
-            </CardContent>
+            </CardBody>
           </Card>
         </div>
 
         {/* Quick Actions */}
         <Card className="mt-8">
           <CardHeader>
-            <CardTitle>Quick Actions</CardTitle>
+            <h3 className="text-lg font-semibold">Quick Actions</h3>
           </CardHeader>
-          <CardContent>
+          <CardBody>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <Button variant="outline" onClick={loadRewardsData} disabled={isLoading}>
-                {isLoading ? (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                ) : (
-                  <Activity className="mr-2 h-4 w-4" />
-                )}
+              <Button 
+                variant="bordered" 
+                onPress={loadRewardsData} 
+                isDisabled={isLoading}
+                startContent={isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Activity className="h-4 w-4" />}
+              >
                 Refresh Data
               </Button>
               
-              <Button variant="outline" onClick={() => window.open('/training/sessions', '_blank')}>
-                <Award className="mr-2 h-4 w-4" />
+              <Button 
+                variant="bordered" 
+                onPress={() => window.open('/training/sessions', '_blank')}
+                startContent={<Award className="h-4 w-4" />}
+              >
                 Join Sessions
               </Button>
               
-              <Button variant="outline" disabled>
-                <DollarSign className="mr-2 h-4 w-4" />
+              <Button 
+                variant="bordered" 
+                isDisabled
+                startContent={<DollarSign className="h-4 w-4" />}
+              >
                 Export History
               </Button>
             </div>
-          </CardContent>
+          </CardBody>
         </Card>
       </div>
     </div>

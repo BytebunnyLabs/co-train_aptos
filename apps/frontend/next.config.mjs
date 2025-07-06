@@ -18,10 +18,11 @@ const nextConfig = {
   images: {
     unoptimized: false,
   },
-  // Disable static generation for problematic pages
+  // Disable static optimization for error pages
   experimental: {
-    // Remove deprecated option
+    optimizeCss: false,
   },
+  serverExternalPackages: ['@aptos-labs/wallet-adapter-react'],
   eslint: {
     // Temporarily ignore ESLint errors during builds
     ignoreDuringBuilds: true,

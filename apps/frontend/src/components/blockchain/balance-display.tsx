@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useWallet } from '@aptos-labs/wallet-adapter-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/cotrain/ui/card';
-import { Button } from '@/components/cotrain/ui/button';
-import { Badge } from '@/components/cotrain/ui/badge';
-import { Skeleton } from '@/components/cotrain/ui/skeleton';
-import { Alert, AlertDescription } from '@/components/cotrain/ui/alert';
+import { Card, CardBody, CardHeader, Button, Chip, Skeleton } from '@heroui/react';
 import {
   RefreshCw,
   Wallet,
@@ -129,14 +125,14 @@ export const BalanceDisplay: React.FC<BalanceDisplayProps> = ({
   if (!connected) {
     return (
       <Card className={cn('w-full', className)}>
-        <CardContent className="p-6">
+        <CardBody className="p-6">
           <div className="flex items-center justify-center h-32">
             <div className="text-center space-y-2">
-              <Wallet className="mx-auto h-8 w-8 text-muted-foreground" />
-              <p className="text-sm text-muted-foreground">Connect your wallet to view balance</p>
+              <Wallet className="mx-auto h-8 w-8 text-default-400" />
+              <p className="text-sm text-default-400">Connect your wallet to view balance</p>
             </div>
           </div>
-        </CardContent>
+        </CardBody>
       </Card>
     );
   }
@@ -150,7 +146,7 @@ export const BalanceDisplay: React.FC<BalanceDisplayProps> = ({
             <Skeleton className="h-8 w-8 rounded" />
           </div>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardBody className="space-y-4">
           <div className="space-y-2">
             <Skeleton className="h-8 w-40" />
             <Skeleton className="h-4 w-24" />
@@ -163,7 +159,7 @@ export const BalanceDisplay: React.FC<BalanceDisplayProps> = ({
               <Skeleton className="h-16" />
             </div>
           )}
-        </CardContent>
+        </CardBody>
       </Card>
     );
   }
@@ -171,43 +167,43 @@ export const BalanceDisplay: React.FC<BalanceDisplayProps> = ({
   if (error && !balanceData) {
     return (
       <Card className={cn('w-full', className)}>
-        <CardContent className="p-6">
-          <Alert className="border-destructive">
-            <AlertDescription className="space-y-2">
+        <CardBody className="p-6">
+          <div className="p-4 border border-danger-200 bg-danger-50 rounded-lg">
+            <div className="space-y-2">
               <p>Failed to load balance: {error}</p>
-              <Button onClick={handleRefresh} size="sm" variant="outline">
+              <Button onPress={handleRefresh} size="sm" variant="bordered">
                 <RefreshCw className="mr-2 h-4 w-4" />
                 Retry
               </Button>
-            </AlertDescription>
-          </Alert>
-        </CardContent>
+            </div>
+          </div>
+        </CardBody>
       </Card>
     );
   }
 
   if (compact) {
     return (
-      <div className={cn('flex items-center space-x-4 p-3 bg-card rounded-lg border', className)}>
+      <div className={cn('flex items-center space-x-4 p-3 bg-content1 rounded-lg border', className)}>
         <div className="flex items-center space-x-2">
-          <Wallet className="h-4 w-4 text-muted-foreground" />
+          <Wallet className="h-4 w-4 text-default-400" />
           <span className="text-sm font-medium">
             {formatBalance(balanceData?.totalBalance || 0, !showPrivate)}
           </span>
         </div>
         <Button
-          variant="ghost"
+          variant="light"
           size="sm"
-          onClick={() => setShowPrivate(!showPrivate)}
+          onPress={() => setShowPrivate(!showPrivate)}
           className="h-6 w-6 p-0"
         >
           {showPrivate ? <Eye className="h-3 w-3" /> : <EyeOff className="h-3 w-3" />}
         </Button>
         <Button
-          variant="ghost"
+          variant="light"
           size="sm"
-          onClick={handleRefresh}
-          disabled={loading}
+          onPress={handleRefresh}
+          isDisabled={loading}
           className="h-6 w-6 p-0"
         >
           <RefreshCw className={cn('h-3 w-3', loading && 'animate-spin')} />
@@ -220,32 +216,32 @@ export const BalanceDisplay: React.FC<BalanceDisplayProps> = ({
     <Card className={cn('w-full', className)}>
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-lg font-semibold flex items-center gap-2">
+          <h3 className="text-lg font-semibold flex items-center gap-2">
             <Wallet className="h-5 w-5" />
             Wallet Balance
-          </CardTitle>
+          </h3>
           <div className="flex items-center space-x-2">
             <Button
-              variant="ghost"
+              variant="light"
               size="sm"
-              onClick={() => setShowPrivate(!showPrivate)}
+              onPress={() => setShowPrivate(!showPrivate)}
               className="h-8 w-8 p-0"
             >
               {showPrivate ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
             </Button>
             <Button
-              variant="ghost"
+              variant="light"
               size="sm"
-              onClick={openExplorer}
+              onPress={openExplorer}
               className="h-8 w-8 p-0"
             >
               <ExternalLink className="h-4 w-4" />
             </Button>
             <Button
-              variant="ghost"
+              variant="light"
               size="sm"
-              onClick={handleRefresh}
-              disabled={loading}
+              onPress={handleRefresh}
+              isDisabled={loading}
               className="h-8 w-8 p-0"
             >
               <RefreshCw className={cn('h-4 w-4', loading && 'animate-spin')} />
@@ -253,35 +249,35 @@ export const BalanceDisplay: React.FC<BalanceDisplayProps> = ({
           </div>
         </div>
         {lastRefreshTime && (
-          <p className="text-xs text-muted-foreground">
+          <p className="text-xs text-default-400">
             Last updated: {lastRefreshTime.toLocaleTimeString()}
           </p>
         )}
       </CardHeader>
       
-      <CardContent className="space-y-4">
+      <CardBody className="space-y-4">
         {/* Total Balance */}
         <div className="space-y-2">
           <div className="flex items-baseline space-x-2">
             <span className="text-2xl font-bold">
               {formatBalance(balanceData?.totalBalance || 0, !showPrivate)}
             </span>
-            <Badge variant="secondary" className="text-xs">
+            <Chip variant="flat" size="sm" className="text-xs">
               Total
-            </Badge>
+            </Chip>
           </div>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-default-400">
             Address: {account?.address?.toString().slice(0, 8)}...{account?.address?.toString().slice(-6)}
           </p>
         </div>
 
         {/* Error display */}
         {error && (
-          <Alert className="border-yellow-200 bg-yellow-50">
-            <AlertDescription className="text-sm">
+          <div className="p-3 border border-warning-200 bg-warning-50 rounded-lg">
+            <p className="text-sm">
               <strong>Warning:</strong> {error}. Showing cached data.
-            </AlertDescription>
-          </Alert>
+            </p>
+          </div>
         )}
 
         {/* Balance breakdown */}
@@ -290,7 +286,7 @@ export const BalanceDisplay: React.FC<BalanceDisplayProps> = ({
             <div className="space-y-1">
               <div className="flex items-center space-x-1">
                 <DollarSign className="h-3 w-3 text-green-500" />
-                <span className="text-xs text-muted-foreground">Available</span>
+                <span className="text-xs text-default-400">Available</span>
               </div>
               <p className="text-sm font-medium">
                 {formatBalance(balanceData.availableBalance, !showPrivate)}
@@ -300,7 +296,7 @@ export const BalanceDisplay: React.FC<BalanceDisplayProps> = ({
             <div className="space-y-1">
               <div className="flex items-center space-x-1">
                 <TrendingUp className="h-3 w-3 text-blue-500" />
-                <span className="text-xs text-muted-foreground">Staked</span>
+                <span className="text-xs text-default-400">Staked</span>
               </div>
               <p className="text-sm font-medium">
                 {formatBalance(balanceData.stakedBalance, !showPrivate)}
@@ -310,7 +306,7 @@ export const BalanceDisplay: React.FC<BalanceDisplayProps> = ({
             <div className="space-y-1">
               <div className="flex items-center space-x-1">
                 <TrendingDown className="h-3 w-3 text-orange-500" />
-                <span className="text-xs text-muted-foreground">Pending</span>
+                <span className="text-xs text-default-400">Pending</span>
               </div>
               <p className="text-sm font-medium">
                 {formatBalance(balanceData.pendingRewards, !showPrivate)}
@@ -320,7 +316,7 @@ export const BalanceDisplay: React.FC<BalanceDisplayProps> = ({
             <div className="space-y-1">
               <div className="flex items-center space-x-1">
                 <DollarSign className="h-3 w-3 text-emerald-500" />
-                <span className="text-xs text-muted-foreground">Claimable</span>
+                <span className="text-xs text-default-400">Claimable</span>
               </div>
               <p className="text-sm font-medium text-emerald-600">
                 {formatBalance(balanceData.claimableRewards, !showPrivate)}
@@ -328,7 +324,7 @@ export const BalanceDisplay: React.FC<BalanceDisplayProps> = ({
             </div>
           </div>
         )}
-      </CardContent>
+      </CardBody>
     </Card>
   );
 };

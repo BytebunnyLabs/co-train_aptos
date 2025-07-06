@@ -1,29 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useWallet } from '@aptos-labs/wallet-adapter-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/cotrain/ui/card';
-import { Button } from '@/components/cotrain/ui/button';
-import { Badge } from '@/components/cotrain/ui/badge';
-import { Checkbox } from '@/components/cotrain/ui/checkbox';
-import { Alert, AlertDescription } from '@/components/cotrain/ui/alert';
-import { Progress } from '@/components/cotrain/ui/progress';
-import { Separator } from '@/components/cotrain/ui/separator';
-import { ScrollArea } from '@/components/cotrain/ui/scroll-area';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  DialogFooter,
-} from '@/components/cotrain/ui/dialog';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/cotrain/ui/select';
+import { Card, CardBody, CardHeader, Button, Chip, Checkbox, Progress, Divider, ScrollShadow, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Select, SelectItem } from '@heroui/react';
+import toast from 'react-hot-toast';
 import {
   CheckCircle,
   AlertTriangle,
@@ -39,7 +17,6 @@ import {
   Award,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useToast } from '@/components/cotrain/ui/use-toast';
 import { RewardItem } from './rewards-dashboard';
 
 interface BatchClaimRewardsProps {
@@ -66,7 +43,6 @@ export const BatchClaimRewards: React.FC<BatchClaimRewardsProps> = ({
   onError,
 }) => {
   const { account, connected } = useWallet();
-  const { toast } = useToast();
   
   const [rewards, setRewards] = useState<RewardItem[]>([]);
   const [selectedRewards, setSelectedRewards] = useState<Set<string>>(new Set());
@@ -248,11 +224,7 @@ export const BatchClaimRewards: React.FC<BatchClaimRewardsProps> = ({
     } else if (newSelected.size < maxBatchSize) {
       newSelected.add(rewardId);
     } else {
-      toast({
-        title: 'Selection Limit Reached',
-        description: `You can only select up to ${maxBatchSize} rewards at once.`,
-        variant: 'destructive',
-      });
+      toast.error(`You can only select up to ${maxBatchSize} rewards at once.`);
       return;
     }
     setSelectedRewards(newSelected);
@@ -324,10 +296,7 @@ export const BatchClaimRewards: React.FC<BatchClaimRewardsProps> = ({
       setSelectedRewards(new Set());
       
       // Show success toast
-      toast({
-        title: 'Batch Claim Completed',
-        description: `Successfully claimed ${claimProgress?.completed || 0} rewards.`,
-      });
+      toast.success(`Successfully claimed ${claimProgress?.completed || 0} rewards.`);
       
       // Close dialog
       setShowDialog(false);
@@ -336,11 +305,7 @@ export const BatchClaimRewards: React.FC<BatchClaimRewardsProps> = ({
       const error = err instanceof Error ? err : new Error('Batch claim failed');
       onError?.(error);
       
-      toast({
-        title: 'Batch Claim Failed',
-        description: error.message,
-        variant: 'destructive',
-      });
+      toast.error(`Batch claim failed: ${error.message}`);
     } finally {
       setClaiming(false);
       setClaimProgress(null);
@@ -370,14 +335,14 @@ export const BatchClaimRewards: React.FC<BatchClaimRewardsProps> = ({
   if (!connected) {
     return (
       <Card className={cn('w-full', className)}>
-        <CardContent className="p-6">
+        <CardBody className="p-6">
           <div className="flex items-center justify-center h-32">
             <div className="text-center space-y-2">
-              <Gift className="mx-auto h-8 w-8 text-muted-foreground" />
-              <p className="text-sm text-muted-foreground">Connect your wallet to claim rewards</p>
+              <Gift className="mx-auto h-8 w-8 text-default-400" />
+              <p className="text-sm text-default-400">Connect your wallet to claim rewards</p>
             </div>
           </div>
-        </CardContent>
+        </CardBody>
       </Card>
     );
   }
@@ -386,29 +351,29 @@ export const BatchClaimRewards: React.FC<BatchClaimRewardsProps> = ({
     <Card className={cn('w-full', className)}>
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2">
+          <h3 className="text-lg font-semibold flex items-center gap-2">
             <Download className="h-5 w-5" />
             Batch Claim Rewards
-          </CardTitle>
+          </h3>
           <Button
             variant="ghost"
             size="sm"
-            onClick={fetchClaimableRewards}
-            disabled={loading}
+            onPress={fetchClaimableRewards}
+            isDisabled={loading}
           >
             <RefreshCw className={cn('h-4 w-4', loading && 'animate-spin')} />
           </Button>
         </div>
         
         {/* Stats */}
-        <div className="flex items-center space-x-4 text-sm text-muted-foreground">
+        <div className="flex items-center space-x-4 text-sm text-default-400">
           <span>{rewards.length} claimable rewards</span>
           <span>•</span>
           <span>{selectedRewards.size} selected</span>
           {selectedRewards.size > 0 && (
             <>
               <span>•</span>
-              <span className="font-medium text-foreground">
+              <span className="font-medium text-default-900">
                 {totalSelectedAmount.toFixed(4)} APT
               </span>
             </>
@@ -416,77 +381,85 @@ export const BatchClaimRewards: React.FC<BatchClaimRewardsProps> = ({
         </div>
       </CardHeader>
       
-      <CardContent className="space-y-4">
+      <CardBody className="space-y-4">
         {error && (
-          <Alert className="border-yellow-200 bg-yellow-50">
-            <AlertTriangle className="h-4 w-4" />
-            <AlertDescription>
+          <div className="border-yellow-200 bg-yellow-50 border rounded-lg p-3 flex items-start space-x-2">
+            <AlertTriangle className="h-4 w-4 text-yellow-600 mt-0.5" />
+            <p className="text-sm text-yellow-800">
               {error}. Showing cached data.
-            </AlertDescription>
-          </Alert>
+            </p>
+          </div>
         )}
         
         {/* Controls */}
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <Select value={sortBy} onValueChange={(value: SortOption) => setSortBy(value)}>
-              <SelectTrigger className="w-40">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="amount-desc">Amount (High to Low)</SelectItem>
-                <SelectItem value="amount-asc">Amount (Low to High)</SelectItem>
-                <SelectItem value="expiry-soon">Expiring Soon</SelectItem>
-                <SelectItem value="expiry-late">Expiring Later</SelectItem>
-                <SelectItem value="type">Type</SelectItem>
-                <SelectItem value="session">Session</SelectItem>
-              </SelectContent>
+            <Select 
+              selectedKeys={[sortBy]} 
+              onSelectionChange={(keys) => {
+                const selected = Array.from(keys)[0] as string;
+                setSortBy(selected as SortOption);
+              }}
+              className="w-48"
+              placeholder="Sort by"
+            >
+              <SelectItem key="amount-desc">Amount (High to Low)</SelectItem>
+              <SelectItem key="amount-asc">Amount (Low to High)</SelectItem>
+              <SelectItem key="expiry-soon">Expiring Soon</SelectItem>
+              <SelectItem key="expiry-late">Expiring Later</SelectItem>
+              <SelectItem key="type">Type</SelectItem>
+              <SelectItem key="session">Session</SelectItem>
             </Select>
             
-            <Select value={filterBy} onValueChange={(value: FilterOption) => setFilterBy(value)}>
-              <SelectTrigger className="w-40">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Rewards</SelectItem>
-                <SelectItem value="expiring-soon">Expiring Soon</SelectItem>
-                <SelectItem value="high-value">High Value (≥10 APT)</SelectItem>
-                <SelectItem value="low-value">Low Value (&lt;10 APT)</SelectItem>
-              </SelectContent>
+            <Select 
+              selectedKeys={[filterBy]} 
+              onSelectionChange={(keys) => {
+                const selected = Array.from(keys)[0] as string;
+                setFilterBy(selected as FilterOption);
+              }}
+              className="w-40"
+              placeholder="Filter by"
+            >
+              <SelectItem key="all">All Rewards</SelectItem>
+              <SelectItem key="expiring-soon">Expiring Soon</SelectItem>
+              <SelectItem key="high-value">High Value (≥10 APT)</SelectItem>
+              <SelectItem key="low-value">Low Value (&lt;10 APT)</SelectItem>
             </Select>
           </div>
           
           <div className="flex items-center space-x-2">
             <Button
-              variant="outline"
+              variant="bordered"
               size="sm"
-              onClick={handleSelectAll}
-              disabled={filteredAndSortedRewards.length === 0}
+              onPress={handleSelectAll}
+              isDisabled={filteredAndSortedRewards.length === 0}
             >
               {selectedRewards.size === filteredAndSortedRewards.length ? 'Deselect All' : 'Select All'}
             </Button>
             
-            <Dialog open={showDialog} onOpenChange={setShowDialog}>
-              <DialogTrigger asChild>
-                <Button
-                  disabled={selectedRewards.size === 0 || claiming}
-                  className="min-w-24"
-                >
-                  {claiming ? (
-                    <RefreshCw className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <>Claim Selected ({selectedRewards.size})</>
-                  )}
-                </Button>
-              </DialogTrigger>
-              
-              <DialogContent className="max-w-2xl">
-                <DialogHeader>
-                  <DialogTitle>Confirm Batch Claim</DialogTitle>
-                  <DialogDescription>
-                    You are about to claim {selectedRewards.size} rewards totaling {totalSelectedAmount.toFixed(4)} APT.
-                  </DialogDescription>
-                </DialogHeader>
+            <Button
+              isDisabled={selectedRewards.size === 0 || claiming}
+              className="min-w-24"
+              onPress={() => setShowDialog(true)}
+            >
+              {claiming ? (
+                <RefreshCw className="h-4 w-4 animate-spin" />
+              ) : (
+                <>Claim Selected ({selectedRewards.size})</>
+              )}
+            </Button>
+            
+            <Modal isOpen={showDialog} onOpenChange={setShowDialog} size="2xl">
+              <ModalContent>
+                <ModalHeader>
+                  <div>
+                    <h3 className="text-lg font-semibold">Confirm Batch Claim</h3>
+                    <p className="text-sm text-default-400">
+                      You are about to claim {selectedRewards.size} rewards totaling {totalSelectedAmount.toFixed(4)} APT.
+                    </p>
+                  </div>
+                </ModalHeader>
+                <ModalBody>
                 
                 {/* Claim Progress */}
                 {claimProgress && (
@@ -503,25 +476,25 @@ export const BatchClaimRewards: React.FC<BatchClaimRewardsProps> = ({
                     </div>
                     
                     {claimProgress.current && (
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-sm text-default-400">
                         Currently claiming: {claimProgress.current}
                       </p>
                     )}
                     
                     {claimProgress.failed > 0 && (
-                      <Alert className="border-red-200 bg-red-50">
-                        <AlertTriangle className="h-4 w-4" />
-                        <AlertDescription>
+                      <div className="p-3 border border-red-200 bg-red-50 rounded-lg flex items-start space-x-2">
+                        <AlertTriangle className="h-4 w-4 text-red-600 mt-0.5" />
+                        <p className="text-sm text-red-800">
                           {claimProgress.failed} rewards failed to claim.
-                        </AlertDescription>
-                      </Alert>
+                        </p>
+                      </div>
                     )}
                   </div>
                 )}
                 
                 {/* Selected Rewards List */}
                 {!claimProgress && (
-                  <ScrollArea className="max-h-96">
+                  <ScrollShadow className="max-h-96">
                     <div className="space-y-2">
                       {selectedRewardsList.map((reward) => {
                         const daysUntilExpiry = reward.expiresAt ? getDaysUntilExpiry(reward.expiresAt) : null;
@@ -529,12 +502,12 @@ export const BatchClaimRewards: React.FC<BatchClaimRewardsProps> = ({
                         return (
                           <div key={reward.id} className="flex items-center justify-between p-3 border rounded">
                             <div className="flex items-center space-x-3">
-                              <div className="flex items-center justify-center w-8 h-8 rounded-full bg-muted">
+                              <div className="flex items-center justify-center w-8 h-8 rounded-full bg-default-100">
                                 {getRewardIcon(reward.type)}
                               </div>
                               <div>
                                 <p className="font-medium text-sm">{reward.sessionName}</p>
-                                <div className="flex items-center space-x-2 text-xs text-muted-foreground">
+                                <div className="flex items-center space-x-2 text-xs text-default-400">
                                   <span className="capitalize">{reward.type}</span>
                                   {daysUntilExpiry !== null && daysUntilExpiry <= 7 && (
                                     <>
@@ -552,38 +525,39 @@ export const BatchClaimRewards: React.FC<BatchClaimRewardsProps> = ({
                         );
                       })}
                     </div>
-                  </ScrollArea>
+                  </ScrollShadow>
                 )}
                 
                 {/* Warnings */}
                 {!claimProgress && expiringRewards.length > 0 && (
-                  <Alert className="border-orange-200 bg-orange-50">
-                    <AlertTriangle className="h-4 w-4" />
-                    <AlertDescription>
+                  <div className="p-3 border border-orange-200 bg-orange-50 rounded-lg flex items-start space-x-2">
+                    <AlertTriangle className="h-4 w-4 text-orange-600 mt-0.5" />
+                    <p className="text-sm text-orange-800">
                       {expiringRewards.length} of the selected rewards expire within 7 days. Claim them soon!
-                    </AlertDescription>
-                  </Alert>
+                    </p>
+                  </div>
                 )}
                 
-                <DialogFooter>
-                  {!claiming ? (
-                    <>
-                      <Button variant="outline" onClick={() => setShowDialog(false)}>
-                        Cancel
-                      </Button>
-                      <Button onClick={handleBatchClaim}>
-                        Confirm Claim ({totalSelectedAmount.toFixed(4)} APT)
-                      </Button>
-                    </>
-                  ) : (
-                    <Button disabled className="w-full">
-                      <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
-                      Claiming Rewards...
+              </ModalBody>
+              <ModalFooter>
+                {!claiming ? (
+                  <>
+                    <Button variant="bordered" onPress={() => setShowDialog(false)}>
+                      Cancel
                     </Button>
-                  )}
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
+                    <Button color="primary" onPress={handleBatchClaim}>
+                      Confirm Claim ({totalSelectedAmount.toFixed(4)} APT)
+                    </Button>
+                  </>
+                ) : (
+                  <Button isDisabled className="w-full">
+                    <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
+                    Claiming Rewards...
+                  </Button>
+                )}
+              </ModalFooter>
+              </ModalContent>
+            </Modal>
           </div>
         </div>
         
@@ -592,24 +566,24 @@ export const BatchClaimRewards: React.FC<BatchClaimRewardsProps> = ({
           <div className="space-y-2">
             {Array.from({ length: 3 }).map((_, i) => (
               <div key={i} className="flex items-center space-x-3 p-3 border rounded">
-                <div className="w-4 h-4 bg-muted rounded" />
+                <div className="w-4 h-4 bg-default-100 rounded" />
                 <div className="flex-1 space-y-1">
-                  <div className="h-4 bg-muted rounded w-3/4" />
-                  <div className="h-3 bg-muted rounded w-1/2" />
+                  <div className="h-4 bg-default-100 rounded w-3/4" />
+                  <div className="h-3 bg-default-100 rounded w-1/2" />
                 </div>
-                <div className="h-4 bg-muted rounded w-20" />
+                <div className="h-4 bg-default-100 rounded w-20" />
               </div>
             ))}
           </div>
         ) : filteredAndSortedRewards.length === 0 ? (
           <div className="text-center py-8">
-            <Gift className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-            <p className="text-muted-foreground">
+            <Gift className="mx-auto h-12 w-12 text-default-400 mb-4" />
+            <p className="text-default-400">
               No claimable rewards found
             </p>
           </div>
         ) : (
-          <ScrollArea className="h-96">
+          <ScrollShadow className="h-96">
             <div className="space-y-2">
               {filteredAndSortedRewards.map((reward) => {
                 const isSelected = selectedRewards.has(reward.id);
@@ -621,7 +595,7 @@ export const BatchClaimRewards: React.FC<BatchClaimRewardsProps> = ({
                     key={reward.id}
                     className={cn(
                       'flex items-center space-x-3 p-3 border rounded-lg cursor-pointer transition-colors',
-                      isSelected ? 'bg-blue-50 border-blue-200' : 'hover:bg-muted/50',
+                      isSelected ? 'bg-blue-50 border-blue-200' : 'hover:bg-default-100/50',
                       !canSelect && 'opacity-50 cursor-not-allowed'
                     )}
                     onClick={() => canSelect && handleSelectReward(reward.id)}
@@ -632,19 +606,19 @@ export const BatchClaimRewards: React.FC<BatchClaimRewardsProps> = ({
                       onChange={() => canSelect && handleSelectReward(reward.id)}
                     />
                     
-                    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-muted">
+                    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-default-100">
                       {getRewardIcon(reward.type)}
                     </div>
                     
                     <div className="flex-1 space-y-1">
                       <div className="flex items-center space-x-2">
                         <h4 className="font-medium text-sm">{reward.sessionName}</h4>
-                        <Badge variant="secondary" className="text-xs capitalize">
+                        <Chip size="sm" variant="flat" className="text-xs capitalize">
                           {reward.type}
-                        </Badge>
+                        </Chip>
                       </div>
                       
-                      <div className="flex items-center space-x-2 text-xs text-muted-foreground">
+                      <div className="flex items-center space-x-2 text-xs text-default-400">
                         <span>Earned {reward.earnedAt.toLocaleDateString()}</span>
                         {reward.metadata?.score && (
                           <>
@@ -656,7 +630,7 @@ export const BatchClaimRewards: React.FC<BatchClaimRewardsProps> = ({
                           <>
                             <span>•</span>
                             <span className={cn(
-                              daysUntilExpiry <= 7 ? 'text-orange-600' : 'text-muted-foreground'
+                              daysUntilExpiry <= 7 ? 'text-orange-600' : 'text-default-400'
                             )}>
                               Expires in {daysUntilExpiry} day{daysUntilExpiry !== 1 ? 's' : ''}
                             </span>
@@ -675,7 +649,7 @@ export const BatchClaimRewards: React.FC<BatchClaimRewardsProps> = ({
                     <div className="text-right">
                       <p className="font-semibold">{reward.amount.toFixed(4)} APT</p>
                       {reward.metadata?.rank && (
-                        <p className="text-xs text-muted-foreground">
+                        <p className="text-xs text-default-400">
                           Rank #{reward.metadata.rank}
                         </p>
                       )}
@@ -684,18 +658,18 @@ export const BatchClaimRewards: React.FC<BatchClaimRewardsProps> = ({
                 );
               })}
             </div>
-          </ScrollArea>
+          </ScrollShadow>
         )}
         
         {/* Summary */}
         {selectedRewards.size > 0 && (
-          <div className="mt-4 p-4 bg-muted/50 rounded-lg">
+          <div className="mt-4 p-4 bg-default-100/50 rounded-lg">
             <div className="flex items-center justify-between">
               <div className="space-y-1">
                 <p className="text-sm font-medium">
                   {selectedRewards.size} reward{selectedRewards.size !== 1 ? 's' : ''} selected
                 </p>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-default-400">
                   Total value: {totalSelectedAmount.toFixed(4)} APT
                 </p>
               </div>
@@ -709,7 +683,7 @@ export const BatchClaimRewards: React.FC<BatchClaimRewardsProps> = ({
             </div>
           </div>
         )}
-      </CardContent>
+      </CardBody>
     </Card>
   );
 };

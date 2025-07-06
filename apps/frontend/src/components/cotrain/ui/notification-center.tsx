@@ -13,10 +13,7 @@ import {
   Filter,
   MoreHorizontal
 } from 'lucide-react';
-import { Button } from '@/components/cotrain/ui/button';
-import { Badge } from '@/components/cotrain/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/cotrain/ui/card';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/cotrain/ui/dropdown-menu';
+import { Button, Chip, Card, CardBody, CardHeader, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from '@heroui/react';
 import { useWebSocket, Notification } from '@/hooks/useWebSocket';
 
 interface NotificationItemProps {
@@ -74,7 +71,7 @@ export const NotificationItem: React.FC<NotificationItemProps> = ({
 
   return (
     <Card className={cn('transition-all duration-200 hover:shadow-md', getBackgroundColor(), className)}>
-      <CardContent className="p-4">
+      <CardBody className="p-4">
         <div className="flex items-start gap-3">
           {/* Icon */}
           <div className="flex-shrink-0 mt-0.5">
@@ -102,30 +99,30 @@ export const NotificationItem: React.FC<NotificationItemProps> = ({
               {/* Actions */}
               <div className="flex items-center gap-1 ml-2">
                 <span className="text-xs text-muted-foreground">{timeAgo}</span>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+                <Dropdown>
+                  <DropdownTrigger>
+                    <Button variant="light" size="sm" className="h-6 w-6 p-0 min-w-0">
                       <MoreHorizontal className="h-3 w-3" />
                     </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    {onMarkAsRead && (
-                      <DropdownMenuItem onClick={onMarkAsRead}>
+                  </DropdownTrigger>
+                  <DropdownMenu>
+                    {onMarkAsRead ? (
+                      <DropdownItem key="mark-read" onPress={onMarkAsRead}>
                         <Check className="h-4 w-4 mr-2" />
                         Mark as read
-                      </DropdownMenuItem>
-                    )}
-                    <DropdownMenuItem onClick={onDismiss}>
+                      </DropdownItem>
+                    ) : null}
+                    <DropdownItem key="dismiss" onPress={onDismiss}>
                       <X className="h-4 w-4 mr-2" />
                       Dismiss
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                    </DropdownItem>
+                  </DropdownMenu>
+                </Dropdown>
               </div>
             </div>
           </div>
         </div>
-      </CardContent>
+      </CardBody>
     </Card>
   );
 };
@@ -164,13 +161,13 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
   if (notifications.length === 0) {
     return (
       <Card className={className}>
-        <CardContent className="p-6 text-center">
+        <CardBody className="p-6 text-center">
           <Bell className="h-8 w-8 text-muted-foreground mx-auto mb-3" />
           <h3 className="text-sm font-medium text-muted-foreground">No notifications</h3>
           <p className="text-xs text-muted-foreground mt-1">
             You're all caught up! New notifications will appear here.
           </p>
-        </CardContent>
+        </CardBody>
       </Card>
     );
   }
@@ -179,45 +176,45 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
     <Card className={className}>
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-lg flex items-center gap-2">
+          <h3 className="text-lg font-semibold flex items-center gap-2">
             <Bell className="h-5 w-5" />
             Notifications
             {unreadNotifications > 0 && (
-              <Badge variant="destructive" className="h-5 text-xs">
+              <Chip color="danger" size="sm" className="h-5 text-xs">
                 {unreadNotifications}
-              </Badge>
+              </Chip>
             )}
-          </CardTitle>
+          </h3>
           
           <div className="flex items-center gap-2">
             {/* Filter */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm">
+            <Dropdown>
+              <DropdownTrigger>
+                <Button variant="bordered" size="sm">
                   <Filter className="h-4 w-4 mr-1" />
                   {filter === 'all' ? 'All' : 'Unread'}
                 </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => setFilter('all')}>
+              </DropdownTrigger>
+              <DropdownMenu>
+                <DropdownItem key="all" onPress={() => setFilter('all')}>
                   <Clock className="h-4 w-4 mr-2" />
                   All notifications
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setFilter('unread')}>
+                </DropdownItem>
+                <DropdownItem key="unread" onPress={() => setFilter('unread')}>
                   <Bell className="h-4 w-4 mr-2" />
                   Unread only
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+                </DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
 
             {/* Settings */}
-            <Button variant="outline" size="sm">
+            <Button variant="bordered" size="sm">
               <Settings className="h-4 w-4" />
             </Button>
 
             {/* Clear All */}
             {notifications.length > 0 && (
-              <Button variant="outline" size="sm" onClick={clearNotifications}>
+              <Button variant="bordered" size="sm" onPress={clearNotifications}>
                 Clear All
               </Button>
             )}
@@ -225,7 +222,7 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
         </div>
       </CardHeader>
 
-      <CardContent className="p-0">
+      <CardBody className="p-0">
         <div 
           className="space-y-2 p-4 overflow-y-auto"
           style={{ maxHeight }}
@@ -246,7 +243,7 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
             </div>
           )}
         </div>
-      </CardContent>
+      </CardBody>
     </Card>
   );
 };
@@ -265,19 +262,20 @@ export const NotificationBell: React.FC<NotificationBellProps> = ({
 
   return (
     <Button
-      variant="ghost"
+      variant="light"
       size="sm"
-      onClick={onClick}
+      onPress={onClick}
       className={cn('relative', className)}
     >
       <Bell className="h-5 w-5" />
       {unreadNotifications > 0 && (
-        <Badge 
-          variant="destructive" 
+        <Chip 
+          color="danger" 
+          size="sm"
           className="absolute -top-1 -right-1 h-5 w-5 p-0 text-xs flex items-center justify-center"
         >
           {unreadNotifications > 9 ? '9+' : unreadNotifications}
-        </Badge>
+        </Chip>
       )}
     </Button>
   );
@@ -297,20 +295,61 @@ export const NotificationToast: React.FC<NotificationToastProps> = ({
   autoHide = true,
   autoHideDelay = 5000,
 }) => {
+  const [isVisible, setIsVisible] = React.useState(true);
+
   React.useEffect(() => {
     if (autoHide) {
-      const timer = setTimeout(onDismiss, autoHideDelay);
+      const timer = setTimeout(() => {
+        setIsVisible(false);
+        setTimeout(onDismiss, 300); // Wait for animation to complete
+      }, autoHideDelay);
       return () => clearTimeout(timer);
     }
   }, [autoHide, autoHideDelay, onDismiss]);
 
+  const getIcon = () => {
+    switch (notification.type) {
+      case 'success':
+        return <CheckCircle className="h-5 w-5 text-green-500" />;
+      case 'error':
+        return <XCircle className="h-5 w-5 text-red-500" />;
+      case 'warning':
+        return <AlertCircle className="h-5 w-5 text-yellow-500" />;
+      default:
+        return <Info className="h-5 w-5 text-blue-500" />;
+    }
+  };
+
   return (
-    <div className="fixed top-4 right-4 z-50 animate-in slide-in-from-top-2">
-      <NotificationItem
-        notification={notification}
-        onDismiss={onDismiss}
-        className="shadow-lg min-w-[300px] max-w-[400px]"
-      />
-    </div>
+    <Card className={cn(
+      'fixed bottom-4 right-4 w-80 shadow-lg border-l-4 transition-all duration-300 transform z-50',
+      notification.type === 'error' && 'border-l-red-500 bg-red-50',
+      notification.type === 'warning' && 'border-l-yellow-500 bg-yellow-50',
+      notification.type === 'success' && 'border-l-green-500 bg-green-50',
+      notification.type === 'info' && 'border-l-blue-500 bg-blue-50',
+      isVisible ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'
+    )}>
+      <CardBody className="p-4">
+        <div className="flex items-start gap-3">
+          <div className="flex-shrink-0">
+            {getIcon()}
+          </div>
+          
+          <div className="flex-1">
+            <h4 className="font-medium text-sm">{notification.title}</h4>
+            <p className="text-sm text-muted-foreground mt-1">{notification.message}</p>
+          </div>
+          
+          <Button
+            variant="light"
+            size="sm"
+            onPress={onDismiss}
+            className="h-6 w-6 p-0 min-w-0 text-muted-foreground hover:text-foreground"
+          >
+            <X className="h-4 w-4" />
+          </Button>
+        </div>
+      </CardBody>
+    </Card>
   );
 };

@@ -3,10 +3,7 @@
 import React from 'react';
 import { ServiceWorkerStatus } from '@/components/service-worker/offline-indicator';
 import { useOfflineQueue } from '@/hooks/use-offline-queue';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/cotrain/ui/card';
-import { Button } from '@/components/cotrain/ui/button';
-import { Badge } from '@/components/cotrain/ui/badge';
-import { Alert, AlertDescription } from '@/components/cotrain/ui/alert';
+import { Card, CardBody, CardHeader, Button, Chip } from '@heroui/react';
 import { 
   Trash2, 
   RefreshCw, 
@@ -48,15 +45,15 @@ export default function OfflineSettingsPage() {
           {/* Queue Stats */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
+              <h3 className="text-lg font-semibold flex items-center space-x-2">
                 <Clock className="h-5 w-5" />
                 <span>Offline Queue</span>
-              </CardTitle>
-              <CardDescription>
+              </h3>
+              <p className="text-sm text-muted-foreground">
                 Actions queued while offline will be executed when connection is restored
-              </CardDescription>
+              </p>
             </CardHeader>
-            <CardContent>
+            <CardBody>
               <div className="grid grid-cols-2 gap-4">
                 <div className="text-center">
                   <div className="text-2xl font-bold">{queueStats.total}</div>
@@ -87,7 +84,7 @@ export default function OfflineSettingsPage() {
                 </Button>
                 
                 <Button
-                  variant="outline"
+                  variant="bordered"
                   onClick={clearQueue}
                   disabled={queue.length === 0}
                   size="sm"
@@ -98,26 +95,28 @@ export default function OfflineSettingsPage() {
               </div>
 
               {!isOnline && (
-                <Alert className="mt-4">
-                  <AlertTriangle className="h-4 w-4" />
-                  <AlertDescription>
-                    You're currently offline. Queued actions will be processed when connection is restored.
-                  </AlertDescription>
-                </Alert>
+                <Card className="mt-4 border-warning-200 bg-warning-50">
+                  <CardBody className="flex flex-row items-center gap-2">
+                    <AlertTriangle className="h-4 w-4" />
+                    <p className="text-sm">
+                      You're currently offline. Queued actions will be processed when connection is restored.
+                    </p>
+                  </CardBody>
+                </Card>
               )}
-            </CardContent>
+            </CardBody>
           </Card>
 
           {/* Queued Actions List */}
           {queue.length > 0 && (
             <Card>
               <CardHeader>
-                <CardTitle>Queued Actions</CardTitle>
-                <CardDescription>
+                <h3 className="text-lg font-semibold">Queued Actions</h3>
+                <p className="text-sm text-muted-foreground">
                   Actions waiting to be executed
-                </CardDescription>
+                </p>
               </CardHeader>
-              <CardContent>
+              <CardBody>
                 <div className="space-y-3 max-h-96 overflow-y-auto">
                   {queue.map((action) => (
                     <div
@@ -128,13 +127,13 @@ export default function OfflineSettingsPage() {
                         <div className="flex items-center space-x-2">
                           <span className="font-medium text-sm">{action.description}</span>
                           {action.retryCount && action.retryCount > 0 ? (
-                            <Badge variant="outline" className="text-xs">
+                            <Chip variant="bordered" size="sm" className="text-xs">
                               Retry {action.retryCount}/{action.maxRetries || 3}
-                            </Badge>
+                            </Chip>
                           ) : (
-                            <Badge variant="secondary" className="text-xs">
+                            <Chip variant="flat" size="sm" className="text-xs">
                               Pending
-                            </Badge>
+                            </Chip>
                           )}
                         </div>
                         <div className="text-xs text-muted-foreground mt-1">
@@ -148,7 +147,7 @@ export default function OfflineSettingsPage() {
                       </div>
                       
                       <Button
-                        variant="ghost"
+                        variant="light"
                         size="sm"
                         onClick={() => removeFromQueue(action.id)}
                       >
@@ -157,19 +156,19 @@ export default function OfflineSettingsPage() {
                     </div>
                   ))}
                 </div>
-              </CardContent>
+              </CardBody>
             </Card>
           )}
 
           {queue.length === 0 && (
             <Card>
-              <CardContent className="p-8 text-center">
+              <CardBody className="p-8 text-center">
                 <CheckCircle className="h-12 w-12 mx-auto mb-4 text-green-500" />
                 <h3 className="font-medium mb-2">No Queued Actions</h3>
                 <p className="text-sm text-muted-foreground">
                   All actions have been processed successfully
                 </p>
-              </CardContent>
+              </CardBody>
             </Card>
           )}
         </div>
@@ -178,9 +177,9 @@ export default function OfflineSettingsPage() {
       {/* Usage Guidelines */}
       <Card className="mt-8">
         <CardHeader>
-          <CardTitle>How Offline Mode Works</CardTitle>
+          <h3 className="text-lg font-semibold">How Offline Mode Works</h3>
         </CardHeader>
-        <CardContent>
+        <CardBody>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <h4 className="font-medium mb-2">Available Offline:</h4>
@@ -205,14 +204,16 @@ export default function OfflineSettingsPage() {
             </div>
           </div>
           
-          <Alert className="mt-4">
-            <CheckCircle className="h-4 w-4" />
-            <AlertDescription>
-              Actions performed while offline are automatically queued and will be executed when you're back online. 
-              You'll see notifications when queued actions are processed.
-            </AlertDescription>
-          </Alert>
-        </CardContent>
+          <Card className="mt-4 border-success-200 bg-success-50">
+            <CardBody className="flex flex-row items-center gap-2">
+              <CheckCircle className="h-4 w-4" />
+              <p className="text-sm">
+                Actions performed while offline are automatically queued and will be executed when you're back online. 
+                You'll see notifications when queued actions are processed.
+              </p>
+            </CardBody>
+          </Card>
+        </CardBody>
       </Card>
     </div>
   );

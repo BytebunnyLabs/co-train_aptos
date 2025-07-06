@@ -11,9 +11,8 @@ import {
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import { useState } from "react";
 import { TransactionHash } from "../TransactionHash";
-import { Button } from "@/components/cotrain/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/cotrain/ui/card";
-import { useToast } from "@/components/cotrain/ui/use-toast";
+import { Button, Card, CardHeader, CardBody } from "@heroui/react";
+import { toast } from "react-hot-toast";
 import { LabelValueGrid } from "../LabelValueGrid";
 
 const APTOS_COIN = "0x1::aptos_coin::AptosCoin";
@@ -27,7 +26,6 @@ script {
 const TRANSFER_SCRIPT =
   "0xa11ceb0b0700000a0601000203020605080d071525083a40107a1f010200030201000104060c060c05030003060c0503083c53454c463e5f30046d61696e0d6170746f735f6163636f756e74087472616e73666572ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000000000000000000000000000000000000000000114636f6d70696c6174696f6e5f6d65746164617461090003322e3003322e31000001070b000b01010b020b03110002";
 export function MultiAgent() {
-  const { toast } = useToast();
   const { connected, account, network, signTransaction, submitTransaction } =
     useWallet();
 
@@ -118,16 +116,9 @@ export function MultiAgent() {
         senderAuthenticator: senderAuthenticator,
         additionalSignersAuthenticators: [secondarySignerAuthenticator],
       });
-      toast({
-        title: "Success",
-        description: <TransactionHash hash={response.hash} network={network} />,
-      });
+      toast.success(`Transaction submitted successfully: ${response.hash}`);
     } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Unable to submit multiagent Transaction.",
-      });
+      toast.error("Unable to submit multiagent Transaction.");
       console.error(error);
     }
   };
@@ -135,22 +126,22 @@ export function MultiAgent() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Multi Agent Transaction Flow</CardTitle>
+        <h3 className="text-lg font-semibold">Multi Agent Transaction Flow</h3>
       </CardHeader>
-      <CardContent className="flex flex-col gap-8">
+      <CardBody className="flex flex-col gap-8">
         <div className="flex flex-wrap gap-4">
-          <Button onClick={onSenderSignTransaction} disabled={!sendable}>
+          <Button onPress={onSenderSignTransaction} isDisabled={!sendable}>
             Sign as sender
           </Button>
           <Button
-            onClick={onSecondarySignerSignTransaction}
-            disabled={!sendable || !senderAuthenticator}
+            onPress={onSecondarySignerSignTransaction}
+            isDisabled={!sendable || !senderAuthenticator}
           >
             Sign as secondary signer
           </Button>
           <Button
-            onClick={onSubmitTransaction}
-            disabled={!sendable || !secondarySignerAuthenticator}
+            onPress={onSubmitTransaction}
+            isDisabled={!sendable || !secondarySignerAuthenticator}
           >
             Submit transaction
           </Button>
@@ -177,7 +168,7 @@ export function MultiAgent() {
             />
           </div>
         )}
-      </CardContent>
+      </CardBody>
     </Card>
   );
 }

@@ -19,7 +19,50 @@ export class ContributionTrackerService {
   private contributions: Map<string, ContributionMetrics[]> = new Map();
   private sessionMetrics: Map<number, Map<string, ContributionMetrics>> = new Map();
 
-  constructor(private eventEmitter: EventEmitter2) {}
+  constructor(private eventEmitter: EventEmitter2) {
+    this.initializeMockContributions();
+  }
+
+  private initializeMockContributions(): void {
+    // Add some mock contributions for development
+    const mockContributions: TrainingContribution[] = [
+      {
+        sessionId: 1001,
+        participant: 'node-central-hub-001',
+        computeTime: 2.5,
+        gradientQuality: 95.2,
+        dataTransmitted: 1024,
+        uptimeRatio: 0.98,
+        timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000)
+      },
+      {
+        sessionId: 1001,
+        participant: 'node-worker-002',
+        computeTime: 1.8,
+        gradientQuality: 87.5,
+        dataTransmitted: 768,
+        uptimeRatio: 0.95,
+        timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000)
+      },
+      {
+        sessionId: 1002,
+        participant: 'node-validator-003',
+        computeTime: 3.2,
+        gradientQuality: 92.1,
+        dataTransmitted: 1536,
+        uptimeRatio: 0.97,
+        timestamp: new Date(Date.now() - 1 * 60 * 60 * 1000)
+      }
+    ];
+
+    mockContributions.forEach(contribution => {
+      this.recordContribution(contribution).catch(error => {
+        this.logger.error('Error recording mock contribution:', error);
+      });
+    });
+
+    this.logger.log(`Initialized ${mockContributions.length} mock contributions for development`);
+  }
 
   async recordContribution(contribution: TrainingContribution): Promise<void> {
     const contributionScore = this.calculateContributionScore(

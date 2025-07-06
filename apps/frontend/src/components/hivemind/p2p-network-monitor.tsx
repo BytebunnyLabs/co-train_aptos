@@ -1,12 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/cotrain/ui/card';
-import { Badge } from '@/components/cotrain/ui/badge';
-import { Button } from '@/components/cotrain/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/cotrain/ui/tabs';
-import { Progress } from '@/components/cotrain/ui/progress';
-import { ScrollArea } from '@/components/cotrain/ui/scroll-area';
+import { Button, Chip, Card, CardBody, CardHeader, Tabs, Tab, Progress, ScrollShadow } from '@heroui/react';
 import { 
   Activity, 
   Users, 
@@ -92,10 +87,10 @@ export function P2PNetworkMonitor() {
   };
 
   const getNodeStatusColor = (node: P2PNode) => {
-    if (!node.isActive) return 'destructive';
-    if (node.reputationScore >= 80) return 'default';
-    if (node.reputationScore >= 60) return 'secondary';
-    return 'outline';
+    if (!node.isActive) return 'danger';
+    if (node.reputationScore >= 80) return 'success';
+    if (node.reputationScore >= 60) return 'primary';
+    return 'warning';
   };
 
   const getNodeStatusText = (node: P2PNode) => {
@@ -134,74 +129,74 @@ export function P2PNetworkMonitor() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Nodes</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
+            <h3 className="text-sm font-medium">Total Nodes</h3>
+            <Users className="h-4 w-4 text-default-400" />
           </CardHeader>
-          <CardContent>
+          <CardBody>
             <div className="text-2xl font-bold">{networkStats.totalNodes}</div>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-default-400">
               {networkStats.activeNodes} active
             </p>
-          </CardContent>
+          </CardBody>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Network Health</CardTitle>
-            <Activity className="h-4 w-4 text-muted-foreground" />
+            <h3 className="text-sm font-medium">Network Health</h3>
+            <Activity className="h-4 w-4 text-default-400" />
           </CardHeader>
-          <CardContent>
+          <CardBody>
             <div className="text-2xl font-bold">{networkStats.networkHealth.toFixed(1)}%</div>
             <Progress value={networkStats.networkHealth} className="mt-2" />
-          </CardContent>
+          </CardBody>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Compute Power</CardTitle>
-            <Cpu className="h-4 w-4 text-muted-foreground" />
+            <h3 className="text-sm font-medium">Compute Power</h3>
+            <Cpu className="h-4 w-4 text-default-400" />
           </CardHeader>
-          <CardContent>
+          <CardBody>
             <div className="text-2xl font-bold">{networkStats.totalComputePower.toLocaleString()}</div>
-            <p className="text-xs text-muted-foreground">Total units</p>
-          </CardContent>
+            <p className="text-xs text-default-400">Total units</p>
+          </CardBody>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Network Status</CardTitle>
-            <Network className="h-4 w-4 text-muted-foreground" />
+            <h3 className="text-sm font-medium">Network Status</h3>
+            <Network className="h-4 w-4 text-default-400" />
           </CardHeader>
-          <CardContent>
+          <CardBody>
             <div className="flex items-center space-x-2">
               <CheckCircle className="h-5 w-5 text-green-500" />
               <span className="text-sm font-medium">Operational</span>
             </div>
-            <p className="text-xs text-muted-foreground mt-1">
+            <p className="text-xs text-default-400 mt-1">
               All systems normal
             </p>
-          </CardContent>
+          </CardBody>
         </Card>
       </div>
 
       {/* Main Content Tabs */}
-      <Tabs defaultValue="nodes" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="nodes">Active Nodes</TabsTrigger>
-          <TabsTrigger value="contributors">Top Contributors</TabsTrigger>
-          <TabsTrigger value="metrics">Metrics</TabsTrigger>
-        </TabsList>
+      <Tabs defaultSelectedKey="nodes" className="space-y-4">
+        <div className="flex space-x-1 mb-4">
+          <Tab key="nodes" title="Active Nodes" />
+          <Tab key="contributors" title="Top Contributors" />
+          <Tab key="metrics" title="Metrics" />
+        </div>
 
-        <TabsContent value="nodes" className="space-y-4">
+        <div key="nodes" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>P2P Network Nodes</CardTitle>
-              <CardDescription>
+              <h3 className="text-lg font-semibold">P2P Network Nodes</h3>
+              <p className="text-sm text-default-400">
                 Real-time status of all nodes in the Hivemind network
-              </CardDescription>
+              </p>
             </CardHeader>
-            <CardContent>
-              <ScrollArea className="h-96">
+            <CardBody>
+              <ScrollShadow className="h-96">
                 <div className="space-y-4">
                   {nodes.map((node) => (
                     <div
@@ -220,9 +215,9 @@ export function P2PNetworkMonitor() {
                         
                         <div>
                           <div className="font-medium text-sm">{node.nodeId}</div>
-                          <div className="text-xs text-muted-foreground">
-                            {node.address.slice(0, 8)}...{node.address.slice(-6)}
-                          </div>
+                          <div className="text-xs text-default-400">
+                          {node.address.slice(0, 8)}...{node.address.slice(-6)}
+                        </div>
                         </div>
                       </div>
 
@@ -239,45 +234,45 @@ export function P2PNetworkMonitor() {
                         </div>
 
                         <div className="text-right">
-                          <Badge variant={getNodeStatusColor(node)}>
-                            {getNodeStatusText(node)}
-                          </Badge>
-                          <div className="text-xs text-muted-foreground mt-1">
-                            Rep: {node.reputationScore}
-                          </div>
+                          <Chip variant="flat" color={getNodeStatusColor(node)}>
+                          {getNodeStatusText(node)}
+                        </Chip>
+                        <div className="text-xs text-default-400 mt-1">
+                          Rep: {node.reputationScore}
+                        </div>
                         </div>
 
                         <div className="text-right">
-                          <div className="flex items-center space-x-1 text-xs text-muted-foreground">
-                            <Clock className="h-3 w-3" />
-                            <span>{formatLastSeen(node.lastSeen)}</span>
-                          </div>
+                          <div className="flex items-center space-x-1 text-xs text-default-400">
+                          <Clock className="h-3 w-3" />
+                          <span>{formatLastSeen(node.lastSeen)}</span>
+                        </div>
                         </div>
                       </div>
                     </div>
                   ))}
                 </div>
-              </ScrollArea>
+              </ScrollShadow>
 
               {nodes.length === 0 && (
-                <div className="text-center py-8 text-muted-foreground">
+                <div className="text-center py-8 text-default-400">
                   <Network className="h-8 w-8 mx-auto mb-2" />
                   <p>No active nodes found</p>
                 </div>
               )}
-            </CardContent>
+            </CardBody>
           </Card>
-        </TabsContent>
+        </div>
 
-        <TabsContent value="contributors" className="space-y-4">
+        <div key="contributors" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Top Contributors</CardTitle>
-              <CardDescription>
+              <h3 className="text-lg font-semibold">Top Contributors</h3>
+              <p className="text-sm text-default-400">
                 Nodes with the highest contribution scores
-              </CardDescription>
+              </p>
             </CardHeader>
-            <CardContent>
+            <CardBody>
               <div className="space-y-4">
                 {topContributors.map((contributor, index) => (
                   <div
@@ -290,7 +285,7 @@ export function P2PNetworkMonitor() {
                       </div>
                       <div>
                         <div className="font-medium">{contributor.nodeId}</div>
-                        <div className="text-sm text-muted-foreground">
+                        <div className="text-sm text-default-400">
                           {contributor.contributionCount} contributions
                         </div>
                       </div>
@@ -301,31 +296,31 @@ export function P2PNetworkMonitor() {
                         <TrendingUp className="h-4 w-4 text-green-500" />
                         <span className="font-bold">{contributor.totalScore.toLocaleString()}</span>
                       </div>
-                      <div className="text-xs text-muted-foreground">Total Score</div>
+                      <div className="text-xs text-default-400">Total Score</div>
                     </div>
                   </div>
                 ))}
               </div>
 
               {topContributors.length === 0 && (
-                <div className="text-center py-8 text-muted-foreground">
+                <div className="text-center py-8 text-default-400">
                   <TrendingUp className="h-8 w-8 mx-auto mb-2" />
                   <p>No contributions recorded yet</p>
                 </div>
               )}
-            </CardContent>
+            </CardBody>
           </Card>
-        </TabsContent>
+        </div>
 
-        <TabsContent value="metrics" className="space-y-4">
+        <div key="metrics" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Network Metrics</CardTitle>
-              <CardDescription>
+              <h3 className="text-lg font-semibold">Network Metrics</h3>
+              <p className="text-sm text-default-400">
                 Performance and health metrics for the P2P network
-              </CardDescription>
+              </p>
             </CardHeader>
-            <CardContent>
+            <CardBody>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
@@ -371,24 +366,24 @@ export function P2PNetworkMonitor() {
                   </div>
                 </div>
               </div>
-            </CardContent>
+            </CardBody>
           </Card>
-        </TabsContent>
+        </div>
       </Tabs>
 
       {error && (
-        <Card className="border-destructive">
-          <CardContent className="pt-6">
-            <div className="flex items-center space-x-2 text-destructive">
+        <Card className="border-danger">
+          <CardBody className="pt-6">
+            <div className="flex items-center space-x-2 text-danger">
               <AlertCircle className="h-4 w-4" />
               <span className="text-sm">{error}</span>
             </div>
-          </CardContent>
+          </CardBody>
         </Card>
       )}
 
       <div className="flex justify-end">
-        <Button onClick={fetchNetworkData} disabled={isLoading}>
+        <Button onPress={fetchNetworkData} isDisabled={isLoading} variant="solid">
           <Activity className={`h-4 w-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
           Refresh Data
         </Button>

@@ -2,9 +2,8 @@ import { isSendableNetwork, aptosClient } from "@/utils";
 import { parseTypeTag, AccountAddress, U64 } from "@aptos-labs/ts-sdk";
 import { InputTransactionData } from "@aptos-labs/wallet-adapter-core";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
-import { Button } from "@/components/cotrain/ui/button";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/cotrain/ui/card";
-import { useToast } from "@/components/cotrain/ui/use-toast";
+import { Button, Card, CardHeader, CardBody } from "@heroui/react";
+import { toast } from "react-hot-toast";
 import { TransactionHash } from "../TransactionHash";
 
 const APTOS_COIN = "0x1::aptos_coin::AptosCoin";
@@ -18,7 +17,6 @@ function generateNonce() {
 }
 
 export function SingleSigner() {
-  const { toast } = useToast();
   const {
     connected,
     account,
@@ -36,10 +34,7 @@ export function SingleSigner() {
       nonce: generateNonce(),
     };
     const response = await signMessageAndVerify(payload);
-    toast({
-      title: "Success",
-      description: JSON.stringify({ onSignMessageAndVerify: response }),
-    });
+    toast.success(`Success: ${JSON.stringify({ onSignMessageAndVerify: response })}`);
   };
 
   const onSignMessage = async () => {
@@ -48,10 +43,7 @@ export function SingleSigner() {
       nonce: generateNonce(),
     };
     const response = await signMessage(payload);
-    toast({
-      title: "Success",
-      description: JSON.stringify({ onSignMessage: response }),
-    });
+    toast.success(`Success: ${JSON.stringify({ onSignMessage: response })}`);
   };
 
   const onSignAndSubmitTransaction = async () => {
@@ -68,10 +60,7 @@ export function SingleSigner() {
       await aptosClient(network).waitForTransaction({
         transactionHash: response.hash,
       });
-      toast({
-        title: "Success",
-        description: <TransactionHash hash={response.hash} network={network} />,
-      });
+      toast.success("Transaction submitted successfully!");
     } catch (error) {
       console.error(error);
     }
@@ -92,10 +81,7 @@ export function SingleSigner() {
       await aptosClient(network).waitForTransaction({
         transactionHash: response.hash,
       });
-      toast({
-        title: "Success",
-        description: <TransactionHash hash={response.hash} network={network} />,
-      });
+      toast.success("Script transaction submitted successfully!");
     } catch (error) {
       console.error(error);
     }
@@ -115,10 +101,7 @@ export function SingleSigner() {
       await aptosClient(network).waitForTransaction({
         transactionHash: response.hash,
       });
-      toast({
-        title: "Success",
-        description: <TransactionHash hash={response.hash} network={network} />,
-      });
+      toast.success("BCS transaction submitted successfully!");
     } catch (error) {
       console.error(error);
     }
@@ -137,10 +120,7 @@ export function SingleSigner() {
       const response = await signTransaction({
         transactionOrPayload: payload,
       });
-      toast({
-        title: "Success",
-        description: JSON.stringify(response),
-      });
+      toast.success(`Success: ${JSON.stringify(response)}`);
     } catch (error) {
       console.error(error);
     }
@@ -163,10 +143,7 @@ export function SingleSigner() {
       const response = await signTransaction({
         transactionOrPayload: transactionToSign,
       });
-      toast({
-        title: "Success",
-        description: JSON.stringify(response),
-      });
+      toast.success(`Success: ${JSON.stringify(response)}`);
     } catch (error) {
       console.error(error);
     }
@@ -186,10 +163,7 @@ export function SingleSigner() {
       await aptosClient(network).waitForTransaction({
         transactionHash: response.hash,
       });
-      toast({
-        title: "Success",
-        description: <TransactionHash hash={response.hash} network={network} />,
-      });
+      toast.success("Authentication function added successfully!");
     } catch (error) {
       console.error(error);
     }
@@ -199,48 +173,48 @@ export function SingleSigner() {
     <>
       <Card>
         <CardHeader>
-          <CardTitle>Single Signer Flow</CardTitle>
+          <h3 className="text-lg font-semibold">Single Signer Flow</h3>
         </CardHeader>
-        <CardContent className="flex flex-wrap gap-4">
-          <Button onClick={onSignAndSubmitTransaction} disabled={!sendable}>
+        <CardBody className="flex flex-wrap gap-4">
+          <Button onPress={onSignAndSubmitTransaction} isDisabled={!sendable}>
             Sign and submit transaction
           </Button>
           <Button
-            onClick={onSignAndSubmitScriptTransaction}
-            disabled={!sendable}
+            onPress={onSignAndSubmitScriptTransaction}
+            isDisabled={!sendable}
           >
             Sign and submit script transaction
           </Button>
-          <Button onClick={onSignAndSubmitBCSTransaction} disabled={!sendable}>
+          <Button onPress={onSignAndSubmitBCSTransaction} isDisabled={!sendable}>
             Sign and submit BCS transaction
           </Button>
-          <Button onClick={onSignTransaction} disabled={!sendable}>
+          <Button onPress={onSignTransaction} isDisabled={!sendable}>
             Sign transaction
           </Button>
-          <Button onClick={onSignRawTransaction} disabled={!sendable}>
+          <Button onPress={onSignRawTransaction} isDisabled={!sendable}>
             Sign raw transaction
           </Button>
-          <Button onClick={onSignMessage} disabled={!sendable}>
+          <Button onPress={onSignMessage} isDisabled={!sendable}>
             Sign message
           </Button>
-          <Button onClick={onSignMessageAndVerify} disabled={!sendable}>
+          <Button onPress={onSignMessageAndVerify} isDisabled={!sendable}>
             Sign message and verify
           </Button>
-        </CardContent>
+        </CardBody>
       </Card>
       <Card>
         <CardHeader>
-          <CardTitle>Account Abstraction</CardTitle>
+          <h3 className="text-lg font-semibold">Account Abstraction</h3>
         </CardHeader>
-        <CardContent className="flex flex-wrap gap-4">
+        <CardBody className="flex flex-wrap gap-4">
           <Button
-            onClick={onAddAuthenticationFunction}
-            disabled={!sendable}
-            variant="secondary"
+            onPress={onAddAuthenticationFunction}
+            isDisabled={!sendable}
+            variant="bordered"
           >
             Add authentication function
           </Button>
-        </CardContent>
+        </CardBody>
       </Card>
     </>
   );

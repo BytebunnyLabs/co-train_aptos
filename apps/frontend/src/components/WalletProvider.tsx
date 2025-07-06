@@ -1,63 +1,46 @@
 "use client";
 
 import { AptosWalletAdapterProvider } from "@aptos-labs/wallet-adapter-react";
-import { setupAutomaticEthereumWalletDerivation } from "@aptos-labs/derived-wallet-ethereum";
-import { setupAutomaticSolanaWalletDerivation } from "@aptos-labs/derived-wallet-solana";
 import { PropsWithChildren } from "react";
 import { Network } from "@aptos-labs/ts-sdk";
-import { useClaimSecretKey } from "@/hooks/useClaimSecretKey";
 import { useAutoConnect } from "./AutoConnectProvider";
-import { useToast } from "@/components/cotrain/ui/use-toast";
+import { toast } from "react-hot-toast";
 
-const searchParams =
-  typeof window !== "undefined"
-    ? new URL(window.location.href).searchParams
-    : undefined;
-const deriveWalletsFrom = searchParams?.get("deriveWalletsFrom")?.split(",");
-if (deriveWalletsFrom?.includes("ethereum")) {
-  setupAutomaticEthereumWalletDerivation({ defaultNetwork: Network.TESTNET });
-}
-if (deriveWalletsFrom?.includes("solana")) {
-  setupAutomaticSolanaWalletDerivation({ defaultNetwork: Network.TESTNET });
-}
+// AIP-62 标准钱包插件导入
+import { PetraWallet } from "petra-plugin-wallet-adapter";
+import { MartianWallet } from "@martianwallet/aptos-wallet-adapter";
+import { RiseWallet } from "@rise-wallet/wallet-adapter";
+import { MSafeWalletAdapter } from "@msafe/aptos-wallet-adapter";
+import { FewchaWallet } from "fewcha-plugin-wallet-adapter";
+import { PontemWallet } from "@pontem/wallet-adapter-plugin";
+import { OKXWallet } from "@okwallet/aptos-wallet-adapter";
+// import { AptosConnectWallet } from "@aptos-connect/wallet-adapter-plugin"; // 抽象类，无法直接实例化
+// import { NightlyWallet } from "@nightlylabs/wallet-selector-aptos"; // 与当前 Aptos SDK 版本不兼容
 
-let dappImageURI: string | undefined;
-if (typeof window !== "undefined") {
-  dappImageURI = `${window.location.origin}${window.location.pathname}favicon.ico`;
-}
+// 支持的 AIP-62 钱包列表
+const supportedWallets = [
+  new PetraWallet(),
+  new MartianWallet(), 
+  new MSafeWalletAdapter(),
+  new OKXWallet(),
+  new PontemWallet(),
+  new RiseWallet(),
+  new FewchaWallet(),
+  // AptosConnect 和 Nightly 暂时禁用，因为兼容性问题
+];
 
 export const WalletProvider = ({ children }: PropsWithChildren) => {
   const { autoConnect } = useAutoConnect();
-  const { toast } = useToast();
-
-  // Enables claim flow when the `claim` query param is detected
-  const claimSecretKey = useClaimSecretKey();
 
   return (
     <AptosWalletAdapterProvider
       autoConnect={autoConnect}
       dappConfig={{
         network: Network.TESTNET,
-        aptosApiKeys: {
-          testnet: process.env.NEXT_PUBLIC_APTOS_API_KEY_TESNET,
-          devnet: process.env.NEXT_PUBLIC_APTOS_API_KEY_DEVNET,
-        },
-        aptosConnect: {
-          claimSecretKey,
-          dappId: "57fa42a9-29c6-4f1e-939c-4eefa36d9ff5",
-          dappImageURI,
-        },
-        mizuwallet: {
-          manifestURL:
-            "https://assets.mz.xyz/static/config/mizuwallet-connect-manifest.json",
-        },
       }}
       onError={(error) => {
-        toast({
-          variant: "destructive",
-          title: "Error",
-          description: error || "Unknown wallet error",
-        });
+        console.error("Wallet error:", error);
+        toast.error(error || "Unknown wallet error");
       }}
     >
       {children}

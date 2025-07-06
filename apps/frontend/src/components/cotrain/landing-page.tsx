@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Button } from "@/components/cotrain/ui/button"
+import { Button, Card, CardBody, CardHeader, Progress, Avatar, Chip } from "@heroui/react"
 import { Brain, Zap, Globe, Users, TrendingUp, Shield, ArrowRight, Play, Star, Database, Network, Coins, ExternalLink } from "lucide-react"
 
 interface LandingPageProps {
@@ -132,19 +132,21 @@ export function LandingPage({ onNavigate, isConnecting, contributors, logs, curr
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <Button
                 onClick={() => onNavigate("terminal")}
-                className="bg-green-600 hover:bg-green-700 text-white px-8 py-4 text-lg font-semibold"
+                color="success"
                 size="lg"
+                className="px-8 py-4 text-lg font-semibold"
+                endContent={<ArrowRight className="w-5 h-5" />}
               >
                 Launch Terminal
-                <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
               <Button
                 onClick={() => onNavigate("training")}
-                variant="outline"
-                className="border-green-400 text-green-400 hover:bg-green-400 hover:text-black px-8 py-4 text-lg"
+                variant="bordered"
+                color="success"
                 size="lg"
+                className="px-8 py-4 text-lg"
+                startContent={<Play className="w-5 h-5" />}
               >
-                <Play className="w-5 h-5 mr-2" />
                 View Training
               </Button>
             </div>
@@ -189,14 +191,17 @@ export function LandingPage({ onNavigate, isConnecting, contributors, logs, curr
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {features.map((feature, index) => (
-              <div
+              <Card
                 key={index}
-                className="bg-gray-800/50 border border-gray-700 rounded-lg p-6 hover:border-green-400/50 transition-all duration-300"
+                className="bg-gray-800/50 border-gray-700 hover:border-green-400/50 transition-all duration-300"
+                isHoverable
               >
-                <div className="text-green-400 mb-4">{feature.icon}</div>
-                <h3 className="text-xl font-semibold text-white mb-3">{feature.title}</h3>
-                <p className="text-gray-400">{feature.description}</p>
-              </div>
+                <CardBody className="p-6">
+                  <div className="text-green-400 mb-4">{feature.icon}</div>
+                  <h3 className="text-xl font-semibold text-white mb-3">{feature.title}</h3>
+                  <p className="text-gray-400">{feature.description}</p>
+                </CardBody>
+              </Card>
             ))}
           </div>
         </div>
@@ -213,49 +218,53 @@ export function LandingPage({ onNavigate, isConnecting, contributors, logs, curr
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {currentProjects.map((project, index) => (
-              <div
+              <Card
                 key={index}
-                className="bg-gray-900 border border-gray-800 rounded-lg p-6 hover:border-gray-600 transition-all"
+                className="bg-gray-900 border-gray-800 hover:border-gray-600 transition-all"
+                isHoverable
               >
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-sm text-gray-400">{project.type}</span>
-                  <span
-                    className={`px-2 py-1 text-xs rounded ${
-                      project.status === "active" ? "bg-green-900 text-green-400" : "bg-yellow-900 text-yellow-400"
-                    }`}
-                  >
-                    {project.status.toUpperCase()}
-                  </span>
-                </div>
-                <h3 className="text-lg font-semibold text-white mb-3">{project.name}</h3>
-                <div className="space-y-3">
-                  <div>
-                    <div className="flex justify-between text-sm text-gray-400 mb-1">
-                      <span>Progress</span>
-                      <span>{project.progress}%</span>
-                    </div>
-                    <div className="w-full bg-gray-800 h-2 rounded-full">
-                      <div
-                        className="bg-green-400 h-2 rounded-full transition-all duration-300"
-                        style={{ width: `${project.progress}%` }}
+                <CardBody className="p-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="text-sm text-gray-400">{project.type}</span>
+                    <Chip
+                      color={project.status === "active" ? "success" : "warning"}
+                      variant="flat"
+                      size="sm"
+                    >
+                      {project.status.toUpperCase()}
+                    </Chip>
+                  </div>
+                  <h3 className="text-lg font-semibold text-white mb-3">{project.name}</h3>
+                  <div className="space-y-3">
+                    <div>
+                      <div className="flex justify-between text-sm text-gray-400 mb-2">
+                        <span>Progress</span>
+                        <span>{project.progress}%</span>
+                      </div>
+                      <Progress
+                        value={project.progress}
+                        color="success"
+                        className="max-w-full"
                       />
                     </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-400">Participants</span>
+                      <span className="text-green-400">{project.participants}</span>
+                    </div>
                   </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-400">Participants</span>
-                    <span className="text-green-400">{project.participants}</span>
-                  </div>
-                </div>
-              </div>
+                </CardBody>
+              </Card>
             ))}
           </div>
           <div className="text-center mt-12">
             <Button
-              onClick={() => onNavigate("training")}
-              className="bg-green-600 hover:bg-green-700 text-white px-8 py-3"
+              onPress={() => onNavigate("training")}
+              color="success"
+              size="lg"
+              className="px-8 py-3"
+              endContent={<ArrowRight className="w-4 h-4" />}
             >
               View All Projects
-              <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
           </div>
         </div>
@@ -272,25 +281,28 @@ export function LandingPage({ onNavigate, isConnecting, contributors, logs, curr
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {testimonials.map((testimonial, index) => (
-              <div key={index} className="bg-gray-800/50 border border-gray-700 rounded-lg p-6">
-                <div className="flex items-center mb-4">
-                  <img
-                    src={testimonial.avatar || "/placeholder.svg"}
-                    alt={testimonial.name}
-                    className="w-10 h-10 rounded-full mr-3"
-                  />
-                  <div>
-                    <div className="font-semibold text-white">{testimonial.name}</div>
-                    <div className="text-sm text-gray-400">{testimonial.role}</div>
+              <Card key={index} className="bg-gray-800/50 border-gray-700" isHoverable>
+                <CardBody className="p-6">
+                  <div className="flex items-center mb-4">
+                    <Avatar
+                      src={testimonial.avatar || "/placeholder.svg"}
+                      alt={testimonial.name}
+                      className="mr-3"
+                      size="md"
+                    />
+                    <div>
+                      <div className="font-semibold text-white">{testimonial.name}</div>
+                      <div className="text-sm text-gray-400">{testimonial.role}</div>
+                    </div>
                   </div>
-                </div>
-                <p className="text-gray-300 italic">"{testimonial.content}"</p>
-                <div className="flex mt-4">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
-                  ))}
-                </div>
-              </div>
+                  <p className="text-gray-300 italic">"{testimonial.content}"</p>
+                  <div className="flex mt-4">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
+                    ))}
+                  </div>
+                </CardBody>
+              </Card>
             ))}
           </div>
         </div>
@@ -328,29 +340,35 @@ export function LandingPage({ onNavigate, isConnecting, contributors, logs, curr
 
           {/* Shelby Core Features */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-            <div className="bg-gray-800/50 border border-blue-500/30 rounded-lg p-6 hover:border-blue-400/50 transition-all duration-300">
-              <div className="text-blue-400 mb-4">
-                <Network className="w-8 h-8" />
-              </div>
-              <h3 className="text-xl font-semibold text-white mb-3">专用光纤网络</h3>
-              <p className="text-gray-400">提供亚秒级响应速度，媲美 CDN 性能，支持 10-100 Gbps 高带宽数据传输</p>
-            </div>
+            <Card className="bg-gray-800/50 border-blue-500/30 hover:border-blue-400/50 transition-all duration-300" isHoverable>
+              <CardBody className="p-6">
+                <div className="text-blue-400 mb-4">
+                  <Network className="w-8 h-8" />
+                </div>
+                <h3 className="text-xl font-semibold text-white mb-3">专用光纤网络</h3>
+                <p className="text-gray-400">提供亚秒级响应速度，媲美 CDN 性能，支持 10-100 Gbps 高带宽数据传输</p>
+              </CardBody>
+            </Card>
             
-            <div className="bg-gray-800/50 border border-blue-500/30 rounded-lg p-6 hover:border-blue-400/50 transition-all duration-300">
-              <div className="text-blue-400 mb-4">
-                <Coins className="w-8 h-8" />
-              </div>
-              <h3 className="text-xl font-semibold text-white mb-3">数据货币化</h3>
-              <p className="text-gray-400">每次数据访问都能产生收入，打破传统静态存储逻辑，实现动态价值创造</p>
-            </div>
+            <Card className="bg-gray-800/50 border-blue-500/30 hover:border-blue-400/50 transition-all duration-300" isHoverable>
+              <CardBody className="p-6">
+                <div className="text-blue-400 mb-4">
+                  <Coins className="w-8 h-8" />
+                </div>
+                <h3 className="text-xl font-semibold text-white mb-3">数据货币化</h3>
+                <p className="text-gray-400">每次数据访问都能产生收入，打破传统静态存储逻辑，实现动态价值创造</p>
+              </CardBody>
+            </Card>
             
-            <div className="bg-gray-800/50 border border-blue-500/30 rounded-lg p-6 hover:border-blue-400/50 transition-all duration-300">
-              <div className="text-blue-400 mb-4">
-                <Database className="w-8 h-8" />
-              </div>
-              <h3 className="text-xl font-semibold text-white mb-3">节点激励机制</h3>
-              <p className="text-gray-400">首创对提供数据服务的节点进行奖励，激励生态系统高效运行</p>
-            </div>
+            <Card className="bg-gray-800/50 border-blue-500/30 hover:border-blue-400/50 transition-all duration-300" isHoverable>
+              <CardBody className="p-6">
+                <div className="text-blue-400 mb-4">
+                  <Database className="w-8 h-8" />
+                </div>
+                <h3 className="text-xl font-semibold text-white mb-3">节点激励机制</h3>
+                <p className="text-gray-400">首创对提供数据服务的节点进行奖励，激励生态系统高效运行</p>
+              </CardBody>
+            </Card>
           </div>
 
           {/* Integration Benefits */}
@@ -399,17 +417,20 @@ export function LandingPage({ onNavigate, isConnecting, contributors, logs, curr
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button
-              onClick={() => onNavigate("terminal")}
-              className="bg-green-600 hover:bg-green-700 text-white px-8 py-4 text-lg"
+              onPress={() => onNavigate("terminal")}
+              color="success"
               size="lg"
+              className="px-8 py-4 text-lg"
+              endContent={<ArrowRight className="w-5 h-5" />}
             >
               Get Started Now
-              <ArrowRight className="w-5 h-5 ml-2" />
             </Button>
             <Button
-              variant="outline"
-              className="border-gray-600 text-gray-300 hover:bg-gray-700 px-8 py-4 text-lg bg-transparent"
+              variant="bordered"
+              color="default"
               size="lg"
+              className="px-8 py-4 text-lg"
+              onPress={() => window.open('https://docs.cotrain.ai', '_blank')}
             >
               Read Documentation
             </Button>

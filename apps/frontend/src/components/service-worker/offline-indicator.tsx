@@ -2,10 +2,7 @@
 
 import React from 'react';
 import { useServiceWorker } from '@/lib/service-worker';
-import { Alert, AlertDescription } from '@/components/cotrain/ui/alert';
-import { Button } from '@/components/cotrain/ui/button';
-import { Badge } from '@/components/cotrain/ui/badge';
-import { Card, CardContent } from '@/components/cotrain/ui/card';
+import { Button, Chip, Card, CardBody } from '@heroui/react';
 import { 
   Wifi, 
   WifiOff, 
@@ -50,27 +47,27 @@ export function OfflineIndicator() {
       {/* Offline Status Indicator */}
       {!isOnline && (
         <Card className="bg-orange-50 dark:bg-orange-950 border-orange-200 dark:border-orange-800">
-          <CardContent className="p-3">
+          <CardBody className="p-3">
             <div className="flex items-center space-x-2">
               <WifiOff className="h-4 w-4 text-orange-600 dark:text-orange-400" />
               <span className="text-sm font-medium text-orange-800 dark:text-orange-200">
                 You're offline
               </span>
-              <Badge variant="secondary" className="text-xs">
+              <Chip variant="flat" size="sm" className="text-xs">
                 Limited features
-              </Badge>
+              </Chip>
             </div>
             <p className="text-xs text-orange-600 dark:text-orange-400 mt-1">
               Some actions will be queued until you're back online
             </p>
-          </CardContent>
+          </CardBody>
         </Card>
       )}
 
       {/* Online Status Indicator (brief) */}
       {isOnline && (
         <Card className="bg-green-50 dark:bg-green-950 border-green-200 dark:border-green-800 animate-in slide-in-from-bottom">
-          <CardContent className="p-3">
+          <CardBody className="p-3">
             <div className="flex items-center space-x-2">
               <Wifi className="h-4 w-4 text-green-600 dark:text-green-400" />
               <span className="text-sm font-medium text-green-800 dark:text-green-200">
@@ -78,34 +75,38 @@ export function OfflineIndicator() {
               </span>
               <CheckCircle className="h-3 w-3 text-green-600 dark:text-green-400" />
             </div>
-          </CardContent>
+          </CardBody>
         </Card>
       )}
 
       {/* Service Worker Update Available */}
       {updateAvailable && (
-        <Alert className="bg-blue-50 dark:bg-blue-950 border-blue-200 dark:border-blue-800">
-          <Download className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-          <AlertDescription className="text-blue-800 dark:text-blue-200">
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-medium">
-                New version available!
-              </span>
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={updateServiceWorker}
-                className="ml-2 h-7 px-2 text-xs"
-              >
-                <RefreshCw className="h-3 w-3 mr-1" />
-                Update
-              </Button>
+        <Card className="bg-blue-50 dark:bg-blue-950 border-blue-200 dark:border-blue-800 border-l-4 border-l-blue-500">
+          <CardBody className="p-3">
+            <div className="flex items-start gap-3">
+              <Download className="h-4 w-4 text-blue-600 dark:text-blue-400 mt-0.5" />
+              <div className="flex-1">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium text-blue-800 dark:text-blue-200">
+                    New version available!
+                  </span>
+                  <Button
+                    size="sm"
+                    variant="bordered"
+                    onPress={updateServiceWorker}
+                    className="ml-2 h-7 px-2 text-xs"
+                  >
+                    <RefreshCw className="h-3 w-3 mr-1" />
+                    Update
+                  </Button>
+                </div>
+                <p className="text-xs mt-1 text-blue-600 dark:text-blue-400">
+                  Click update to get the latest features
+                </p>
+              </div>
             </div>
-            <p className="text-xs mt-1 text-blue-600 dark:text-blue-400">
-              Click update to get the latest features
-            </p>
-          </AlertDescription>
-        </Alert>
+          </CardBody>
+        </Card>
       )}
     </div>
   );
@@ -170,7 +171,7 @@ export function ServiceWorkerStatus() {
   if (!isSupported) {
     return (
       <Card className="bg-red-50 dark:bg-red-950 border-red-200 dark:border-red-800">
-        <CardContent className="p-4">
+        <CardBody className="p-4">
           <div className="flex items-center space-x-2">
             <AlertCircle className="h-5 w-5 text-red-600 dark:text-red-400" />
             <span className="font-medium text-red-800 dark:text-red-200">
@@ -180,7 +181,7 @@ export function ServiceWorkerStatus() {
           <p className="text-sm text-red-600 dark:text-red-400 mt-2">
             Your browser doesn't support Service Workers. Offline functionality will be limited.
           </p>
-        </CardContent>
+        </CardBody>
       </Card>
     );
   }
@@ -189,7 +190,7 @@ export function ServiceWorkerStatus() {
     <div className="space-y-4">
       {/* Connection Status */}
       <Card>
-        <CardContent className="p-4">
+        <CardBody className="p-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               {isOnline ? (
@@ -209,16 +210,16 @@ export function ServiceWorkerStatus() {
                 </p>
               </div>
             </div>
-            <Badge variant={isOnline ? 'default' : 'destructive'}>
+            <Chip color={isOnline ? 'success' : 'danger'} variant="flat">
               {isOnline ? 'Connected' : 'Disconnected'}
-            </Badge>
+            </Chip>
           </div>
-        </CardContent>
+        </CardBody>
       </Card>
 
       {/* Service Worker Status */}
       <Card>
-        <CardContent className="p-4">
+        <CardBody className="p-4">
           <div className="flex items-center justify-between mb-4">
             <div>
               <h3 className="font-medium">Service Worker</h3>
@@ -226,18 +227,18 @@ export function ServiceWorkerStatus() {
                 Offline functionality and caching
               </p>
             </div>
-            <Badge variant={registration ? 'default' : 'secondary'}>
+            <Chip color={registration ? 'success' : 'default'} variant="flat">
               {registration ? 'Active' : 'Inactive'}
-            </Badge>
+            </Chip>
           </div>
 
           {registration && (
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-sm">Registration Status</span>
-                <Badge variant="outline" className="text-xs">
+                <Chip variant="bordered" size="sm" className="text-xs">
                   {registration.active ? 'Active' : 'Installing'}
-                </Badge>
+                </Chip>
               </div>
 
               <div className="flex items-center justify-between">
@@ -248,12 +249,12 @@ export function ServiceWorkerStatus() {
               </div>
             </div>
           )}
-        </CardContent>
+        </CardBody>
       </Card>
 
       {/* Cache Status */}
       <Card>
-        <CardContent className="p-4">
+        <CardBody className="p-4">
           <div className="flex items-center justify-between mb-4">
             <div>
               <h3 className="font-medium">Cache Status</h3>
@@ -264,18 +265,18 @@ export function ServiceWorkerStatus() {
             <div className="flex space-x-2">
               <Button
                 size="sm"
-                variant="outline"
-                onClick={refreshCacheStatus}
-                disabled={isRefreshing}
+                variant="bordered"
+                onPress={refreshCacheStatus}
+                isDisabled={isRefreshing}
               >
                 <RefreshCw className={`h-4 w-4 mr-1 ${isRefreshing ? 'animate-spin' : ''}`} />
                 Refresh
               </Button>
               <Button
                 size="sm"
-                variant="outline"
-                onClick={handleClearCache}
-                disabled={isClearing}
+                variant="bordered"
+                onPress={handleClearCache}
+                isDisabled={isClearing}
               >
                 <Trash2 className="h-4 w-4 mr-1" />
                 {isClearing ? 'Clearing...' : 'Clear'}
@@ -290,9 +291,9 @@ export function ServiceWorkerStatus() {
                   <span className="text-sm capitalize">
                     {cacheName.replace(/cotrain-|v\d+/g, '').replace(/-/g, ' ')}
                   </span>
-                  <Badge variant="secondary" className="text-xs">
+                  <Chip variant="flat" size="sm" className="text-xs">
                     {String(count)} items
-                  </Badge>
+                  </Chip>
                 </div>
               ))}
             </div>
@@ -304,7 +305,7 @@ export function ServiceWorkerStatus() {
               <span className="text-sm">Loading cache status...</span>
             </div>
           )}
-        </CardContent>
+        </CardBody>
       </Card>
     </div>
   );

@@ -3,9 +3,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useWallet } from '@aptos-labs/wallet-adapter-react';
 import { useWebSocket } from '@/hooks/useWebSocket';
-// import { useUserGuide, UserGuide } from '@/components/cotrain/ui/user-guide';
-// import UserGuideComponent from '@/components/cotrain/ui/user-guide';
-import { useToast } from '@/components/cotrain/ui/use-toast';
+import toast from 'react-hot-toast';
 
 interface AppState {
   isInitialized: boolean;
@@ -23,11 +21,6 @@ interface AppContextType {
   wsConnected: boolean;
   wsError: string | null;
   
-  // User guide
-  // activeGuide: UserGuide | null;
-  // startGuide: (guide: UserGuide) => void;
-  // closeGuide: () => void;
-  // isGuideCompleted: (guideId: string) => boolean;
   
   // Notifications
   showNotificationToasts: boolean;
@@ -62,14 +55,6 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     connect: connectWS,
     disconnect: disconnectWS 
   } = useWebSocket();
-  // const { 
-  //   activeGuide, 
-  //   startGuide, 
-  //   closeGuide, 
-  //   completeGuide, 
-  //   isGuideCompleted 
-  // } = useUserGuide();
-  const { toast } = useToast();
 
   const [appState, setAppStateInternal] = useState<AppState>({
     isInitialized: false,
@@ -127,11 +112,11 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
       newNotifications.forEach(notification => {
         // Show toast for new notifications
         if (Date.now() - new Date(notification.timestamp).getTime() < 2000) {
-          toast({
-            title: notification.title,
-            description: notification.message,
-            variant: notification.type === 'error' ? 'destructive' : 'default',
-          });
+          if (notification.type === 'error') {
+            toast.error(`${notification.title}: ${notification.message}`);
+          } else {
+            toast.success(`${notification.title}: ${notification.message}`);
+          }
         }
       });
     }
@@ -195,15 +180,6 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     setAppState({ theme: nextTheme });
   };
 
-  // const handleCompleteGuide = (guide: UserGuide) => {
-  //   completeGuide(guide);
-  //   
-  //   // Show completion toast
-  //   toast({
-  //     title: "Guide Completed",
-  //     description: `You've completed the ${guide.title} guide!`,
-  //   });
-  // };
 
   const handleNotificationToastSettings = (show: boolean) => {
     setShowNotificationToasts(show);
@@ -232,11 +208,6 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     wsConnected,
     wsError,
     
-    // User guide
-    // activeGuide,
-    // startGuide,
-    // closeGuide,
-    // isGuideCompleted,
     
     // Notifications
     showNotificationToasts,
@@ -252,15 +223,6 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     <AppContext.Provider value={contextValue}>
       {children}
       
-      {/* User Guide Modal */}
-      {/* {activeGuide && (
-        <UserGuideComponent
-          guide={activeGuide}
-          isOpen={!!activeGuide}
-          onClose={closeGuide}
-          onComplete={() => handleCompleteGuide(activeGuide)}
-        />
-      )} */}
       
       {/* Debug Panel */}
       {appState.debugMode && (

@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Button } from "@/components/cotrain/ui/button"
+import { Button } from "@heroui/react"
 import { 
   Menu, 
   X, 
@@ -234,16 +234,18 @@ export function Navigation({
             {/* CTA Button */}
             {variant === 'cotrain' ? (
               <Button
-                onClick={() => handleNavigation("/terminal", "terminal")}
-                className="bg-green-600 hover:bg-green-700 text-white font-mono text-sm"
+                onPress={() => handleNavigation("/terminal", "terminal")}
+                color="success"
+                className="font-mono text-sm"
               >
                 Launch Terminal
               </Button>
             ) : (
               <Link href="/demo">
                 <Button
-                  className="bg-primary hover:bg-primary/90 text-primary-foreground font-mono text-sm"
+                  color="primary"
                   size="sm"
+                  className="font-mono text-sm"
                 >
                   Launch Demo
                 </Button>

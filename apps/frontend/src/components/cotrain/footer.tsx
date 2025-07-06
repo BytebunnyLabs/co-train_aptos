@@ -1,5 +1,6 @@
 "use client"
 
+import { Button } from "@heroui/react"
 import { Github, Twitter, DiscIcon as Discord, TextIcon as Telegram, MapPin } from "lucide-react"
 
 export function Footer() {
@@ -98,9 +99,12 @@ export function Footer() {
                 placeholder="Enter your email"
                 className="flex-1 px-4 py-2 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
               />
-              <button className="px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md transition-colors font-medium">
+              <Button
+                color="success"
+                className="px-6 py-2 font-medium"
+              >
                 Subscribe
-              </button>
+              </Button>
             </div>
           </div>
         </div>

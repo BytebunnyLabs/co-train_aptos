@@ -3,15 +3,13 @@ import {
   InputTransactionData,
   useWallet,
 } from "@aptos-labs/wallet-adapter-react";
-import { Button } from "@/components/cotrain/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/cotrain/ui/card";
-import { useToast } from "@/components/cotrain/ui/use-toast";
+import { Button, Card, CardHeader, CardBody } from "@heroui/react";
+import { toast } from "react-hot-toast";
 
 const APTOS_COIN = "0x1::aptos_coin::AptosCoin";
 const MaxGasAMount = 10000;
 
 export function TransactionParameters() {
-  const { toast } = useToast();
   const { connected, account, network, signAndSubmitTransaction, wallet } =
     useWallet();
   let sendable = isSendableNetwork(connected, network?.name);
@@ -35,16 +33,9 @@ export function TransactionParameters() {
       );
       // Check maxGasAmount is respected by the current connected Wallet
       if ((executedTransaction as any).max_gas_amount == MaxGasAMount) {
-        toast({
-          title: "Success",
-          description: `${wallet?.name ?? "Wallet"} transaction ${executedTransaction.hash} executed with a max gas amount of ${MaxGasAMount}`,
-        });
+        toast.success(`${wallet?.name ?? "Wallet"} transaction ${executedTransaction.hash} executed with a max gas amount of ${MaxGasAMount}`);
       } else {
-        toast({
-          variant: "destructive",
-          title: "Error",
-          description: `${wallet?.name ?? "Wallet"} transaction ${executedTransaction.hash} executed with a max gas amount of ${(executedTransaction as any).max_gas_amount}`,
-        });
+        toast.error(`${wallet?.name ?? "Wallet"} transaction ${executedTransaction.hash} executed with a max gas amount of ${(executedTransaction as any).max_gas_amount}`);
       }
     } catch (error) {
       console.error(error);
@@ -54,13 +45,13 @@ export function TransactionParameters() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Validate Transaction Parameters</CardTitle>
+        <h3 className="text-lg font-semibold">Validate Transaction Parameters</h3>
       </CardHeader>
-      <CardContent className="flex flex-wrap gap-4">
-        <Button onClick={onSignAndSubmitTransaction} disabled={!sendable}>
+      <CardBody className="flex flex-wrap gap-4">
+        <Button onPress={onSignAndSubmitTransaction} isDisabled={!sendable}>
           With MaxGasAmount
         </Button>
-      </CardContent>
+      </CardBody>
     </Card>
   );
 }

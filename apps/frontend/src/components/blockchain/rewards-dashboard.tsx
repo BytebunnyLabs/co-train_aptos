@@ -1,12 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useWallet } from '@aptos-labs/wallet-adapter-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/cotrain/ui/card';
-import { Button } from '@/components/cotrain/ui/button';
-import { Badge } from '@/components/cotrain/ui/badge';
-import { Skeleton } from '@/components/cotrain/ui/skeleton';
-import { Alert, AlertDescription } from '@/components/cotrain/ui/alert';
-import { Progress } from '@/components/cotrain/ui/progress';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/cotrain/ui/tabs';
+import { Card, CardBody, CardHeader, Button, Chip, Skeleton, Progress, Tabs, Tab } from '@heroui/react';
 import {
   RefreshCw,
   Gift,
@@ -269,14 +263,14 @@ export const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
   if (!connected) {
     return (
       <Card className={cn('w-full', className)}>
-        <CardContent className="p-6">
+        <CardBody className="p-6">
           <div className="flex items-center justify-center h-32">
             <div className="text-center space-y-2">
-              <Gift className="mx-auto h-8 w-8 text-muted-foreground" />
-              <p className="text-sm text-muted-foreground">Connect your wallet to view rewards</p>
+              <Gift className="mx-auto h-8 w-8 text-default-400" />
+              <p className="text-sm text-default-400">Connect your wallet to view rewards</p>
             </div>
           </div>
-        </CardContent>
+        </CardBody>
       </Card>
     );
   }
@@ -287,11 +281,11 @@ export const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
         <CardHeader>
           <Skeleton className="h-6 w-32" />
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardBody className="space-y-4">
           {Array.from({ length: 3 }).map((_, i) => (
             <Skeleton key={i} className="h-16" />
           ))}
-        </CardContent>
+        </CardBody>
       </Card>
     );
   }
@@ -302,53 +296,53 @@ export const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
       {showStats && stats && (
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <Card>
-            <CardContent className="p-4">
+            <CardBody className="p-4">
               <div className="flex items-center space-x-2">
                 <TrendingUp className="h-4 w-4 text-green-500" />
                 <div>
-                  <p className="text-sm text-muted-foreground">Total Earned</p>
+                  <p className="text-sm text-default-400">Total Earned</p>
                   <p className="text-lg font-semibold">{stats.totalEarned.toFixed(2)} APT</p>
                 </div>
               </div>
-            </CardContent>
+            </CardBody>
           </Card>
           
           <Card>
-            <CardContent className="p-4">
+            <CardBody className="p-4">
               <div className="flex items-center space-x-2">
                 <CheckCircle className="h-4 w-4 text-blue-500" />
                 <div>
-                  <p className="text-sm text-muted-foreground">Total Claimed</p>
+                  <p className="text-sm text-default-400">Total Claimed</p>
                   <p className="text-lg font-semibold">{stats.totalClaimed.toFixed(2)} APT</p>
                 </div>
               </div>
-            </CardContent>
+            </CardBody>
           </Card>
           
           <Card>
-            <CardContent className="p-4">
+            <CardBody className="p-4">
               <div className="flex items-center space-x-2">
                 <Clock className="h-4 w-4 text-orange-500" />
                 <div>
-                  <p className="text-sm text-muted-foreground">Pending</p>
+                  <p className="text-sm text-default-400">Pending</p>
                   <p className="text-lg font-semibold">{stats.totalPending.toFixed(2)} APT</p>
                 </div>
               </div>
-            </CardContent>
+            </CardBody>
           </Card>
           
           <Card>
-            <CardContent className="p-4">
+            <CardBody className="p-4">
               <div className="flex items-center space-x-2">
                 <DollarSign className="h-4 w-4 text-emerald-500" />
                 <div>
-                  <p className="text-sm text-muted-foreground">Claim Rate</p>
+                  <p className="text-sm text-default-400">Claim Rate</p>
                   <p className="text-lg font-semibold">
                     {((stats.totalClaimed / stats.totalEarned) * 100).toFixed(1)}%
                   </p>
                 </div>
               </div>
-            </CardContent>
+            </CardBody>
           </Card>
         </div>
       )}
@@ -357,22 +351,22 @@ export const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
-            <CardTitle className="flex items-center gap-2">
+            <h3 className="text-lg font-semibold flex items-center gap-2">
               <Gift className="h-5 w-5" />
               Rewards
-            </CardTitle>
+            </h3>
             <div className="flex items-center space-x-2">
               {filteredRewards.filter(r => r.status === 'claimable').length > 1 && (
-                <Button onClick={batchClaim} disabled={loading} size="sm">
+                <Button onPress={batchClaim} isDisabled={loading} size="sm">
                   <CheckCircle className="mr-2 h-4 w-4" />
                   Claim All
                 </Button>
               )}
               <Button
-                variant="ghost"
+                variant="light"
                 size="sm"
-                onClick={fetchRewards}
-                disabled={loading}
+                onPress={fetchRewards}
+                isDisabled={loading}
               >
                 <RefreshCw className={cn('h-4 w-4', loading && 'animate-spin')} />
               </Button>
@@ -380,33 +374,27 @@ export const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
           </div>
         </CardHeader>
         
-        <CardContent>
-          <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="grid w-full grid-cols-4">
-              <TabsTrigger value="claimable">Claimable</TabsTrigger>
-              <TabsTrigger value="claimed">Claimed</TabsTrigger>
-              <TabsTrigger value="pending">Pending</TabsTrigger>
-              <TabsTrigger value="all">All</TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value={activeTab} className="mt-4">
-              {error && (
-                <Alert className="mb-4 border-yellow-200 bg-yellow-50">
-                  <AlertTriangle className="h-4 w-4" />
-                  <AlertDescription>
-                    {error}. Showing cached data.
-                  </AlertDescription>
-                </Alert>
-              )}
+        <CardBody>
+          <Tabs selectedKey={activeTab} onSelectionChange={(key) => setActiveTab(key as string)} className="w-full">
+            <Tab key="claimable" title="Claimable">
+              <div className="mt-4">
+                {error && (
+                  <div className="mb-4 p-3 bg-warning-50 border border-warning-200 rounded-lg flex items-start gap-2">
+                    <AlertTriangle className="h-4 w-4 text-warning-600 mt-0.5" />
+                    <p className="text-sm text-warning-700">
+                      {error}. Showing cached data.
+                    </p>
+                  </div>
+                )}
               
               {filteredRewards.length === 0 ? (
-                <div className="text-center py-8">
-                  <Gift className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-                  <p className="text-muted-foreground">
-                    No {activeTab} rewards found
-                  </p>
-                </div>
-              ) : (
+                 <div className="text-center py-8">
+                   <Gift className="mx-auto h-12 w-12 text-default-400 mb-4" />
+                   <p className="text-default-400">
+                     No {activeTab} rewards found
+                   </p>
+                 </div>
+               ) : (
                 <div className="space-y-3">
                   {filteredRewards.map((reward) => {
                     const daysUntilExpiry = reward.expiresAt ? getDaysUntilExpiry(reward.expiresAt) : null;
@@ -417,29 +405,29 @@ export const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
                         className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors"
                       >
                         <div className="flex items-center space-x-4">
-                          <div className="flex items-center justify-center w-10 h-10 rounded-full bg-muted">
-                            {getRewardIcon(reward.type)}
-                          </div>
-                          
-                          <div className="space-y-1">
-                            <div className="flex items-center space-x-2">
-                              <h4 className="font-medium">{reward.sessionName}</h4>
-                              <Badge className={cn('text-xs', getStatusColor(reward.status))}>
-                                {reward.status}
-                              </Badge>
-                            </div>
-                            
-                            <div className="flex items-center space-x-4 text-sm text-muted-foreground">
-                              <span className="capitalize">{reward.type} reward</span>
-                              <span>•</span>
-                              <span>{reward.earnedAt.toLocaleDateString()}</span>
-                              {reward.metadata?.score && (
-                                <>
-                                  <span>•</span>
-                                  <span>Score: {reward.metadata.score}%</span>
-                                </>
-                              )}
-                            </div>
+                          <div className="flex items-center justify-center w-10 h-10 rounded-full bg-default-100">
+                           {getRewardIcon(reward.type)}
+                         </div>
+                         
+                         <div className="space-y-1">
+                           <div className="flex items-center space-x-2">
+                             <h4 className="font-medium">{reward.sessionName}</h4>
+                             <Chip size="sm" className={cn('text-xs', getStatusColor(reward.status))}>
+                               {reward.status}
+                             </Chip>
+                           </div>
+                           
+                           <div className="flex items-center space-x-4 text-sm text-default-400">
+                             <span className="capitalize">{reward.type} reward</span>
+                             <span>•</span>
+                             <span>{reward.earnedAt.toLocaleDateString()}</span>
+                             {reward.metadata?.score && (
+                               <>
+                                 <span>•</span>
+                                 <span>Score: {reward.metadata.score}%</span>
+                               </>
+                             )}
+                           </div>
                             
                             {daysUntilExpiry !== null && daysUntilExpiry <= 7 && reward.status === 'claimable' && (
                               <div className="flex items-center space-x-1 text-xs text-orange-600">
@@ -452,18 +440,18 @@ export const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
                         
                         <div className="flex items-center space-x-4">
                           <div className="text-right">
-                            <p className="font-semibold">{reward.amount.toFixed(4)} APT</p>
-                            {reward.claimedAt && (
-                              <p className="text-xs text-muted-foreground">
-                                Claimed {reward.claimedAt.toLocaleDateString()}
-                              </p>
-                            )}
-                          </div>
+                             <p className="font-semibold">{reward.amount.toFixed(4)} APT</p>
+                             {reward.claimedAt && (
+                               <p className="text-xs text-default-400">
+                                 Claimed {reward.claimedAt.toLocaleDateString()}
+                               </p>
+                             )}
+                           </div>
                           
                           {reward.status === 'claimable' && (
                             <Button
-                              onClick={() => claimReward(reward.id)}
-                              disabled={claimingIds.has(reward.id)}
+                              onPress={() => claimReward(reward.id)}
+                              isDisabled={claimingIds.has(reward.id)}
                               size="sm"
                             >
                               {claimingIds.has(reward.id) ? (
@@ -476,12 +464,289 @@ export const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
                         </div>
                       </div>
                     );
-                  })}
-                </div>
-              )}
-            </TabsContent>
+                   })}
+                 </div>
+               )}
+               </div>
+            </Tab>
+            <Tab key="claimed" title="Claimed">
+              <div className="mt-4">
+                {error && (
+                  <div className="mb-4 p-3 bg-warning-50 border border-warning-200 rounded-lg flex items-start gap-2">
+                    <AlertTriangle className="h-4 w-4 text-warning-600 mt-0.5" />
+                    <p className="text-sm text-warning-700">
+                      {error}. Showing cached data.
+                    </p>
+                  </div>
+                )}
+                {filteredRewards.length === 0 ? (
+                  <div className="text-center py-8">
+                    <Gift className="mx-auto h-12 w-12 text-default-400 mb-4" />
+                    <p className="text-default-400">
+                      No {activeTab} rewards found
+                    </p>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {filteredRewards.map((reward) => {
+                      const daysUntilExpiry = reward.expiresAt ? getDaysUntilExpiry(reward.expiresAt) : null;
+                      
+                      return (
+                        <div
+                          key={reward.id}
+                          className="flex items-center justify-between p-4 border rounded-lg hover:bg-default-50 transition-colors"
+                        >
+                          <div className="flex items-center space-x-4">
+                            <div className="flex items-center justify-center w-10 h-10 rounded-full bg-default-100">
+                              {getRewardIcon(reward.type)}
+                            </div>
+                            
+                            <div className="space-y-1">
+                              <div className="flex items-center space-x-2">
+                                <h4 className="font-medium">{reward.sessionName}</h4>
+                                <Chip size="sm" className={cn('text-xs', getStatusColor(reward.status))}>
+                                  {reward.status}
+                                </Chip>
+                              </div>
+                              
+                              <div className="flex items-center space-x-4 text-sm text-default-400">
+                                <span className="capitalize">{reward.type} reward</span>
+                                <span>•</span>
+                                <span>{reward.earnedAt.toLocaleDateString()}</span>
+                                {reward.metadata?.score && (
+                                  <>
+                                    <span>•</span>
+                                    <span>Score: {reward.metadata.score}%</span>
+                                  </>
+                                )}
+                              </div>
+                              
+                              {daysUntilExpiry !== null && daysUntilExpiry <= 7 && reward.status === 'claimable' && (
+                                <div className="flex items-center space-x-1 text-xs text-orange-600">
+                                  <AlertTriangle className="h-3 w-3" />
+                                  <span>Expires in {daysUntilExpiry} day{daysUntilExpiry !== 1 ? 's' : ''}</span>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                          
+                          <div className="flex items-center space-x-4">
+                            <div className="text-right">
+                              <p className="font-semibold">{reward.amount.toFixed(4)} APT</p>
+                              {reward.claimedAt && (
+                                <p className="text-xs text-default-400">
+                                  Claimed {reward.claimedAt.toLocaleDateString()}
+                                </p>
+                              )}
+                            </div>
+                            
+                            {reward.status === 'claimable' && (
+                              <Button
+                                onPress={() => claimReward(reward.id)}
+                                isDisabled={claimingIds.has(reward.id)}
+                                size="sm"
+                              >
+                                {claimingIds.has(reward.id) ? (
+                                  <RefreshCw className="h-4 w-4 animate-spin" />
+                                ) : (
+                                  'Claim'
+                                )}
+                              </Button>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            </Tab>
+            <Tab key="pending" title="Pending">
+              <div className="mt-4">
+                {error && (
+                  <div className="mb-4 p-3 bg-warning-50 border border-warning-200 rounded-lg flex items-start gap-2">
+                    <AlertTriangle className="h-4 w-4 text-warning-600 mt-0.5" />
+                    <p className="text-sm text-warning-700">
+                      {error}. Showing cached data.
+                    </p>
+                  </div>
+                )}
+                {filteredRewards.length === 0 ? (
+                  <div className="text-center py-8">
+                    <Gift className="mx-auto h-12 w-12 text-default-400 mb-4" />
+                    <p className="text-default-400">
+                      No {activeTab} rewards found
+                    </p>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {filteredRewards.map((reward) => {
+                      const daysUntilExpiry = reward.expiresAt ? getDaysUntilExpiry(reward.expiresAt) : null;
+                      
+                      return (
+                        <div
+                          key={reward.id}
+                          className="flex items-center justify-between p-4 border rounded-lg hover:bg-default-50 transition-colors"
+                        >
+                          <div className="flex items-center space-x-4">
+                            <div className="flex items-center justify-center w-10 h-10 rounded-full bg-default-100">
+                              {getRewardIcon(reward.type)}
+                            </div>
+                            
+                            <div className="space-y-1">
+                              <div className="flex items-center space-x-2">
+                                <h4 className="font-medium">{reward.sessionName}</h4>
+                                <Chip size="sm" className={cn('text-xs', getStatusColor(reward.status))}>
+                                  {reward.status}
+                                </Chip>
+                              </div>
+                              
+                              <div className="flex items-center space-x-4 text-sm text-default-400">
+                                <span className="capitalize">{reward.type} reward</span>
+                                <span>•</span>
+                                <span>{reward.earnedAt.toLocaleDateString()}</span>
+                                {reward.metadata?.score && (
+                                  <>
+                                    <span>•</span>
+                                    <span>Score: {reward.metadata.score}%</span>
+                                  </>
+                                )}
+                              </div>
+                              
+                              {daysUntilExpiry !== null && daysUntilExpiry <= 7 && reward.status === 'claimable' && (
+                                <div className="flex items-center space-x-1 text-xs text-orange-600">
+                                  <AlertTriangle className="h-3 w-3" />
+                                  <span>Expires in {daysUntilExpiry} day{daysUntilExpiry !== 1 ? 's' : ''}</span>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                          
+                          <div className="flex items-center space-x-4">
+                            <div className="text-right">
+                              <p className="font-semibold">{reward.amount.toFixed(4)} APT</p>
+                              {reward.claimedAt && (
+                                <p className="text-xs text-default-400">
+                                  Claimed {reward.claimedAt.toLocaleDateString()}
+                                </p>
+                              )}
+                            </div>
+                            
+                            {reward.status === 'claimable' && (
+                              <Button
+                                onPress={() => claimReward(reward.id)}
+                                isDisabled={claimingIds.has(reward.id)}
+                                size="sm"
+                              >
+                                {claimingIds.has(reward.id) ? (
+                                  <RefreshCw className="h-4 w-4 animate-spin" />
+                                ) : (
+                                  'Claim'
+                                )}
+                              </Button>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            </Tab>
+            <Tab key="all" title="All">
+              <div className="mt-4">
+                {error && (
+                  <div className="mb-4 p-3 bg-warning-50 border border-warning-200 rounded-lg flex items-start gap-2">
+                    <AlertTriangle className="h-4 w-4 text-warning-600 mt-0.5" />
+                    <p className="text-sm text-warning-700">
+                      {error}. Showing cached data.
+                    </p>
+                  </div>
+                )}
+                {filteredRewards.length === 0 ? (
+                  <div className="text-center py-8">
+                    <Gift className="mx-auto h-12 w-12 text-default-400 mb-4" />
+                    <p className="text-default-400">
+                      No {activeTab} rewards found
+                    </p>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {filteredRewards.map((reward) => {
+                      const daysUntilExpiry = reward.expiresAt ? getDaysUntilExpiry(reward.expiresAt) : null;
+                      
+                      return (
+                        <div
+                          key={reward.id}
+                          className="flex items-center justify-between p-4 border rounded-lg hover:bg-default-50 transition-colors"
+                        >
+                          <div className="flex items-center space-x-4">
+                            <div className="flex items-center justify-center w-10 h-10 rounded-full bg-default-100">
+                              {getRewardIcon(reward.type)}
+                            </div>
+                            
+                            <div className="space-y-1">
+                              <div className="flex items-center space-x-2">
+                                <h4 className="font-medium">{reward.sessionName}</h4>
+                                <Chip size="sm" className={cn('text-xs', getStatusColor(reward.status))}>
+                                  {reward.status}
+                                </Chip>
+                              </div>
+                              
+                              <div className="flex items-center space-x-4 text-sm text-default-400">
+                                <span className="capitalize">{reward.type} reward</span>
+                                <span>•</span>
+                                <span>{reward.earnedAt.toLocaleDateString()}</span>
+                                {reward.metadata?.score && (
+                                  <>
+                                    <span>•</span>
+                                    <span>Score: {reward.metadata.score}%</span>
+                                  </>
+                                )}
+                              </div>
+                              
+                              {daysUntilExpiry !== null && daysUntilExpiry <= 7 && reward.status === 'claimable' && (
+                                <div className="flex items-center space-x-1 text-xs text-orange-600">
+                                  <AlertTriangle className="h-3 w-3" />
+                                  <span>Expires in {daysUntilExpiry} day{daysUntilExpiry !== 1 ? 's' : ''}</span>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                          
+                          <div className="flex items-center space-x-4">
+                            <div className="text-right">
+                              <p className="font-semibold">{reward.amount.toFixed(4)} APT</p>
+                              {reward.claimedAt && (
+                                <p className="text-xs text-default-400">
+                                  Claimed {reward.claimedAt.toLocaleDateString()}
+                                </p>
+                              )}
+                            </div>
+                            
+                            {reward.status === 'claimable' && (
+                              <Button
+                                onPress={() => claimReward(reward.id)}
+                                isDisabled={claimingIds.has(reward.id)}
+                                size="sm"
+                              >
+                                {claimingIds.has(reward.id) ? (
+                                  <RefreshCw className="h-4 w-4 animate-spin" />
+                                ) : (
+                                  'Claim'
+                                )}
+                              </Button>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            </Tab>
           </Tabs>
-        </CardContent>
+        </CardBody>
       </Card>
     </div>
   );

@@ -63,6 +63,7 @@ export class EventListenerService implements OnModuleInit, OnModuleDestroy {
     try {
       // Get the last processed version from database
       const lastEvent = await this.eventLogRepository.findOne({
+        where: {},
         order: { createdAt: 'DESC' },
       });
 

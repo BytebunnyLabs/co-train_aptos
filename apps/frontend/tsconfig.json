@@ -24,6 +24,21 @@
     "paths": {
       "@/*": [
         "./src/*"
+      ],
+      "@/components/heroui/*": [
+        "./src/components/heroui/*"
+      ],
+      "@/components/ui/*": [
+        "./src/components/cotrain/ui/*"
+      ],
+      "@/components/ui-legacy/*": [
+        "./src/components/cotrain/ui-legacy/*"
+      ],
+      "@/types/heroui": [
+        "./src/types/heroui"
+      ],
+      "@/config/heroui-theme": [
+        "./src/config/heroui-theme"
       ]
     },
     "target": "ES2017"

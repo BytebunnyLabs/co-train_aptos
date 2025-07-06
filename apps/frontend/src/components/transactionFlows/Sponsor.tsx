@@ -8,12 +8,10 @@ import {
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import { useState } from "react";
 import { TransactionHash } from "../TransactionHash";
-import { Button } from "@/components/cotrain/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/cotrain/ui/card";
-import { useToast } from "@/components/cotrain/ui/use-toast";
+import { Button, Card, CardHeader, CardBody } from "@heroui/react";
+import { toast } from "react-hot-toast";
 
 export function Sponsor() {
-  const { toast } = useToast();
   const { connected, account, network, signTransaction, submitTransaction } =
     useWallet();
   const [transactionToSubmit, setTransactionToSubmit] =
@@ -102,10 +100,7 @@ export function Sponsor() {
         senderAuthenticator: senderAuthenticator,
         feePayerAuthenticator: feepayerAuthenticator,
       });
-      toast({
-        title: "Success",
-        description: <TransactionHash hash={response.hash} network={network} />,
-      });
+      toast.success(`Transaction submitted successfully: ${response.hash}`);
     } catch (error) {
       console.error(error);
     }
@@ -114,25 +109,25 @@ export function Sponsor() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Sponsor Transaction Flow</CardTitle>
+        <h3 className="text-lg font-semibold">Sponsor Transaction Flow</h3>
       </CardHeader>
-      <CardContent className="flex flex-wrap gap-4">
-        <Button onClick={onSignTransaction} disabled={!sendable}>
+      <CardBody className="flex flex-wrap gap-4">
+        <Button onPress={onSignTransaction} isDisabled={!sendable}>
           Sign as sender
         </Button>
         <Button
-          onClick={onSignTransactionAsSponsor}
-          disabled={!sendable || !senderAuthenticator}
+          onPress={onSignTransactionAsSponsor}
+          isDisabled={!sendable || !senderAuthenticator}
         >
           Sign as sponsor
         </Button>
         <Button
-          onClick={onSubmitTransaction}
-          disabled={!sendable || !senderAuthenticator}
+          onPress={onSubmitTransaction}
+          isDisabled={!sendable || !senderAuthenticator}
         >
           Submit transaction
         </Button>
-      </CardContent>
+      </CardBody>
     </Card>
   );
 }

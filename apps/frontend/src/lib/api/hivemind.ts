@@ -57,7 +57,7 @@ export const hivemindApi = {
   async getTrainingStatus(taskId: string): Promise<TrainingStatus> {
     const response = await apiClient.get(`/api/v1/hivemind-ml/training/${taskId}`);
     if (response.success) {
-      return response.data.data;
+      return (response.data as any).data;
     }
     throw new Error(response.error || 'Failed to get training status');
   },
@@ -66,7 +66,7 @@ export const hivemindApi = {
   async getConnectedPeers(): Promise<PeerInfo[]> {
     const response = await apiClient.get('/api/v1/hivemind-ml/peers');
     if (response.success) {
-      return response.data.data;
+      return (response.data as any).data;
     }
     throw new Error(response.error || 'Failed to get connected peers');
   },

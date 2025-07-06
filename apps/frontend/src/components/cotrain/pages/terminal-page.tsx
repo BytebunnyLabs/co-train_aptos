@@ -3,10 +3,8 @@
 import type React from "react"
 
 import { useState, useEffect } from "react"
-import { Button } from "@/components/cotrain/ui/button"
+import { Button, Modal, ModalContent, ModalHeader, ModalBody, Tabs, Tab } from "@heroui/react"
 import { Loader2 } from "lucide-react"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/cotrain/ui/dialog"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/cotrain/ui/tabs"
 import { CheckCircle, ExternalLink, Cpu, Hash, Link } from "lucide-react"
 
 interface TerminalPageProps {
@@ -98,27 +96,27 @@ export function TerminalPage({
         </div>
         <div className="flex items-center gap-4">
           <Button
-            variant="outline"
+            variant="bordered"
             size="sm"
-            onClick={() => onNavigate("history")}
-            className="bg-transparent border-purple-400 text-purple-400 hover:bg-purple-400 hover:text-black font-mono text-xs"
+            onPress={() => onNavigate("history")}
+            className="bg-transparent border-purple-400 text-purple-400 font-mono text-xs"
           >
             HISTORY
           </Button>
           <Button
-            variant="outline"
+            variant="bordered"
             size="sm"
-            onClick={() => onNavigate("training")}
-            className="bg-transparent border-green-400 text-green-400 hover:bg-green-400 hover:text-black font-mono text-xs"
+            onPress={() => onNavigate("training")}
+            className="bg-transparent border-green-400 text-green-400 font-mono text-xs"
           >
             TRAINING OPTIONS
           </Button>
           <Button
-            variant="outline"
+            variant="bordered"
             size="sm"
-            onClick={() => setShowContributeModal?.(true)}
-            disabled={isConnecting}
-            className="bg-transparent border-green-400 text-green-400 hover:bg-green-400 hover:text-black font-mono text-xs"
+            onPress={() => setShowContributeModal?.(true)}
+            isDisabled={isConnecting}
+            className="bg-transparent border-green-400 text-green-400 font-mono text-xs"
           >
             {isTraining ? "STOP TRAINING" : "CONTRIBUTE COMPUTE"}
           </Button>
@@ -291,26 +289,15 @@ export function TerminalPage({
       </div>
 
       {/* Contribute Modal */}
-      <Dialog open={showContributeModal} onOpenChange={setShowContributeModal}>
-        <DialogContent className="max-w-4xl bg-black border-gray-800 text-white">
-          <DialogHeader>
-            <DialogTitle className="text-2xl font-bold text-white">Contribute Compute to COTRAIN-1</DialogTitle>
-          </DialogHeader>
-
-          <Tabs value={selectedTab} onValueChange={setSelectedTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-2 bg-gray-800">
-              <TabsTrigger
-                value="fully-managed"
-                className="data-[state=active]:bg-white data-[state=active]:text-black"
-              >
-                Fully Managed
-              </TabsTrigger>
-              <TabsTrigger value="self-hosted" className="data-[state=active]:bg-white data-[state=active]:text-black">
-                Self-Hosted
-              </TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="fully-managed" className="space-y-6 mt-6">
+      <Modal isOpen={showContributeModal} onOpenChange={setShowContributeModal} size="4xl" className="bg-black border-gray-800 text-white">
+        <ModalContent>
+          <ModalHeader>
+            <h2 className="text-2xl font-bold text-white">Contribute Compute to COTRAIN-1</h2>
+          </ModalHeader>
+          <ModalBody>
+            <Tabs selectedKey={selectedTab} onSelectionChange={(key) => setSelectedTab(key as string)} className="w-full">
+              <Tab key="fully-managed" title="Fully Managed">
+                <div className="space-y-6 mt-6">
               <p className="text-gray-300">
                 Rent and contribute compute, and have it fully managed by CoTrain. This option is for less technical
                 users, or users without their own GPU hardware.
@@ -327,8 +314,9 @@ export function TerminalPage({
                       Select the GPUs you want to contribute. The compute pool image will be automatically selected.
                     </p>
                     <Button
-                      variant="outline"
+                      variant="bordered"
                       className="bg-transparent border-gray-600 text-gray-300 hover:bg-gray-700"
+                      onPress={() => {}}
                     >
                       View Documentation <ExternalLink className="w-4 h-4 ml-2" />
                     </Button>
@@ -361,9 +349,10 @@ export function TerminalPage({
                   </div>
                 </div>
               </div>
-            </TabsContent>
-
-            <TabsContent value="self-hosted" className="space-y-6 mt-6">
+                </div>
+              </Tab>
+              <Tab key="self-hosted" title="Self-Hosted">
+                <div className="space-y-6 mt-6">
               <p className="text-gray-300">
                 Permissionlessly contribute your own GPUs to the compute pool. This option is for more technical users
                 with their own GPU hardware.
@@ -446,26 +435,28 @@ export function TerminalPage({
                   </div>
                 </div>
               </div>
-            </TabsContent>
-          </Tabs>
+                </div>
+              </Tab>
+            </Tabs>
 
-          {/* Completion Notice */}
-          <div className="bg-green-900/20 border border-green-700 rounded-lg p-4 flex items-center gap-3">
-            <CheckCircle className="w-5 h-5 text-green-400" />
-            <div>
-              <h4 className="text-green-400 font-semibold">Compute pool has completed</h4>
-              <p className="text-green-300 text-sm">
-                The compute pool has completed, and is no longer accepting contributions.
-              </p>
+            {/* Completion Notice */}
+            <div className="bg-green-900/20 border border-green-700 rounded-lg p-4 flex items-center gap-3">
+              <CheckCircle className="w-5 h-5 text-green-400" />
+              <div>
+                <h4 className="text-green-400 font-semibold">Compute pool has completed</h4>
+                <p className="text-green-300 text-sm">
+                  The compute pool has completed, and is no longer accepting contributions.
+                </p>
+              </div>
             </div>
-          </div>
 
-          {/* Notification Button */}
-          <Button className="w-full bg-gray-800 hover:bg-gray-700 text-white border border-gray-600" variant="outline">
-            Get notified of future compute pools
-          </Button>
-        </DialogContent>
-      </Dialog>
+            {/* Notification Button */}
+            <Button className="w-full bg-gray-800 hover:bg-gray-700 text-white border border-gray-600" variant="bordered" onPress={() => {}}>
+              Get notified of future compute pools
+            </Button>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </div>
   )
 }

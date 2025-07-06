@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { Button } from "@/components/cotrain/ui/button";
+import { Button } from "@heroui/react";
 
 interface ErrorProps {
   error: Error & { digest?: string };
@@ -25,10 +25,10 @@ export default function Error({ error, reset }: ErrorProps) {
           抱歉，服务器遇到了一个错误。请稍后再试或联系支持团队。
         </p>
         <div className="flex gap-4 justify-center">
-          <Button onClick={reset}>
+          <Button color="primary" onClick={reset}>
             重试
           </Button>
-          <Button variant="outline" onClick={() => window.location.href = '/'}>
+          <Button variant="flat" onClick={() => window.location.href = '/'}>
             返回首页
           </Button>
         </div>

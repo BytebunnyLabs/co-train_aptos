@@ -3,11 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useWallet } from '@aptos-labs/wallet-adapter-react';
 import { useAuth } from '@/contexts/AuthContext';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/cotrain/ui/card';
-import { Badge } from '@/components/cotrain/ui/badge';
-import { Button } from '@/components/cotrain/ui/button';
-import { Progress } from '@/components/cotrain/ui/progress';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/cotrain/ui/tabs';
+import { Card, CardBody, CardHeader, Button, Progress, Tabs, Tab, Chip } from '@heroui/react';
 import { 
   TrendingUp, 
   Wallet, 
@@ -103,19 +99,19 @@ export function Web3Dashboard() {
       <div className="min-h-screen flex items-center justify-center">
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
-            <CardTitle>Welcome to CoTrain</CardTitle>
-            <CardDescription>
+            <h3 className="text-lg font-semibold">Welcome to CoTrain</h3>
+            <p className="text-default-400">
               Connect your wallet to access the AI training network
-            </CardDescription>
+            </p>
           </CardHeader>
-          <CardContent>
+          <CardBody>
             <div className="text-center">
-              <Wallet className="h-16 w-16 mx-auto mb-4 text-muted-foreground" />
-              <p className="text-sm text-muted-foreground mb-4">
+              <Wallet className="h-16 w-16 mx-auto mb-4 text-default-400" />
+              <p className="text-sm text-default-400 mb-4">
                 Connect your Aptos wallet to start earning rewards through distributed AI training
               </p>
             </div>
-          </CardContent>
+          </CardBody>
         </Card>
       </div>
     );
@@ -128,11 +124,11 @@ export function Web3Dashboard() {
           {[1, 2, 3, 4].map((i) => (
             <Card key={i} className="animate-pulse">
               <CardHeader className="pb-2">
-                <div className="h-4 bg-muted rounded w-3/4"></div>
+                <div className="h-4 bg-default-100 rounded w-3/4"></div>
               </CardHeader>
-              <CardContent>
-                <div className="h-8 bg-muted rounded w-1/2"></div>
-              </CardContent>
+              <CardBody>
+                <div className="h-8 bg-default-100 rounded w-1/2"></div>
+              </CardBody>
             </Card>
           ))}
         </div>
@@ -146,201 +142,197 @@ export function Web3Dashboard() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">Welcome back, {user?.username}</h1>
-          <p className="text-muted-foreground">
+          <p className="text-default-400">
             Your AI training network dashboard
           </p>
         </div>
-        <Badge variant="outline" className="flex items-center gap-2">
+        <Chip variant="bordered" className="flex items-center gap-2">
           <Activity className="h-4 w-4" />
           Network Active
-        </Badge>
+        </Chip>
       </div>
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Wallet Balance</CardTitle>
-            <Wallet className="h-4 w-4 text-muted-foreground" />
+            <h3 className="text-sm font-medium">Wallet Balance</h3>
+            <Wallet className="h-4 w-4 text-default-400" />
           </CardHeader>
-          <CardContent>
+          <CardBody>
             <div className="text-2xl font-bold">{formatAPT(stats?.walletBalance || 0)}</div>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-default-400">
               Available for transactions
             </p>
-          </CardContent>
+          </CardBody>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Rewards</CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
+            <h3 className="text-sm font-medium">Total Rewards</h3>
+            <DollarSign className="h-4 w-4 text-default-400" />
           </CardHeader>
-          <CardContent>
+          <CardBody>
             <div className="text-2xl font-bold">{formatAPT(stats?.totalRewards || 0)}</div>
-            <p className="text-xs text-muted-foreground">
-              {formatAPT(stats?.pendingRewards || 0)} pending
+            <p className="text-xs text-default-400">
+              Lifetime earnings
             </p>
-          </CardContent>
+          </CardBody>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Sessions Completed</CardTitle>
-            <CheckCircle className="h-4 w-4 text-muted-foreground" />
+            <h3 className="text-sm font-medium">Training Sessions</h3>
+            <Activity className="h-4 w-4 text-default-400" />
           </CardHeader>
-          <CardContent>
+          <CardBody>
             <div className="text-2xl font-bold">{stats?.completedSessions || 0}</div>
-            <p className="text-xs text-muted-foreground">
-              Rank #{stats?.myRanking || 'N/A'}
+            <p className="text-xs text-default-400">
+              Completed sessions
             </p>
-          </CardContent>
+          </CardBody>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Network Size</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
+            <h3 className="text-sm font-medium">Network Size</h3>
+            <Users className="h-4 w-4 text-default-400" />
           </CardHeader>
-          <CardContent>
+          <CardBody>
             <div className="text-2xl font-bold">{formatNumber(stats?.networkParticipants || 0)}</div>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-default-400">
               Active participants
             </p>
-          </CardContent>
+          </CardBody>
         </Card>
       </div>
 
       {/* Main Content Tabs */}
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="training">Training</TabsTrigger>
-          <TabsTrigger value="rewards">Rewards</TabsTrigger>
-          <TabsTrigger value="network">Network</TabsTrigger>
-        </TabsList>
+      <Tabs selectedKey={activeTab} onSelectionChange={(key) => setActiveTab(key as string)} aria-label="Dashboard tabs">
+        <Tab key="overview" title="Overview">
+          <div className="space-y-6">
 
-        <TabsContent value="overview" className="space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Performance Overview */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <BarChart3 className="h-5 w-5" />
-                  Performance Overview
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Performance Overview */}
+              <Card>
+                <CardHeader>
+                  <h3 className="flex items-center gap-2">
+                    <BarChart3 className="h-5 w-5" />
+                    Performance Overview
+                  </h3>
+                </CardHeader>
+                <CardBody className="space-y-4">
                 <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium">Average Score</span>
-                    <span className="text-sm text-muted-foreground">
-                      {(stats?.avgPerformance || 0).toFixed(1)}%
-                    </span>
-                  </div>
-                  <Progress value={stats?.avgPerformance || 0} className="h-2" />
-                </div>
-                
-                <div className="grid grid-cols-2 gap-4 pt-4">
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-green-600">
-                      {stats?.completedSessions || 0}
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm font-medium">Average Score</span>
+                      <span className="text-sm text-default-400">
+                        {(stats?.avgPerformance || 0).toFixed(1)}%
+                      </span>
                     </div>
-                    <div className="text-sm text-muted-foreground">Completed</div>
+                    <Progress value={stats?.avgPerformance || 0} className="h-2" />
                   </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-blue-600">
-                      {formatAPT(stats?.totalRewards || 0)}
-                    </div>
-                    <div className="text-sm text-muted-foreground">Earned</div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Recent Activity */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Clock className="h-5 w-5" />
-                  Recent Activity
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  {recentActivity.length === 0 ? (
-                    <p className="text-sm text-muted-foreground text-center py-4">
-                      No recent activity
-                    </p>
-                  ) : (
-                    recentActivity.slice(0, 5).map((activity) => (
-                      <div key={activity.id} className="flex items-center gap-3">
-                        <div className={`p-2 rounded-full ${
-                          activity.status === 'completed' ? 'bg-green-100 text-green-600' :
-                          activity.status === 'pending' ? 'bg-yellow-100 text-yellow-600' :
-                          'bg-red-100 text-red-600'
-                        }`}>
-                          {activity.type === 'training' ? <Cpu className="h-4 w-4" /> :
-                           activity.type === 'reward' ? <DollarSign className="h-4 w-4" /> :
-                           <Activity className="h-4 w-4" />}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium truncate">
-                            {activity.description}
-                          </p>
-                          <p className="text-xs text-muted-foreground">
-                            {activity.timestamp.toLocaleDateString()}
-                          </p>
-                        </div>
-                        {activity.amount && (
-                          <div className="text-sm font-medium">
-                            +{formatAPT(activity.amount)}
-                          </div>
-                        )}
+                  
+                  <div className="grid grid-cols-2 gap-4 pt-4">
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-green-600">
+                        {stats?.completedSessions || 0}
                       </div>
-                    ))
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
+                      <div className="text-sm text-default-400">Completed</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-blue-600">
+                        {formatAPT(stats?.totalRewards || 0)}
+                      </div>
+                      <div className="text-sm text-default-400">Earned</div>
+                    </div>
+                  </div>
+                </CardBody>
+              </Card>
 
-        <TabsContent value="training">
+              {/* Recent Activity */}
+              <Card>
+                <CardHeader>
+                  <h3 className="flex items-center gap-2">
+                    <Clock className="h-5 w-5" />
+                    Recent Activity
+                  </h3>
+                </CardHeader>
+                <CardBody>
+                  <div className="space-y-3">
+                    {recentActivity.length === 0 ? (
+                      <p className="text-sm text-default-400 text-center py-4">
+                        No recent activity
+                      </p>
+                    ) : (
+                      recentActivity.slice(0, 5).map((activity) => (
+                        <div key={activity.id} className="flex items-center gap-3">
+                          <div className={`p-2 rounded-full ${
+                            activity.status === 'completed' ? 'bg-green-100 text-green-600' :
+                            activity.status === 'pending' ? 'bg-yellow-100 text-yellow-600' :
+                            'bg-red-100 text-red-600'
+                          }`}>
+                            {activity.type === 'training' ? <Cpu className="h-4 w-4" /> :
+                             activity.type === 'reward' ? <DollarSign className="h-4 w-4" /> :
+                             <Activity className="h-4 w-4" />}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium truncate">
+                              {activity.description}
+                            </p>
+                            <p className="text-xs text-default-400">
+                              {activity.timestamp.toLocaleDateString()}
+                            </p>
+                          </div>
+                          {activity.amount && (
+                            <div className="text-sm font-medium">
+                              +{formatAPT(activity.amount)}
+                            </div>
+                          )}
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </CardBody>
+              </Card>
+            </div>
+          </div>
+        </Tab>
+
+        <Tab key="training" title="Training">
           <Card>
             <CardHeader>
-              <CardTitle>Available Training Sessions</CardTitle>
-              <CardDescription>
+              <h3>Available Training Sessions</h3>
+              <p className="text-default-400">
                 Join AI training sessions to earn rewards
-              </CardDescription>
+              </p>
             </CardHeader>
-            <CardContent>
+            <CardBody>
               <div className="text-center py-8">
-                <Cpu className="h-16 w-16 mx-auto mb-4 text-muted-foreground" />
+                <Cpu className="h-16 w-16 mx-auto mb-4 text-default-400" />
                 <p className="text-lg font-medium mb-2">No Active Sessions</p>
-                <p className="text-sm text-muted-foreground mb-4">
+                <p className="text-sm text-default-400 mb-4">
                   Check back later for new training opportunities
                 </p>
                 <Button>Browse Training History</Button>
               </div>
-            </CardContent>
+            </CardBody>
           </Card>
-        </TabsContent>
+        </Tab>
 
-        <TabsContent value="rewards">
+        <Tab key="rewards" title="Rewards">
           <Card>
             <CardHeader>
-              <CardTitle>Reward Management</CardTitle>
-              <CardDescription>
+              <h3>Reward Management</h3>
+              <p className="text-default-400">
                 Claim your earned rewards and view history
-              </CardDescription>
+              </p>
             </CardHeader>
-            <CardContent>
+            <CardBody>
               <div className="space-y-4">
                 <div className="flex items-center justify-between p-4 border rounded-lg">
                   <div>
                     <p className="font-medium">Pending Rewards</p>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-default-400">
                       Ready to claim
                     </p>
                   </div>
@@ -349,7 +341,7 @@ export function Web3Dashboard() {
                       {formatAPT(stats?.pendingRewards || 0)}
                     </p>
                     <Button 
-                      disabled={(stats?.pendingRewards || 0) === 0}
+                      isDisabled={(stats?.pendingRewards || 0) === 0}
                       className="mt-2"
                     >
                       Claim Rewards
@@ -357,38 +349,38 @@ export function Web3Dashboard() {
                   </div>
                 </div>
               </div>
-            </CardContent>
+            </CardBody>
           </Card>
-        </TabsContent>
+        </Tab>
 
-        <TabsContent value="network">
+        <Tab key="network" title="Network">
           <Card>
             <CardHeader>
-              <CardTitle>Network Status</CardTitle>
-              <CardDescription>
+              <h3>Network Status</h3>
+              <p className="text-default-400">
                 Monitor the distributed training network
-              </CardDescription>
+              </p>
             </CardHeader>
-            <CardContent>
+            <CardBody>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="text-center p-4 border rounded-lg">
                   <div className="text-2xl font-bold text-green-600">
                     {formatNumber(stats?.networkParticipants || 0)}
                   </div>
-                  <div className="text-sm text-muted-foreground">Active Nodes</div>
+                  <div className="text-sm text-default-400">Active Nodes</div>
                 </div>
                 <div className="text-center p-4 border rounded-lg">
                   <div className="text-2xl font-bold text-blue-600">99.2%</div>
-                  <div className="text-sm text-muted-foreground">Network Uptime</div>
+                  <div className="text-sm text-default-400">Network Uptime</div>
                 </div>
                 <div className="text-center p-4 border rounded-lg">
                   <div className="text-2xl font-bold text-purple-600">1.2PH/s</div>
-                  <div className="text-sm text-muted-foreground">Compute Power</div>
+                  <div className="text-sm text-default-400">Compute Power</div>
                 </div>
               </div>
-            </CardContent>
+            </CardBody>
           </Card>
-        </TabsContent>
+        </Tab>
       </Tabs>
     </div>
   );

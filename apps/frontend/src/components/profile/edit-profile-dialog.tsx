@@ -1,11 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/cotrain/ui/dialog';
-import { Button } from '@/components/cotrain/ui/button';
-import { Input } from '@/components/cotrain/ui/input';
-import { Label } from '@/components/cotrain/ui/label';
-import { Textarea } from '@/components/cotrain/ui/textarea';
+import { Modal, ModalContent, ModalHeader, ModalBody, Button, Input } from '@heroui/react';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import { Edit, Save, X } from 'lucide-react';
@@ -88,49 +84,54 @@ export function EditProfileDialog({ trigger }: EditProfileDialogProps) {
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        {trigger || (
-          <Button variant="outline" className="flex items-center gap-2">
-            <Edit className="h-4 w-4" />
-            Edit Profile
-          </Button>
-        )}
-      </DialogTrigger>
-      <DialogContent className="max-w-md">
-        <DialogHeader>
-          <DialogTitle>Edit Profile</DialogTitle>
-          <DialogDescription>
-            Update your account information and preferences.
-          </DialogDescription>
-        </DialogHeader>
+    <>
+      {trigger || (
+        <Button 
+          variant="bordered" 
+          className="flex items-center gap-2"
+          onPress={() => setOpen(true)}
+          startContent={<Edit className="h-4 w-4" />}
+        >
+          Edit Profile
+        </Button>
+      )}
+      
+      <Modal isOpen={open} onOpenChange={setOpen} size="md">
+        <ModalContent>
+          <ModalHeader className="flex flex-col gap-1">
+            <h3 className="text-lg font-semibold">Edit Profile</h3>
+            <p className="text-sm text-default-500">
+              Update your account information and preferences.
+            </p>
+          </ModalHeader>
+          <ModalBody>
         
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Username */}
           <div className="space-y-2">
-            <Label htmlFor="username">Username *</Label>
             <Input
               id="username"
               type="text"
+              label="Username *"
               value={formData.username}
               onChange={(e) => handleInputChange('username', e.target.value)}
               placeholder="Enter your username"
-              required
-              disabled={loading}
+              isRequired
+              isDisabled={loading}
             />
           </div>
 
           {/* Email */}
           <div className="space-y-2">
-            <Label htmlFor="email">Email *</Label>
             <Input
               id="email"
               type="email"
+              label="Email *"
               value={formData.email}
               onChange={(e) => handleInputChange('email', e.target.value)}
               placeholder="Enter your email"
-              required
-              disabled={loading}
+              isRequired
+              isDisabled={loading}
             />
           </div>
 
@@ -138,28 +139,30 @@ export function EditProfileDialog({ trigger }: EditProfileDialogProps) {
           <div className="flex gap-2 pt-4">
             <Button
               type="submit"
-              disabled={loading}
-              className="flex-1 flex items-center gap-2"
+              color="primary"
+              isLoading={loading}
+              className="flex-1"
+              startContent={!loading && <Save className="h-4 w-4" />}
             >
-              <Save className="h-4 w-4" />
               {loading ? 'Saving...' : 'Save Changes'}
             </Button>
             <Button
               type="button"
-              variant="outline"
-              onClick={() => {
+              variant="bordered"
+              onPress={() => {
                 resetForm();
                 setOpen(false);
               }}
-              disabled={loading}
-              className="flex items-center gap-2"
+              isDisabled={loading}
+              startContent={<X className="h-4 w-4" />}
             >
-              <X className="h-4 w-4" />
               Cancel
             </Button>
           </div>
         </form>
-      </DialogContent>
-    </Dialog>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+    </>
   );
 }

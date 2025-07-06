@@ -1,8 +1,7 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { Loader2, CheckCircle, XCircle, Clock, Zap } from 'lucide-react';
-import { Progress } from '@/components/cotrain/ui/progress';
-import { Card, CardContent } from '@/components/cotrain/ui/card';
+import { Progress, Card, CardBody } from '@heroui/react';
 
 export interface LoadingStep {
   id: string;
@@ -64,7 +63,7 @@ export const AdvancedLoading: React.FC<AdvancedLoadingProps> = ({
           <div className="text-sm font-medium">{title}</div>
           <Progress value={totalProgress} className="h-2 mt-1" />
         </div>
-        <div className="text-xs text-muted-foreground">
+        <div className="text-xs text-default-400">
           {completedSteps}/{steps.length}
         </div>
       </div>
@@ -73,7 +72,7 @@ export const AdvancedLoading: React.FC<AdvancedLoadingProps> = ({
 
   return (
     <Card className={cn('w-full max-w-md mx-auto', className)}>
-      <CardContent className="p-6">
+      <CardBody className="p-6">
         {/* Header */}
         <div className="text-center mb-6">
           <div className="flex justify-center mb-3">
@@ -83,7 +82,7 @@ export const AdvancedLoading: React.FC<AdvancedLoadingProps> = ({
           </div>
           <h3 className="text-lg font-semibold">{title}</h3>
           {description && (
-            <p className="text-sm text-muted-foreground mt-1">{description}</p>
+            <p className="text-sm text-default-400 mt-1">{description}</p>
           )}
         </div>
 
@@ -111,7 +110,7 @@ export const AdvancedLoading: React.FC<AdvancedLoadingProps> = ({
                   {step.label}
                 </div>
                 {step.description && (
-                  <div className="text-xs text-muted-foreground mt-0.5">
+                  <div className="text-xs text-default-400 mt-0.5">
                     {step.description}
                   </div>
                 )}
@@ -121,13 +120,13 @@ export const AdvancedLoading: React.FC<AdvancedLoadingProps> = ({
               </div>
 
               {/* Step Number */}
-              <div className="flex-shrink-0 text-xs text-muted-foreground">
+              <div className="flex-shrink-0 text-xs text-default-400">
                 {index + 1}
               </div>
             </div>
           ))}
         </div>
-      </CardContent>
+      </CardBody>
     </Card>
   );
 };

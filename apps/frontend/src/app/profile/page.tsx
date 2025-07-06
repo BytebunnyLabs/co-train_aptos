@@ -4,12 +4,9 @@ import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useWallet } from '@aptos-labs/wallet-adapter-react';
 import ProtectedRoute from '@/components/ProtectedRoute';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/cotrain/ui/card';
-import { Badge } from '@/components/cotrain/ui/badge';
-import { Button } from '@/components/cotrain/ui/button';
-import { Separator } from '@/components/cotrain/ui/separator';
+import { Card, CardBody, CardHeader, Button, Chip, Divider } from '@heroui/react';
 import { User, Wallet, Mail, Calendar, Shield, Copy } from 'lucide-react';
-import { toast } from 'sonner';
+import toast from 'react-hot-toast';
 
 const ProfilePage: React.FC = () => {
   const { user } = useAuth();
@@ -22,16 +19,16 @@ const ProfilePage: React.FC = () => {
     }
   };
 
-  const getRoleBadgeVariant = (role: string) => {
+  const getRoleChipColor = (role: string) => {
     switch (role.toLowerCase()) {
       case 'admin':
-        return 'destructive';
+        return 'danger';
       case 'moderator':
         return 'secondary';
       case 'premium':
-        return 'default';
+        return 'primary';
       default:
-        return 'outline';
+        return 'default';
     }
   };
 
@@ -42,7 +39,7 @@ const ProfilePage: React.FC = () => {
           {/* Header */}
           <div className="text-center space-y-2">
             <h1 className="text-3xl font-bold">User Profile</h1>
-            <p className="text-muted-foreground">
+            <p className="text-default-400">
               Manage your account settings and view your information
             </p>
           </div>
@@ -50,51 +47,51 @@ const ProfilePage: React.FC = () => {
           {/* Profile Information */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+              <h3 className="text-lg font-semibold flex items-center gap-2">
                 <User className="h-5 w-5" />
                 Profile Information
-              </CardTitle>
-              <CardDescription>
+              </h3>
+              <p className="text-sm text-default-400">
                 Your account details and authentication information
-              </CardDescription>
+              </p>
             </CardHeader>
-            <CardContent className="space-y-6">
+            <CardBody className="space-y-6">
               {/* Basic Info */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-muted-foreground">
+                  <label className="text-sm font-medium text-default-400">
                     Username
                   </label>
                   <div className="flex items-center gap-2">
-                    <User className="h-4 w-4 text-muted-foreground" />
+                    <User className="h-4 w-4 text-default-400" />
                     <span className="font-medium">{user?.username}</span>
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-muted-foreground">
+                  <label className="text-sm font-medium text-default-400">
                     Email
                   </label>
                   <div className="flex items-center gap-2">
-                    <Mail className="h-4 w-4 text-muted-foreground" />
+                    <Mail className="h-4 w-4 text-default-400" />
                     <span className="font-medium">{user?.email}</span>
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-muted-foreground">
+                  <label className="text-sm font-medium text-default-400">
                     Role
                   </label>
                   <div className="flex items-center gap-2">
-                    <Shield className="h-4 w-4 text-muted-foreground" />
-                    <Badge variant={getRoleBadgeVariant(user?.role || 'user')}>
+                    <Shield className="h-4 w-4 text-default-400" />
+                    <Chip color={getRoleChipColor(user?.role || 'user')} variant="flat" size="sm">
                       {user?.role?.toUpperCase()}
-                    </Badge>
+                    </Chip>
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-muted-foreground">
+                  <label className="text-sm font-medium text-default-400">
                     User ID
                   </label>
                   <div className="flex items-center gap-2">
@@ -103,7 +100,7 @@ const ProfilePage: React.FC = () => {
                 </div>
               </div>
 
-              <Separator />
+              <Divider />
 
               {/* Wallet Information */}
               <div className="space-y-4">
@@ -114,18 +111,18 @@ const ProfilePage: React.FC = () => {
                 
                 <div className="space-y-4">
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-muted-foreground">
+                    <label className="text-sm font-medium text-default-400">
                       Connected Wallet Address
                     </label>
-                    <div className="flex items-center gap-2 p-3 bg-muted rounded-lg">
+                    <div className="flex items-center gap-2 p-3 bg-default-100 rounded-lg">
                       <span className="font-mono text-sm flex-1">
                         {account?.address.toString()}
                       </span>
                       <Button
-                        variant="outline"
+                        variant="bordered"
                         size="sm"
-                        onClick={copyAddress}
-                        className="h-8 w-8 p-0"
+                        onPress={copyAddress}
+                        className="h-8 w-8 p-0 min-w-8"
                       >
                         <Copy className="h-4 w-4" />
                       </Button>
@@ -133,23 +130,23 @@ const ProfilePage: React.FC = () => {
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-muted-foreground">
+                    <label className="text-sm font-medium text-default-400">
                       Registered Wallet Address
                     </label>
-                    <div className="flex items-center gap-2 p-3 bg-muted rounded-lg">
+                    <div className="flex items-center gap-2 p-3 bg-default-100 rounded-lg">
                       <span className="font-mono text-sm flex-1">
                         {user?.walletAddress}
                       </span>
                       <Button
-                        variant="outline"
+                        variant="bordered"
                         size="sm"
-                        onClick={() => {
+                        onPress={() => {
                           if (user?.walletAddress) {
                             navigator.clipboard.writeText(user.walletAddress);
                             toast.success('Registered wallet address copied!');
                           }
                         }}
-                        className="h-8 w-8 p-0"
+                        className="h-8 w-8 p-0 min-w-8"
                       >
                         <Copy className="h-4 w-4" />
                       </Button>
@@ -158,40 +155,40 @@ const ProfilePage: React.FC = () => {
 
                   {account?.ansName && (
                     <div className="space-y-2">
-                      <label className="text-sm font-medium text-muted-foreground">
+                      <label className="text-sm font-medium text-default-400">
                         ANS Name
                       </label>
-                      <div className="p-3 bg-muted rounded-lg">
+                      <div className="p-3 bg-default-100 rounded-lg">
                         <span className="font-medium">{account.ansName}</span>
                       </div>
                     </div>
                   )}
                 </div>
               </div>
-            </CardContent>
+            </CardBody>
           </Card>
 
           {/* Account Actions */}
           <Card>
             <CardHeader>
-              <CardTitle>Account Actions</CardTitle>
-              <CardDescription>
+              <h3 className="text-lg font-semibold">Account Actions</h3>
+              <p className="text-sm text-default-400">
                 Manage your account settings and preferences
-              </CardDescription>
+              </p>
             </CardHeader>
-            <CardContent>
+            <CardBody>
               <div className="flex flex-wrap gap-4">
-                <Button variant="outline">
+                <Button variant="bordered">
                   Edit Profile
                 </Button>
-                <Button variant="outline">
+                <Button variant="bordered">
                   Security Settings
                 </Button>
-                <Button variant="outline">
+                <Button variant="bordered">
                   Privacy Settings
                 </Button>
               </div>
-            </CardContent>
+            </CardBody>
           </Card>
         </div>
       </div>

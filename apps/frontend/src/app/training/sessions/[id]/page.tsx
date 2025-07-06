@@ -2,12 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/cotrain/ui/card';
-import { Button } from '@/components/cotrain/ui/button';
-import { Badge } from '@/components/cotrain/ui/badge';
-import { Progress } from '@/components/cotrain/ui/progress';
-import { Alert, AlertDescription } from '@/components/cotrain/ui/alert';
-import { Avatar, AvatarFallback } from '@/components/cotrain/ui/avatar';
+import { Card, CardBody, CardHeader, Button, Chip, Progress, Avatar } from '@heroui/react';
 import { useToast } from '@/components/cotrain/ui/use-toast';
 import { useAptosContract } from '@/hooks/useAptosContract';
 import { useTransactionStatus } from '@/hooks/useTransactionStatus';
@@ -252,13 +247,13 @@ export default function SessionDetails() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'active':
-        return <Badge variant="default" className="bg-green-500">Active</Badge>;
+        return <Chip color="success" size="sm">Active</Chip>;
       case 'completed':
-        return <Badge variant="secondary">Completed</Badge>;
+        return <Chip color="default" size="sm">Completed</Chip>;
       case 'pending':
-        return <Badge variant="outline">Pending</Badge>;
+        return <Chip variant="bordered" size="sm">Pending</Chip>;
       default:
-        return <Badge variant="outline">{status}</Badge>;
+        return <Chip variant="bordered" size="sm">{status}</Chip>;
     }
   };
 
@@ -300,10 +295,10 @@ export default function SessionDetails() {
   if (!session) {
     return (
       <div className="container mx-auto py-8 px-4">
-        <Alert variant="destructive">
-          <AlertCircle className="h-4 w-4" />
-          <AlertDescription>Session not found.</AlertDescription>
-        </Alert>
+        <div className="flex items-center gap-2 p-4 bg-danger-50 border border-danger-200 rounded-lg">
+          <AlertCircle className="h-4 w-4 text-danger" />
+          <span className="text-danger">Session not found.</span>
+        </div>
       </div>
     );
   }
@@ -312,33 +307,34 @@ export default function SessionDetails() {
     <div className="container mx-auto py-8 px-4">
       {/* Header */}
       <div className="flex items-center gap-4 mb-8">
-        <Button variant="ghost" size="sm" onClick={() => router.back()}>
-          <ArrowLeft className="h-4 w-4 mr-2" />
+        <Button variant="light" size="sm" onPress={() => router.back()} startContent={<ArrowLeft className="h-4 w-4" />}>
           Back
         </Button>
       </div>
 
       {/* Real-time Connection Status */}
       {wsEnabled && (
-        <Alert className={`mb-6 ${wsConnected ? 'border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-950' : 'border-yellow-200 bg-yellow-50 dark:border-yellow-800 dark:bg-yellow-950'}`}>
+        <div className={`mb-6 p-4 rounded-lg border ${wsConnected ? 'border-success-200 bg-success-50' : 'border-warning-200 bg-warning-50'}`}>
           <div className="flex items-center gap-2">
-            <div className={`w-2 h-2 rounded-full ${wsConnected ? 'bg-green-500' : 'bg-yellow-500'} ${wsConnected ? 'animate-pulse' : ''}`} />
-            <AlertDescription className={wsConnected ? 'text-green-800 dark:text-green-200' : 'text-yellow-800 dark:text-yellow-200'}>
+            <div className={`w-2 h-2 rounded-full ${wsConnected ? 'bg-success-500' : 'bg-warning-500'} ${wsConnected ? 'animate-pulse' : ''}`} />
+            <span className={wsConnected ? 'text-success-800' : 'text-warning-800'}>
               {wsConnected ? 'Live updates enabled' : 'Connecting to live updates...'}
               {hasRecentActivity && ' • Recent activity detected'}
-            </AlertDescription>
+            </span>
           </div>
-        </Alert>
+        </div>
       )}
 
       {/* Pending Transactions */}
       {pendingTransactions.length > 0 && (
-        <Alert className="mb-6">
-          <Loader2 className="h-4 w-4 animate-spin" />
-          <AlertDescription>
-            {pendingTransactions.length} transaction(s) pending...
-          </AlertDescription>
-        </Alert>
+        <div className="mb-6 p-4 rounded-lg border border-primary-200 bg-primary-50">
+          <div className="flex items-center gap-2">
+            <Loader2 className="h-4 w-4 animate-spin text-primary" />
+            <span className="text-primary-800">
+              {pendingTransactions.length} transaction(s) pending...
+            </span>
+          </div>
+        </div>
       )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -349,43 +345,42 @@ export default function SessionDetails() {
             <CardHeader>
               <div className="flex justify-between items-start">
                 <div className="flex-1">
-                  <CardTitle className="text-2xl">{session.name}</CardTitle>
+                  <h2 className="text-2xl font-semibold">{session.name}</h2>
                   <div className="flex items-center gap-4 mt-2">
                     {getStatusBadge(session.status)}
-                    <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                    <div className="flex items-center gap-1 text-sm text-default-500">
                       <User className="h-4 w-4" />
                       Creator: {formatAddress(session.creator)}
                     </div>
                   </div>
                 </div>
-                <Button variant="outline" size="sm">
-                  <Share2 className="h-4 w-4 mr-2" />
+                <Button variant="bordered" size="sm" startContent={<Share2 className="h-4 w-4" />}>
                   Share
                 </Button>
               </div>
             </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground leading-relaxed">
+            <CardBody>
+              <p className="text-default-500 leading-relaxed">
                 {session.description}
               </p>
-            </CardContent>
+            </CardBody>
           </Card>
 
           {/* Participants */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+              <h3 className="flex items-center gap-2 text-lg font-semibold">
                 <Users className="h-5 w-5" />
                 Participants ({currentParticipants}/{session.maxParticipants})
                 {wsConnected && hasRecentActivity && (
-                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                  <div className="w-2 h-2 bg-success-500 rounded-full animate-pulse" />
                 )}
-              </CardTitle>
-              <CardDescription>
+              </h3>
+              <p className="text-default-500 text-sm">
                 Active contributors to this training session
-              </CardDescription>
+              </p>
             </CardHeader>
-            <CardContent>
+            <CardBody>
               <div className="space-y-4">
                 <Progress value={participationProgress} className="w-full" />
                 
@@ -393,23 +388,19 @@ export default function SessionDetails() {
                   {session.participants.map((participant, index) => (
                     <div key={participant.address} className="flex items-center justify-between p-3 border rounded-lg">
                       <div className="flex items-center gap-3">
-                        <Avatar>
-                          <AvatarFallback>
-                            {index + 1}
-                          </AvatarFallback>
-                        </Avatar>
+                        <Avatar name={(index + 1).toString()} size="sm" />
                         <div>
                           <div className="font-medium">
                             {formatAddress(participant.address)}
                             {participant.address === account?.address.toString() && (
-                              <Badge variant="outline" className="ml-2">You</Badge>
+                              <Chip variant="bordered" size="sm" className="ml-2">You</Chip>
                             )}
                           </div>
-                          <div className="text-sm text-muted-foreground">
+                          <div className="text-sm text-default-500">
                             Joined {participant.joinedAt.toLocaleDateString()}
                           </div>
                           {participant.contribution && (
-                            <div className="text-sm text-muted-foreground">
+                            <div className="text-sm text-default-500">
                               {participant.contribution}
                             </div>
                           )}
@@ -426,12 +417,12 @@ export default function SessionDetails() {
                 </div>
 
                 {session.currentParticipants === 0 && (
-                  <div className="text-center py-8 text-muted-foreground">
+                  <div className="text-center py-8 text-default-500">
                     No participants yet. Be the first to join!
                   </div>
                 )}
               </div>
-            </CardContent>
+            </CardBody>
           </Card>
         </div>
 
@@ -440,86 +431,69 @@ export default function SessionDetails() {
           {/* Action Card */}
           <Card>
             <CardHeader>
-              <CardTitle>Actions</CardTitle>
+              <h3 className="text-lg font-semibold">Actions</h3>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardBody className="space-y-4">
               {!connected ? (
-                <Alert>
-                  <AlertCircle className="h-4 w-4" />
-                  <AlertDescription>
+                <div className="flex items-center gap-2 p-4 bg-warning-50 border border-warning-200 rounded-lg">
+                  <AlertCircle className="h-4 w-4 text-warning" />
+                  <span className="text-warning-800">
                     Connect your wallet to participate
-                  </AlertDescription>
-                </Alert>
+                  </span>
+                </div>
               ) : isParticipant ? (
-                <Alert className="border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-950">
-                  <CheckCircle className="h-4 w-4 text-green-600" />
-                  <AlertDescription className="text-green-800 dark:text-green-200">
+                <div className="flex items-center gap-2 p-4 bg-success-50 border border-success-200 rounded-lg">
+                  <CheckCircle className="h-4 w-4 text-success-600" />
+                  <span className="text-success-800">
                     You are participating in this session
-                  </AlertDescription>
-                </Alert>
+                  </span>
+                </div>
               ) : canJoin ? (
                 <Button 
-                  onClick={handleJoinSession} 
-                  disabled={isJoining}
+                  onPress={handleJoinSession} 
+                  isDisabled={isJoining}
                   className="w-full"
+                  color="primary"
+                  startContent={isJoining ? <Loader2 className="h-4 w-4 animate-spin" /> : <UserPlus className="h-4 w-4" />}
                 >
-                  {isJoining ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Joining...
-                    </>
-                  ) : (
-                    <>
-                      <UserPlus className="mr-2 h-4 w-4" />
-                      Join Session
-                    </>
-                  )}
+                  {isJoining ? 'Joining...' : 'Join Session'}
                 </Button>
               ) : session.status === 'completed' ? (
-                <Alert>
-                  <AlertCircle className="h-4 w-4" />
-                  <AlertDescription>
+                <div className="flex items-center gap-2 p-4 bg-default-50 border border-default-200 rounded-lg">
+                  <AlertCircle className="h-4 w-4 text-default-500" />
+                  <span className="text-default-700">
                     This session has been completed
-                  </AlertDescription>
-                </Alert>
+                  </span>
+                </div>
               ) : (
-                <Alert>
-                  <AlertCircle className="h-4 w-4" />
-                  <AlertDescription>
+                <div className="flex items-center gap-2 p-4 bg-default-50 border border-default-200 rounded-lg">
+                  <AlertCircle className="h-4 w-4 text-default-500" />
+                  <span className="text-default-700">
                     Session is full or not accepting participants
-                  </AlertDescription>
-                </Alert>
+                  </span>
+                </div>
               )}
 
               {isCreator && session.status === 'active' && (
                 <Button 
-                  variant="outline" 
-                  onClick={handleCompleteSession}
-                  disabled={isCompleting}
+                  variant="bordered" 
+                  onPress={handleCompleteSession}
+                  isDisabled={isCompleting}
                   className="w-full"
+                  startContent={isCompleting ? <Loader2 className="h-4 w-4 animate-spin" /> : <CheckCircle className="h-4 w-4" />}
                 >
-                  {isCompleting ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Completing...
-                    </>
-                  ) : (
-                    <>
-                      <CheckCircle className="mr-2 h-4 w-4" />
-                      Complete Session
-                    </>
-                  )}
+                  {isCompleting ? 'Completing...' : 'Complete Session'}
                 </Button>
               )}
-            </CardContent>
+            </CardBody>
           </Card>
 
           {/* Session Stats */}
           <Card>
             <CardHeader>
-              <CardTitle>Session Details</CardTitle>
+              <h3 className="text-lg font-semibold">Session Details</h3>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardBody className="space-y-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Trophy className="h-4 w-4 text-yellow-500" />
@@ -561,16 +535,16 @@ export default function SessionDetails() {
                 </div>
                 <span className="font-medium">{participationProgress.toFixed(0)}%</span>
               </div>
-            </CardContent>
+            </CardBody>
           </Card>
 
           {/* User Score (if participating) */}
           {userParticipation && (
             <Card>
               <CardHeader>
-                <CardTitle>Your Contribution</CardTitle>
+                <h3 className="text-lg font-semibold">Your Contribution</h3>
               </CardHeader>
-              <CardContent>
+              <CardBody>
                 <div className="text-center space-y-2">
                   <div className="text-3xl font-bold text-yellow-600">
                     {userParticipation.score}
@@ -579,12 +553,12 @@ export default function SessionDetails() {
                     Contribution Score
                   </div>
                   {userParticipation.contribution && (
-                    <div className="text-sm bg-muted p-2 rounded">
+                    <div className="text-sm bg-default-100 p-2 rounded">
                       {userParticipation.contribution}
                     </div>
                   )}
                 </div>
-              </CardContent>
+              </CardBody>
             </Card>
           )}
         </div>

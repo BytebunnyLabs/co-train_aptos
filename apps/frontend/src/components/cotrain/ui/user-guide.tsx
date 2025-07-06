@@ -12,11 +12,7 @@ import {
   Play,
   SkipForward
 } from 'lucide-react';
-import { Button } from '@/components/cotrain/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/cotrain/ui/card';
-import { Badge } from '@/components/cotrain/ui/badge';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/cotrain/ui/dialog';
-import { Progress } from '@/components/cotrain/ui/progress';
+import { Button, Modal, ModalContent, ModalHeader, ModalBody, Card, CardHeader, CardBody, Chip, Progress } from '@heroui/react';
 
 export interface GuideStep {
   id: string;
@@ -229,53 +225,63 @@ export const UserGuideComponent: React.FC<UserGuideProps> = ({
         </div>
       )}
       
-      <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center">
-        <div className="bg-white p-6 rounded-lg max-w-md w-full mx-4 shadow-lg">
-          <div className="flex items-center justify-between mb-4">
+      <Modal 
+        isOpen={isOpen} 
+        onClose={onClose}
+        size="md"
+        classNames={{
+          base: "z-50",
+          backdrop: "bg-black/50"
+        }}
+      >
+        <ModalContent>
+          <ModalHeader className="flex items-center justify-between">
             <h2 className="text-lg font-semibold">{guide.title}</h2>
-            <span className="text-xs bg-gray-100 px-2 py-1 rounded">
+            <Chip size="sm" variant="flat">
               {currentStepIndex + 1} of {guide.steps.length}
-            </span>
-          </div>
+            </Chip>
+          </ModalHeader>
+          <ModalBody className="pb-6">
           
           <div className="space-y-4">
             {/* Progress bar */}
             <div>
               <div className="flex justify-between text-sm mb-2">
                 <span className="font-medium">Progress</span>
-                <span className="text-gray-500">{Math.round(progress)}%</span>
+                <span className="text-default-500">{Math.round(progress)}%</span>
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-2">
-                <div 
-                  className="bg-blue-600 h-2 rounded-full transition-all"
-                  style={{ width: `${progress}%` }}
-                />
-              </div>
+              <Progress 
+                value={progress} 
+                color="primary"
+                className="w-full"
+              />
             </div>
 
             {/* Current step content */}
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <div className="bg-primary-50 border border-primary-200 rounded-lg p-4">
               <div className="flex items-start gap-3">
                 <div className="flex-shrink-0 mt-1">
-                  <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
-                    <Lightbulb className="w-4 h-4 text-blue-600" />
+                  <div className="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center">
+                    <Lightbulb className="w-4 h-4 text-primary-600" />
                   </div>
                 </div>
                 <div className="flex-1">
                   <h3 className="font-semibold text-sm mb-2">{currentStep.title}</h3>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-default-600">
                     {currentStep.content}
                   </p>
                   
                   {/* Step action button */}
                   {currentStep.action && (
-                    <button
-                      className="mt-3 px-4 py-2 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 flex items-center gap-1"
-                      onClick={currentStep.action.onClick}
+                    <Button
+                      size="sm"
+                      color="primary"
+                      className="mt-3"
+                      onPress={currentStep.action.onClick}
+                      endContent={<ArrowRight className="w-3 h-3" />}
                     >
                       {currentStep.action.label}
-                      <ArrowRight className="w-3 h-3" />
-                    </button>
+                    </Button>
                   )}
                 </div>
               </div>
@@ -284,45 +290,50 @@ export const UserGuideComponent: React.FC<UserGuideProps> = ({
             {/* Navigation buttons */}
             <div className="flex justify-between items-center">
               <div className="flex gap-2">
-                <button
-                  className="px-4 py-2 text-sm border rounded hover:bg-gray-50 flex items-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
-                  onClick={handlePrevious}
-                  disabled={isFirstStep}
+                <Button
+                  variant="bordered"
+                  size="sm"
+                  onPress={handlePrevious}
+                  isDisabled={isFirstStep}
+                  startContent={<ChevronLeft className="w-4 h-4" />}
                 >
-                  <ChevronLeft className="w-4 h-4" />
                   Previous
-                </button>
+                </Button>
                 
                 {!isLastStep ? (
-                  <button
-                    className="px-4 py-2 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 flex items-center gap-1"
-                    onClick={handleNext}
+                  <Button
+                    color="primary"
+                    size="sm"
+                    onPress={handleNext}
+                    endContent={<ChevronRight className="w-4 h-4" />}
                   >
                     Next
-                    <ChevronRight className="w-4 h-4" />
-                  </button>
+                  </Button>
                 ) : (
-                  <button
-                    className="px-4 py-2 text-sm bg-green-600 text-white rounded hover:bg-green-700 flex items-center gap-1"
-                    onClick={handleComplete}
+                  <Button
+                    color="success"
+                    size="sm"
+                    onPress={handleComplete}
+                    startContent={<Check className="w-4 h-4" />}
                   >
-                    <Check className="w-4 h-4" />
                     Complete
-                  </button>
+                  </Button>
                 )}
               </div>
               
-              <button
-                className="px-4 py-2 text-sm text-gray-500 hover:text-gray-700 flex items-center gap-1"
-                onClick={handleSkip}
+              <Button
+                variant="light"
+                size="sm"
+                onPress={handleSkip}
+                startContent={<SkipForward className="w-4 h-4" />}
               >
-                <SkipForward className="w-4 h-4" />
                 Skip
-              </button>
+              </Button>
             </div>
           </div>
-        </div>
-      </div>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
       
       {/* Global styles for highlighting */}
       <style dangerouslySetInnerHTML={{
@@ -437,12 +448,12 @@ export const HelpButton: React.FC<HelpButtonProps> = ({
 }: HelpButtonProps) => {
   return (
     <Button
-      variant="outline"
+      variant="bordered"
       size="sm"
-      onClick={onClick}
+      onPress={onClick}
       className={className}
+      startContent={<HelpCircle className="h-4 w-4" />}
     >
-      <HelpCircle className="h-4 w-4 mr-1" />
       Help
     </Button>
   );

@@ -1,11 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/cotrain/ui/dialog';
-import { Button } from '@/components/cotrain/ui/button';
-import { Input } from '@/components/cotrain/ui/input';
-import { Label } from '@/components/cotrain/ui/label';
-import { Switch } from '@/components/cotrain/ui/switch';
+import { Modal, ModalContent, ModalHeader, ModalBody, Button, Input, Switch } from '@heroui/react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useWallet } from '@aptos-labs/wallet-adapter-react';
 import { toast } from 'sonner';
@@ -90,25 +86,27 @@ export function SecuritySettingsDialog({ trigger }: SecuritySettingsDialogProps)
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        {trigger || (
-          <Button variant="outline" className="flex items-center gap-2">
-            <Shield className="h-4 w-4" />
-            Security Settings
-          </Button>
-        )}
-      </DialogTrigger>
-      <DialogContent className="max-w-md max-h-[80vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
+    <>
+      {trigger ? (
+        <div onClick={() => setOpen(true)}>{trigger}</div>
+      ) : (
+        <Button variant="bordered" className="flex items-center gap-2" onPress={() => setOpen(true)}>
+          <Shield className="h-4 w-4" />
+          Security Settings
+        </Button>
+      )}
+      <Modal isOpen={open} onOpenChange={setOpen} size="md" scrollBehavior="inside">
+        <ModalContent>
+          <ModalHeader className="flex items-center gap-2">
             <Shield className="h-5 w-5" />
-            Security Settings
-          </DialogTitle>
-          <DialogDescription>
-            Manage your account security and privacy preferences.
-          </DialogDescription>
-        </DialogHeader>
+            <div>
+              <h2 className="text-lg font-semibold">Security Settings</h2>
+              <p className="text-sm text-default-400">
+                Manage your account security and privacy preferences.
+              </p>
+            </div>
+          </ModalHeader>
+          <ModalBody>
         
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Password Section */}
@@ -119,68 +117,66 @@ export function SecuritySettingsDialog({ trigger }: SecuritySettingsDialogProps)
             </h3>
             
             <div className="space-y-2">
-              <Label htmlFor="currentPassword">Current Password</Label>
-              <div className="relative">
-                <Input
-                  id="currentPassword"
-                  type={showCurrentPassword ? "text" : "password"}
-                  value={formData.currentPassword}
-                  onChange={(e) => setFormData(prev => ({ ...prev, currentPassword: e.target.value }))}
-                  placeholder="Enter current password"
-                  disabled={loading}
-                />
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                  onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                >
-                  {showCurrentPassword ? (
-                    <EyeOff className="h-4 w-4" />
-                  ) : (
-                    <Eye className="h-4 w-4" />
-                  )}
-                </Button>
-              </div>
+              <label htmlFor="currentPassword" className="text-sm font-medium">Current Password</label>
+              <Input
+                id="currentPassword"
+                type={showCurrentPassword ? "text" : "password"}
+                value={formData.currentPassword}
+                onChange={(e) => setFormData(prev => ({ ...prev, currentPassword: e.target.value }))}
+                placeholder="Enter current password"
+                isDisabled={loading}
+                endContent={
+                  <Button
+                    isIconOnly
+                    variant="light"
+                    size="sm"
+                    onPress={() => setShowCurrentPassword(!showCurrentPassword)}
+                  >
+                    {showCurrentPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
+                  </Button>
+                }
+              />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="newPassword">New Password</Label>
-              <div className="relative">
-                <Input
-                  id="newPassword"
-                  type={showNewPassword ? "text" : "password"}
-                  value={formData.newPassword}
-                  onChange={(e) => setFormData(prev => ({ ...prev, newPassword: e.target.value }))}
-                  placeholder="Enter new password (min 8 characters)"
-                  disabled={loading}
-                />
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                  onClick={() => setShowNewPassword(!showNewPassword)}
-                >
-                  {showNewPassword ? (
-                    <EyeOff className="h-4 w-4" />
-                  ) : (
-                    <Eye className="h-4 w-4" />
-                  )}
-                </Button>
-              </div>
+              <label htmlFor="newPassword" className="text-sm font-medium">New Password</label>
+              <Input
+                id="newPassword"
+                type={showNewPassword ? "text" : "password"}
+                value={formData.newPassword}
+                onChange={(e) => setFormData(prev => ({ ...prev, newPassword: e.target.value }))}
+                placeholder="Enter new password (min 8 characters)"
+                isDisabled={loading}
+                endContent={
+                  <Button
+                    isIconOnly
+                    variant="light"
+                    size="sm"
+                    onPress={() => setShowNewPassword(!showNewPassword)}
+                  >
+                    {showNewPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
+                  </Button>
+                }
+              />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirm New Password</Label>
+              <label htmlFor="confirmPassword" className="text-sm font-medium">Confirm New Password</label>
               <Input
                 id="confirmPassword"
                 type="password"
                 value={formData.confirmPassword}
                 onChange={(e) => setFormData(prev => ({ ...prev, confirmPassword: e.target.value }))}
                 placeholder="Confirm new password"
-                disabled={loading}
+                isDisabled={loading}
               />
             </div>
           </div>
@@ -194,14 +190,14 @@ export function SecuritySettingsDialog({ trigger }: SecuritySettingsDialogProps)
             
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
-                <Label>Enable 2FA</Label>
-                <p className="text-sm text-muted-foreground">
+                <label className="text-sm font-medium">Enable 2FA</label>
+                <p className="text-sm text-default-400">
                   Add an extra layer of security to your account
                 </p>
               </div>
               <Switch
-                checked={formData.twoFactorEnabled}
-                onCheckedChange={(checked) => 
+                isSelected={formData.twoFactorEnabled}
+                onValueChange={(checked) => 
                   setFormData(prev => ({ ...prev, twoFactorEnabled: checked }))
                 }
               />
@@ -212,10 +208,10 @@ export function SecuritySettingsDialog({ trigger }: SecuritySettingsDialogProps)
           <div className="space-y-4">
             <h3 className="text-lg font-medium">Wallet Security</h3>
             
-            <div className="p-3 bg-muted rounded-lg space-y-3">
+            <div className="p-3 bg-default-100 rounded-lg space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium">Connected Wallet</span>
-                <span className="text-sm text-muted-foreground">
+                <span className="text-sm text-default-400">
                   {account?.address ? 
                     `${account.address.toString().slice(0, 6)}...${account.address.toString().slice(-4)}` : 
                     'Not connected'
@@ -224,11 +220,10 @@ export function SecuritySettingsDialog({ trigger }: SecuritySettingsDialogProps)
               </div>
               
               <Button
-                type="button"
-                variant="outline"
+                variant="bordered"
                 size="sm"
-                onClick={handleWalletSecurity}
-                disabled={!account || loading}
+                onPress={handleWalletSecurity}
+                isDisabled={!account || loading}
                 className="w-full"
               >
                 Verify Wallet Security
@@ -243,14 +238,14 @@ export function SecuritySettingsDialog({ trigger }: SecuritySettingsDialogProps)
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
-                  <Label>Email Notifications</Label>
-                  <p className="text-sm text-muted-foreground">
+                  <label className="text-sm font-medium">Email Notifications</label>
+                  <p className="text-sm text-default-400">
                     Receive security alerts via email
                   </p>
                 </div>
                 <Switch
-                  checked={formData.emailNotifications}
-                  onCheckedChange={(checked) => 
+                  isSelected={formData.emailNotifications}
+                  onValueChange={(checked) => 
                     setFormData(prev => ({ ...prev, emailNotifications: checked }))
                   }
                 />
@@ -258,14 +253,14 @@ export function SecuritySettingsDialog({ trigger }: SecuritySettingsDialogProps)
               
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
-                  <Label>Login Alerts</Label>
-                  <p className="text-sm text-muted-foreground">
+                  <label className="text-sm font-medium">Login Alerts</label>
+                  <p className="text-sm text-default-400">
                     Get notified of new login attempts
                   </p>
                 </div>
                 <Switch
-                  checked={formData.loginAlerts}
-                  onCheckedChange={(checked) => 
+                  isSelected={formData.loginAlerts}
+                  onValueChange={(checked) => 
                     setFormData(prev => ({ ...prev, loginAlerts: checked }))
                   }
                 />
@@ -278,18 +273,18 @@ export function SecuritySettingsDialog({ trigger }: SecuritySettingsDialogProps)
             <h3 className="text-lg font-medium">Session Management</h3>
             
             <div className="space-y-2">
-              <Label htmlFor="autoLogout">Auto-logout (minutes)</Label>
+              <label htmlFor="autoLogout" className="text-sm font-medium">Auto-logout (minutes)</label>
               <Input
                 id="autoLogout"
                 type="number"
                 min="5"
                 max="120"
-                value={formData.autoLogoutMinutes}
+                value={formData.autoLogoutMinutes.toString()}
                 onChange={(e) => setFormData(prev => ({ 
                   ...prev, 
                   autoLogoutMinutes: parseInt(e.target.value) || 30 
                 }))}
-                disabled={loading}
+                isDisabled={loading}
               />
             </div>
           </div>
@@ -298,22 +293,24 @@ export function SecuritySettingsDialog({ trigger }: SecuritySettingsDialogProps)
           <div className="flex gap-2 pt-4">
             <Button
               type="submit"
-              disabled={loading}
+              color="primary"
+              isLoading={loading}
               className="flex-1"
             >
               {loading ? 'Updating...' : 'Update Security Settings'}
             </Button>
             <Button
-              type="button"
-              variant="outline"
-              onClick={() => setOpen(false)}
-              disabled={loading}
+              variant="bordered"
+              onPress={() => setOpen(false)}
+              isDisabled={loading}
             >
               Cancel
             </Button>
           </div>
         </form>
-      </DialogContent>
-    </Dialog>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+    </>
   );
 }

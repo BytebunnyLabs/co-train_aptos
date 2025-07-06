@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { Button } from "@heroui/react"
 import { TrendingUp, TrendingDown, BarChart3, PieChart } from "lucide-react"
 
 interface ChartData {
@@ -149,38 +150,42 @@ function ContributionTrends({ data }: ContributionTrendsProps) {
           </div>
         </div>
         <div className="flex gap-2">
-          <button
-            onClick={() => setActiveChart("compute")}
-            className={`px-3 py-1 text-xs rounded ${
-              activeChart === "compute" ? "bg-blue-600 text-white" : "bg-gray-800 text-gray-400 hover:bg-gray-700"
-            }`}
+          <Button
+            onPress={() => setActiveChart("compute")}
+            size="sm"
+            variant={activeChart === "compute" ? "solid" : "ghost"}
+            color={activeChart === "compute" ? "primary" : "default"}
+            className="px-3 py-1 text-xs"
           >
             Compute
-          </button>
-          <button
-            onClick={() => setActiveChart("tokens")}
-            className={`px-3 py-1 text-xs rounded ${
-              activeChart === "tokens" ? "bg-yellow-600 text-white" : "bg-gray-800 text-gray-400 hover:bg-gray-700"
-            }`}
+          </Button>
+          <Button
+            onPress={() => setActiveChart("tokens")}
+            size="sm"
+            variant={activeChart === "tokens" ? "solid" : "ghost"}
+            color={activeChart === "tokens" ? "warning" : "default"}
+            className="px-3 py-1 text-xs"
           >
             Tokens
-          </button>
-          <button
-            onClick={() => setActiveChart("reputation")}
-            className={`px-3 py-1 text-xs rounded ${
-              activeChart === "reputation" ? "bg-green-600 text-white" : "bg-gray-800 text-gray-400 hover:bg-gray-700"
-            }`}
+          </Button>
+          <Button
+            onPress={() => setActiveChart("reputation")}
+            size="sm"
+            variant={activeChart === "reputation" ? "solid" : "ghost"}
+            color={activeChart === "reputation" ? "success" : "default"}
+            className="px-3 py-1 text-xs"
           >
             Reputation
-          </button>
-          <button
-            onClick={() => setActiveChart("rank")}
-            className={`px-3 py-1 text-xs rounded ${
-              activeChart === "rank" ? "bg-purple-600 text-white" : "bg-gray-800 text-gray-400 hover:bg-gray-700"
-            }`}
+          </Button>
+          <Button
+            onPress={() => setActiveChart("rank")}
+            size="sm"
+            variant={activeChart === "rank" ? "solid" : "ghost"}
+            color={activeChart === "rank" ? "secondary" : "default"}
+            className="px-3 py-1 text-xs"
           >
             Rank
-          </button>
+          </Button>
         </div>
       </div>
 

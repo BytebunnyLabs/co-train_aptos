@@ -270,4 +270,278 @@ export class HivemindApiController {
       );
     }
   }
+
+  @Get('topology/nodes')
+  @ApiOperation({ summary: 'Get network topology nodes' })
+  @ApiResponse({ status: 200, description: 'Topology nodes retrieved successfully' })
+  async getTopologyNodes() {
+    try {
+      this.logger.log('Getting topology nodes');
+
+      // Mock data for topology visualization
+      const mockNodes = [
+        {
+          id: 'node-central-1',
+          label: 'Central Hub 1',
+          type: 'hub',
+          x: 400,
+          y: 300,
+          computePower: 1500,
+          connections: 12,
+          status: 'active',
+          region: 'us-east-1',
+          latency: 25
+        },
+        {
+          id: 'node-worker-1',
+          label: 'Worker Node 1',
+          type: 'worker',
+          x: 200,
+          y: 150,
+          computePower: 800,
+          connections: 4,
+          status: 'active',
+          region: 'us-east-1',
+          latency: 45
+        },
+        {
+          id: 'node-worker-2',
+          label: 'Worker Node 2',
+          type: 'worker',
+          x: 600,
+          y: 150,
+          computePower: 950,
+          connections: 6,
+          status: 'active',
+          region: 'us-west-2',
+          latency: 38
+        },
+        {
+          id: 'node-worker-3',
+          label: 'Worker Node 3',
+          type: 'worker',
+          x: 300,
+          y: 450,
+          computePower: 720,
+          connections: 3,
+          status: 'active',
+          region: 'eu-west-1',
+          latency: 65
+        },
+        {
+          id: 'node-validator-1',
+          label: 'Validator 1',
+          type: 'validator',
+          x: 500,
+          y: 450,
+          computePower: 600,
+          connections: 8,
+          status: 'active',
+          region: 'ap-southeast-1',
+          latency: 75
+        },
+        {
+          id: 'node-storage-1',
+          label: 'Storage Node 1',
+          type: 'storage',
+          x: 100,
+          y: 300,
+          computePower: 300,
+          connections: 5,
+          status: 'active',
+          region: 'us-central-1',
+          latency: 55
+        },
+        {
+          id: 'node-edge-1',
+          label: 'Edge Node 1',
+          type: 'edge',
+          x: 700,
+          y: 300,
+          computePower: 450,
+          connections: 2,
+          status: 'active',
+          region: 'eu-central-1',
+          latency: 85
+        }
+      ];
+
+      return {
+        success: true,
+        data: {
+          nodes: mockNodes,
+          totalCount: mockNodes.length,
+          activeCount: mockNodes.filter(n => n.status === 'active').length,
+          timestamp: new Date().toISOString()
+        }
+      };
+    } catch (error) {
+      this.logger.error('Error getting topology nodes:', error);
+      throw new HttpException(
+        'Failed to retrieve topology nodes',
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
+    }
+  }
+
+  @Get('topology/connections')
+  @ApiOperation({ summary: 'Get network topology connections' })
+  @ApiResponse({ status: 200, description: 'Topology connections retrieved successfully' })
+  async getTopologyConnections() {
+    try {
+      this.logger.log('Getting topology connections');
+
+      // Mock connections data
+      const mockConnections = [
+        {
+          id: 'conn-1',
+          source: 'node-central-1',
+          target: 'node-worker-1',
+          bandwidth: 1000,
+          latency: 25,
+          status: 'active',
+          dataTransferred: 15000
+        },
+        {
+          id: 'conn-2',
+          source: 'node-central-1',
+          target: 'node-worker-2',
+          bandwidth: 1000,
+          latency: 35,
+          status: 'active',
+          dataTransferred: 18500
+        },
+        {
+          id: 'conn-3',
+          source: 'node-central-1',
+          target: 'node-worker-3',
+          bandwidth: 800,
+          latency: 60,
+          status: 'active',
+          dataTransferred: 12000
+        },
+        {
+          id: 'conn-4',
+          source: 'node-central-1',
+          target: 'node-validator-1',
+          bandwidth: 1200,
+          latency: 45,
+          status: 'active',
+          dataTransferred: 22000
+        },
+        {
+          id: 'conn-5',
+          source: 'node-worker-1',
+          target: 'node-storage-1',
+          bandwidth: 600,
+          latency: 40,
+          status: 'active',
+          dataTransferred: 8500
+        },
+        {
+          id: 'conn-6',
+          source: 'node-worker-2',
+          target: 'node-edge-1',
+          bandwidth: 500,
+          latency: 55,
+          status: 'active',
+          dataTransferred: 6200
+        },
+        {
+          id: 'conn-7',
+          source: 'node-validator-1',
+          target: 'node-worker-3',
+          bandwidth: 700,
+          latency: 50,
+          status: 'active',
+          dataTransferred: 9800
+        }
+      ];
+
+      return {
+        success: true,
+        data: {
+          connections: mockConnections,
+          totalCount: mockConnections.length,
+          activeCount: mockConnections.filter(c => c.status === 'active').length,
+          totalBandwidth: mockConnections.reduce((sum, c) => sum + c.bandwidth, 0),
+          averageLatency: mockConnections.reduce((sum, c) => sum + c.latency, 0) / mockConnections.length,
+          timestamp: new Date().toISOString()
+        }
+      };
+    } catch (error) {
+      this.logger.error('Error getting topology connections:', error);
+      throw new HttpException(
+        'Failed to retrieve topology connections',
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
+    }
+  }
+
+  @Get('health')
+  @ApiOperation({ summary: 'Get detailed network health metrics' })
+  @ApiResponse({ status: 200, description: 'Network health metrics retrieved successfully' })
+  async getNetworkHealth() {
+    try {
+      this.logger.log('Getting network health metrics');
+
+      const healthMetrics = {
+        overallHealth: 94.5,
+        nodeHealth: {
+          totalNodes: 847,
+          activeNodes: 734,
+          healthyNodes: 698,
+          warningNodes: 36,
+          criticalNodes: 0,
+          offlineNodes: 113
+        },
+        performance: {
+          averageLatency: 45,
+          maxLatency: 150,
+          minLatency: 15,
+          networkThroughput: 2.4, // GB/s
+          packetLoss: 0.02 // 0.02%
+        },
+        resources: {
+          totalComputePower: 156000, // TFLOPS
+          availableComputePower: 89000,
+          utilizationRate: 42.9, // percentage
+          memoryUsage: 68.5, // percentage
+          storageUsage: 34.2 // percentage
+        },
+        security: {
+          authenticatedNodes: 734,
+          unauthorizedAttempts: 0,
+          encryptionLevel: 'AES-256',
+          consensusHealth: 99.1
+        },
+        trends: {
+          last24h: {
+            nodeJoins: 23,
+            nodeLeaves: 8,
+            averageUptime: 97.8,
+            incidentCount: 0
+          },
+          last7d: {
+            nodeJoins: 156,
+            nodeLeaves: 89,
+            averageUptime: 96.5,
+            incidentCount: 2
+          }
+        },
+        lastUpdated: new Date().toISOString()
+      };
+
+      return {
+        success: true,
+        data: healthMetrics
+      };
+    } catch (error) {
+      this.logger.error('Error getting network health:', error);
+      throw new HttpException(
+        'Failed to retrieve network health metrics',
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
+    }
+  }
 }

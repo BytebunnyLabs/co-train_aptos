@@ -22,6 +22,7 @@ export class P2PNetworkService {
 
   constructor(private eventEmitter: EventEmitter2) {
     this.generateKeys();
+    this.initializeMockNodes();
   }
 
   private generateKeys(): void {
@@ -34,6 +35,68 @@ export class P2PNetworkService {
     this.privateKey = keyPair.privateKey;
     this.publicKey = keyPair.publicKey;
     this.nodeId = crypto.createHash('sha256').update(this.publicKey).digest('hex').substring(0, 16);
+  }
+
+  private initializeMockNodes(): void {
+    // Add some mock nodes for development
+    const mockNodes: P2PNode[] = [
+      {
+        nodeId: 'node-central-hub-001',
+        address: '192.168.1.100:8080',
+        publicKey: 'mock-public-key-001',
+        computeCapacity: 1500,
+        bandwidth: 1000,
+        reputationScore: 950,
+        isActive: true,
+        lastSeen: new Date()
+      },
+      {
+        nodeId: 'node-worker-002',
+        address: '192.168.1.101:8080',
+        publicKey: 'mock-public-key-002',
+        computeCapacity: 800,
+        bandwidth: 600,
+        reputationScore: 875,
+        isActive: true,
+        lastSeen: new Date()
+      },
+      {
+        nodeId: 'node-validator-003',
+        address: '192.168.1.102:8080',
+        publicKey: 'mock-public-key-003',
+        computeCapacity: 1200,
+        bandwidth: 800,
+        reputationScore: 920,
+        isActive: true,
+        lastSeen: new Date()
+      },
+      {
+        nodeId: 'node-storage-004',
+        address: '192.168.1.103:8080',
+        publicKey: 'mock-public-key-004',
+        computeCapacity: 600,
+        bandwidth: 400,
+        reputationScore: 785,
+        isActive: true,
+        lastSeen: new Date()
+      },
+      {
+        nodeId: 'node-edge-005',
+        address: '192.168.1.104:8080',
+        publicKey: 'mock-public-key-005',
+        computeCapacity: 400,
+        bandwidth: 300,
+        reputationScore: 650,
+        isActive: false,
+        lastSeen: new Date(Date.now() - 30 * 60 * 1000) // 30 minutes ago
+      }
+    ];
+
+    mockNodes.forEach(node => {
+      this.nodes.set(node.nodeId, node);
+    });
+
+    this.logger.log(`Initialized ${mockNodes.length} mock nodes for development`);
   }
 
   async initialize(port: number): Promise<void> {

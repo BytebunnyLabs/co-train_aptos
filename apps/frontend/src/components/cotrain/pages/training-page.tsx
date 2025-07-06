@@ -2,8 +2,7 @@
 
 import type React from "react"
 import { Brain, Zap, Database, Code, Image as ImageIcon, MessageSquare, Loader2 } from "lucide-react"
-import { Button } from "@/components/cotrain/ui/button"
-import { Badge } from "@/components/cotrain/ui/badge"
+import { Button, Card, CardBody, Progress, Chip, Spinner } from "@heroui/react"
 import { TrainingOption, Notification } from "../../../types/cotrain"
 import { ERROR_MESSAGES, SUCCESS_MESSAGES, THEME_CONFIG } from "@/config/index"
 import { handleError } from "../../../utils/error-handler"
@@ -45,15 +44,15 @@ export function TrainingPage({
   const getTrainingStatusBadge = (status: string) => {
     switch (status) {
       case "available":
-        return <Badge className="bg-green-600 text-white">Available</Badge>
+        return <Chip color="success" variant="flat">Available</Chip>
       case "training":
-        return <Badge className="bg-blue-600 text-white">Training</Badge>
+        return <Chip color="primary" variant="flat">Training</Chip>
       case "completed":
-        return <Badge className="bg-gray-600 text-white">Completed</Badge>
+        return <Chip color="default" variant="flat">Completed</Chip>
       case "coming-soon":
-        return <Badge className="bg-yellow-600 text-white">Coming Soon</Badge>
+        return <Chip color="warning" variant="flat">Coming Soon</Chip>
       default:
-        return <Badge className="bg-gray-600 text-white">Unknown</Badge>
+        return <Chip color="default" variant="flat">Unknown</Chip>
     }
   }
 
@@ -109,23 +108,29 @@ export function TrainingPage({
         </div>
         <div className="flex gap-4">
           <Button
-            variant="outline"
-            onClick={() => onNavigate("history")}
-            className="bg-transparent border-purple-400 text-purple-400 hover:bg-purple-400 hover:text-black font-mono text-xs"
+            variant="bordered"
+            color="secondary"
+            onPress={() => onNavigate("history")}
+            className="font-mono text-xs"
+            size="sm"
           >
             TRAINING HISTORY
           </Button>
           <Button
-            variant="outline"
-            onClick={() => onNavigate("terminal")}
-            className="bg-transparent border-green-400 text-green-400 hover:bg-green-400 hover:text-black font-mono text-xs"
+            variant="bordered"
+            color="success"
+            onPress={() => onNavigate("terminal")}
+            className="font-mono text-xs"
+            size="sm"
           >
             TERMINAL VIEW
           </Button>
           <Button
-            variant="outline"
-            onClick={() => setShowContributeModal?.(true)}
-            className="bg-transparent border-green-400 text-green-400 hover:bg-green-400 hover:text-black font-mono text-xs"
+            variant="bordered"
+            color="success"
+            onPress={() => setShowContributeModal?.(true)}
+            className="font-mono text-xs"
+            size="sm"
           >
             CONTRIBUTE COMPUTE
           </Button>
@@ -135,92 +140,102 @@ export function TrainingPage({
       {/* Training Options Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {trainingOptions.map((option) => (
-          <div
+          <Card
             key={option.id}
-            onClick={() => handleTrainingSelect(option)}
-            className={`bg-gray-900 border border-gray-800 rounded-lg p-6 hover:border-gray-600 transition-all cursor-pointer ${
-              option.status === "available" ? "hover:bg-gray-800" : ""
-            } ${option.status === "coming-soon" ? "opacity-60 cursor-not-allowed" : ""}`}
+            isPressable
+            isHoverable
+            onPress={() => handleTrainingSelect(option)}
+            className="bg-gray-900 border border-gray-800 hover:border-green-400"
           >
-            <div className="flex items-start justify-between mb-4">
-              <div className="text-green-400">{getIconComponent(option.iconName)}</div>
-              {getTrainingStatusBadge(option.status)}
-            </div>
+            <CardBody className="p-6">
+              <div className="flex items-start justify-between mb-4">
+                <div className="text-green-400">{getIconComponent(option.iconName)}</div>
+                {getTrainingStatusBadge(option.status)}
+              </div>
 
-            <h3 className="text-lg font-semibold text-white mb-2">{option.title}</h3>
-            <p className="text-gray-400 text-sm mb-4">{option.description}</p>
+              <h3 className="text-lg font-semibold text-white mb-2">{option.title}</h3>
+              <p className="text-gray-400 text-sm mb-4">{option.description}</p>
 
-            <div className="space-y-2">
-              {option.participants && (
-                <div className="flex justify-between text-xs">
-                  <span className="text-gray-500">Participants:</span>
-                  <span className="text-green-400">{option.participants}</span>
-                </div>
-              )}
-
-              {option.progress !== undefined && (
-                <div className="space-y-1">
+              <div className="space-y-2">
+                {option.participants && (
                   <div className="flex justify-between text-xs">
-                    <span className="text-gray-500">Progress:</span>
-                    <span className="text-green-400">{option.progress}%</span>
+                    <span className="text-gray-500">Participants:</span>
+                    <span className="text-green-400">{option.participants}</span>
                   </div>
-                  <div className="w-full bg-gray-800 h-1 rounded">
-                    <div
-                      className="bg-green-400 h-1 rounded transition-all duration-300"
-                      style={{ width: `${option.progress}%` }}
+                )}
+
+                {option.progress !== undefined && (
+                  <div className="space-y-1">
+                    <div className="flex justify-between text-xs">
+                      <span className="text-gray-500">Progress:</span>
+                      <span className="text-green-400">{option.progress}%</span>
+                    </div>
+                    <Progress 
+                      value={option.progress} 
+                      color="success"
+                      className="w-full"
+                      size="sm"
                     />
                   </div>
-                </div>
-              )}
+                )}
 
-              {option.status === "available" && (
-                <Button
-                  size="sm"
-                  className="w-full mt-4 bg-green-600 hover:bg-green-700 text-white"
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    handleTrainingSelect(option)
-                  }}
-                >
-                  Join Training
-                </Button>
-              )}
+                {option.status === "available" && (
+                  <Button
+                    size="sm"
+                    color="success"
+                    className="w-full mt-4"
+                    onPress={() => {
+                      handleTrainingSelect(option)
+                    }}
+                  >
+                    Join Training
+                  </Button>
+                )}
 
-              {option.status === "training" && (
-                <div className="flex items-center gap-2 mt-4 text-green-400 text-xs">
-                  <Loader2 className="w-3 h-3 animate-spin" />
-                  <span>Training in progress...</span>
-                </div>
-              )}
-            </div>
-          </div>
+                {option.status === "training" && (
+                  <div className="flex items-center gap-2 mt-4 text-green-400 text-xs">
+                    <Spinner size="sm" />
+                    <span>Training in progress...</span>
+                  </div>
+                )}
+              </div>
+            </CardBody>
+          </Card>
         ))}
       </div>
 
       {/* Quick Stats */}
       <div className="mt-12 grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="bg-gray-900 border border-gray-800 rounded-lg p-4">
-          <div className="text-2xl font-bold text-green-400">
-            {trainingOptions.filter((o) => o.status === "training").length}
-          </div>
-          <div className="text-gray-400 text-sm">Active Training Sessions</div>
-        </div>
-        <div className="bg-gray-900 border border-gray-800 rounded-lg p-4">
-          <div className="text-2xl font-bold text-blue-400">
-            {trainingOptions.reduce((sum, o) => sum + (o.participants || 0), 0)}
-          </div>
-          <div className="text-gray-400 text-sm">Total Participants</div>
-        </div>
-        <div className="bg-gray-900 border border-gray-800 rounded-lg p-4">
-          <div className="text-2xl font-bold text-yellow-400">
-            {trainingOptions.filter((o) => o.status === "completed").length}
-          </div>
-          <div className="text-gray-400 text-sm">Completed Models</div>
-        </div>
-        <div className="bg-gray-900 border border-gray-800 rounded-lg p-4">
-          <div className="text-2xl font-bold text-purple-400">1247</div>
-          <div className="text-gray-400 text-sm">Network Nodes</div>
-        </div>
+        <Card className="bg-gray-900 border border-gray-800">
+          <CardBody className="p-4">
+            <div className="text-2xl font-bold text-green-400">
+              {trainingOptions.filter((o) => o.status === "training").length}
+            </div>
+            <div className="text-gray-400 text-sm">Active Training Sessions</div>
+          </CardBody>
+        </Card>
+        <Card className="bg-gray-900 border border-gray-800">
+          <CardBody className="p-4">
+            <div className="text-2xl font-bold text-blue-400">
+              {trainingOptions.reduce((sum, o) => sum + (o.participants || 0), 0)}
+            </div>
+            <div className="text-gray-400 text-sm">Total Participants</div>
+          </CardBody>
+        </Card>
+        <Card className="bg-gray-900 border border-gray-800">
+          <CardBody className="p-4">
+            <div className="text-2xl font-bold text-yellow-400">
+              {trainingOptions.filter((o) => o.status === "completed").length}
+            </div>
+            <div className="text-gray-400 text-sm">Completed Models</div>
+          </CardBody>
+        </Card>
+        <Card className="bg-gray-900 border border-gray-800">
+          <CardBody className="p-4">
+            <div className="text-2xl font-bold text-purple-400">1247</div>
+            <div className="text-gray-400 text-sm">Network Nodes</div>
+          </CardBody>
+        </Card>
       </div>
     </div>
   )

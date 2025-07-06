@@ -33,7 +33,7 @@ export default function HivemindPage() {
 
   const loadServerStatus = async () => {
     try {
-      const status = await hivemindApi.getStatus();
+      const status = await hivemindApi.getStatus() as any;
       setServerStatus(status.data);
     } catch (error) {
       console.error('Failed to load server status:', error);
