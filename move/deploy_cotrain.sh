@@ -42,7 +42,7 @@ aptos move publish --named-addresses "cotrain=${DEPLOYER_ADDRESS}" --profile "$P
 echo "Initializing the CoTrain network..."
 aptos move run \
   --function-id "${DEPLOYER_ADDRESS}::cotrain_network::initialize" \
-  --account "${DEPLOYER_ADDRESS}" \
+
   --profile "$PROFILE_NAME"
 
 echo "-------------------------------------------------------------"
