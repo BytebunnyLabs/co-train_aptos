@@ -4,10 +4,10 @@ version = "1.0.0"
 authors = ["CoTrain Team"]
 
 [addresses]
-cotrain = "_"
+cotrain = "0x47ce0341b4ab617f09af80c3746c676c950cf0e202eda645d5170399706ca009"
 
 [dev-addresses]
-cotrain = "0x1"
+cotrain = "0x47ce0341b4ab617f09af80c3746c676c950cf0e202eda645d5170399706ca009"
 
 [dependencies.AptosFramework]
 git = "https://github.com/aptos-labs/aptos-framework.git"
