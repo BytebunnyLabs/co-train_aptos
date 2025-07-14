@@ -162,6 +162,14 @@ export default function Training() {
       badge: "New"
     },
     {
+      title: "Config Generator",
+      description: "Generate TOML configuration files for training sessions",
+      icon: Settings,
+      href: "/training/config",
+      color: "bg-gradient-to-br from-indigo-500 to-indigo-600",
+      badge: "Beta"
+    },
+    {
       title: "Browse Sessions", 
       description: "Discover and join existing training sessions",
       icon: Calendar,

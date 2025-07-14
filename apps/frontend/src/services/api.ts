@@ -407,6 +407,41 @@ export const smartApi = {
   }
 }
 
+// Simple API object for direct usage
+export const api = {
+  get: async (endpoint: string) => {
+    const response = await apiClient.get(endpoint)
+    if (!response.success) {
+      throw new Error(response.error || 'API request failed')
+    }
+    return response
+  },
+  
+  post: async (endpoint: string, data?: any) => {
+    const response = await apiClient.post(endpoint, data)
+    if (!response.success) {
+      throw new Error(response.error || 'API request failed')
+    }
+    return response
+  },
+  
+  put: async (endpoint: string, data?: any) => {
+    const response = await apiClient.put(endpoint, data)
+    if (!response.success) {
+      throw new Error(response.error || 'API request failed')
+    }
+    return response
+  },
+  
+  delete: async (endpoint: string) => {
+    const response = await apiClient.delete(endpoint)
+    if (!response.success) {
+      throw new Error(response.error || 'API request failed')
+    }
+    return response
+  }
+}
+
 // Export unified API client (backward compatibility)
 export default apiClient
 
