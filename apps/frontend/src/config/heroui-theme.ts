@@ -1,4 +1,4 @@
-import type { ConfigTheme } from '@heroui/theme';
+import type { ConfigTheme } from '@heroui/react';
 
 // CoTrain 品牌主题配置
 export const cotrainTheme: ConfigTheme = {

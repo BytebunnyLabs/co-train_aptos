@@ -51,6 +51,10 @@
     "src/components/**/*.tsx",
     "src/components/ui/**/*.ts",
     "src/components/ui/**/*.tsx",
+    "src/stores/**/*.ts",
+    "src/stores/**/*.tsx",
+    "src/stores/examples/**/*.ts",
+    "src/stores/examples/**/*.tsx",
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts"

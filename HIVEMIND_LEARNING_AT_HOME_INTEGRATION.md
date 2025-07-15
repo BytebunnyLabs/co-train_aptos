@@ -1,36 +1,49 @@
-# 集成 learning-at-home/hivemind 到 CoTrain Aptos 项目
+# CoTrain Aptos 分布式训练架构文档
 
 ## 概述
 
-本文档详细说明如何将开源的 `learning-at-home/hivemind` Python 库集成到现有的 TypeScript/Node.js monorepo 项目中，实现分布式深度学习功能。
+本文档说明 CoTrain Aptos 项目的分布式深度学习架构。项目已从独立的 `hivemind-service` 迁移到统一的 `CotrainCore` 架构，实现更好的集成和维护性。
 
 ## 项目背景
 
 - **当前项目**: CoTrain Aptos - 基于区块链的协作训练平台
-- **技术栈**: TypeScript, NestJS, React, PostgreSQL, Aptos 区块链
-- **目标**: 集成成熟的分布式训练库 `learning-at-home/hivemind`
+- **技术栈**: TypeScript, NestJS, React, PostgreSQL, Aptos 区块链, Python (CotrainCore)
+- **架构变更**: 已移除独立的 `hivemind-service`，功能集成到 `CotrainCore` 中
 
-## 集成架构
+## 架构变更说明
 
-### 微服务架构方案
+### 变更前 (已废弃)
+- 独立的 `hivemind-service` Python 微服务
+- 通过 HTTP API 与 NestJS 后端通信
+- 复杂的服务间通信和状态同步
+
+### 变更后 (当前架构)
+- 统一的 `CotrainCore` Python 服务
+- 直接集成分布式训练功能
+- 简化的架构和更好的性能
+
+## 当前架构
+
+### 项目结构
 
 ```
 cotrainai/
 ├── apps/
-│   ├── backend/          # 现有 NestJS 后端
-│   ├── frontend/          # 现有前端
-│   └── hivemind-service/  # 新增 Python Hivemind 服务
+│   ├── backend/          # NestJS 后端 (包含 Hivemind 模块)
+│   ├── frontend/         # React 前端
+│   └── CotrainCore/      # 统一的 Python 训练服务
 ├── packages/
-└── docker-compose.yml     # 统一容器编排
+└── docker-compose.yml    # 容器编排
 ```
 
 ### 系统架构图
 
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   Frontend      │    │   NestJS        │    │   Hivemind      │
-│   (React)       │◄──►│   Backend       │◄──►│   Service       │
-│                 │    │   (API Gateway) │    │   (Python)      │
+│   Frontend      │    │   NestJS        │    │   CotrainCore   │
+│   (React)       │◄──►│   Backend       │◄──►│   (Python)      │
+│                 │    │   + Hivemind    │    │   + Hivemind    │
+│                 │    │   Module        │    │   Integration   │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
          │                       │                       │
          │                       │                       │
@@ -827,8 +840,8 @@ export class HivemindSyncService {
 
 在根目录 `.env` 文件中添加：
 ```env
-# Hivemind 配置
-HIVEMIND_SERVICE_URL=http://hivemind-service:8000
+# CotrainCore 分布式训练配置
+COTRAIN_CORE_URL=http://cotrain-core:8002
 HIVEMIND_DHT_PORT=8080
 HIVEMIND_SERVER_PORT=8081
 HIVEMIND_INITIAL_PEERS=
@@ -836,21 +849,21 @@ HIVEMIND_INITIAL_PEERS=
 
 在 `apps/backend/.env` 中添加：
 ```env
-# Hivemind 集成
-HIVEMIND_SERVICE_URL=http://hivemind-service:8000
+# CotrainCore 集成
+COTRAIN_CORE_URL=http://cotrain-core:8002
 ```
 
 #### 6.2 更新开发脚本
 
-在根目录 `package.json` 中添加脚本：
+注意：以下脚本已被移除，分布式训练功能现已集成到 CotrainCore 中：
 ```json
 {
   "scripts": {
-    "dev:hivemind": "docker-compose up hivemind-service",
-    "dev:all-with-hivemind": "docker-compose up",
-    "build:hivemind": "docker-compose build hivemind-service",
-    "logs:hivemind": "docker-compose logs -f hivemind-service",
-    "test:hivemind": "cd apps/hivemind-service && python -m pytest"
+    // 已移除 - 功能集成到 CotrainCore
+    // "dev:hivemind": "docker-compose up hivemind-service",
+    // "build:hivemind": "docker-compose build hivemind-service",
+    // "logs:hivemind": "docker-compose logs -f hivemind-service",
+    // "test:hivemind": "cd apps/hivemind-service && python -m pytest"
   }
 }
 ```

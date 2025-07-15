@@ -19,7 +19,7 @@ import { ContributorsModule } from './modules/contributors/contributors.module';
 import { BlockchainModule } from './modules/blockchain/blockchain.module';
 import { WebSocketModule } from './modules/websocket/websocket.module';
 import { HivemindModule } from './modules/hivemind/hivemind.module';
-import { HivemindProxyModule } from './modules/hivemind-proxy/hivemind-proxy.module';
+// HivemindProxyModule removed - functionality integrated into CotrainCore
 import { CotrainCoreModule } from './modules/cotrain-core/cotrain-core.module';
 // import { ComputeModule } from './modules/compute/compute.module';
 // import { AnalyticsModule } from './modules/analytics/analytics.module';
@@ -73,7 +73,6 @@ import { AppService } from './app.service';
     BlockchainModule,
     WebSocketModule,
     HivemindModule,
-    HivemindProxyModule,
     CotrainCoreModule,
     // ComputeModule,
     // AnalyticsModule,

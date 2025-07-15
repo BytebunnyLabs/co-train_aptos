@@ -37,7 +37,8 @@ co-train_aptos/
 │   ├── shared-types/      # Shared TypeScript types
 │   ├── shared-utils/      # Common utility functions
 │   └── shared-config/     # Configuration management
-├── move/                  # Aptos Move smart contracts
+├── CotrainCore/          # Core AI training service (Python) with distributed training
+├── move/                 # Aptos Move smart contracts
 ├── configs/              # Shared configuration files
 ├── scripts/              # Development and deployment scripts
 └── docs/                 # Documentation
@@ -89,6 +90,7 @@ co-train_aptos/
 pnpm dev                 # Start all apps in development mode
 pnpm dev:frontend        # Start frontend only
 pnpm dev:backend         # Start backend only
+pnpm dev:cotrain-core    # Start CotrainCore service
 pnpm setup              # Initial project setup
 ```
 
@@ -258,6 +260,7 @@ pnpm test:watch
 
 - **`@cotrain/frontend`**: Next.js web application
 - **`@cotrain/backend`**: NestJS API server
+- **`CotrainCore`**: Core AI training service (Python/FastAPI) with distributed training
 
 ## 📱 Applications
 
@@ -297,6 +300,26 @@ pnpm start:dev
 ```
 
 **API Documentation**: Available at `http://localhost:3001/api/docs`
+
+### CotrainCore Service
+
+**Tech Stack**: Python, FastAPI, PyTorch, Transformers, Redis
+
+**Features**:
+- Core AI training functionality
+- Training session management and monitoring
+- Real-time training metrics and logging
+- Configuration management for training parameters
+- RESTful API for training operations
+- Integration with distributed training frameworks
+
+**Development**:
+```bash
+cd CotrainCore
+pnpm dev:cotrain-core
+```
+
+**API Documentation**: Available at `http://localhost:8002/docs`
 
 ## 🚀 Deployment
 

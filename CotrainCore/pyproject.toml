@@ -20,6 +20,10 @@ dependencies = [
     "psutil",
     "torch-shampoo @ git+https://github.com/facebookresearch/optimizers.git@main",
     "liger-kernel-nightly>=0.5.2.dev20250122195349",
+    "fastapi>=0.104.0",
+    "uvicorn[standard]>=0.24.0",
+    "pydantic>=2.0.0",
+    "requests>=2.31.0",
 ]
 
 [project.optional-dependencies]

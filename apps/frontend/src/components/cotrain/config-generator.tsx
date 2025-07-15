@@ -44,7 +44,7 @@ import {
   CheckCircle2,
   Loader2,
 } from 'lucide-react';
-import { useSimpleToast as useToast } from '@/components/cotrain/ui/use-toast';
+import { useToast } from '@/components/cotrain/ui/use-toast';
 import { api } from '@/services/api';
 
 // Types
@@ -226,7 +226,7 @@ export default function ConfigGenerator() {
   const loadTemplates = async () => {
     try {
       const response = await api.get('/cotrain-core/config/templates');
-      setTemplates(response.data.templates);
+      setTemplates((response.data as any).templates);
     } catch (error) {
       console.error('Failed to load templates:', error);
       toast({
@@ -243,7 +243,7 @@ export default function ConfigGenerator() {
     try {
       setIsLoading(true);
       const response = await api.get(`/cotrain-core/config/templates/${templateName}`);
-      const template = response.data.template;
+      const template = (response.data as any).template;
       
       // Merge template with current config
       setConfig(prev => ({
@@ -312,8 +312,8 @@ export default function ConfigGenerator() {
       }
 
       const response = await api.post('/cotrain-core/config/generate', config);
-      setGeneratedConfig(response.data.content);
-      setConfigPath(response.data.configPath);
+      setGeneratedConfig((response.data as any).content);
+      setConfigPath((response.data as any).configPath);
       onOpen();
       
       toast({
@@ -364,7 +364,7 @@ export default function ConfigGenerator() {
     setConfig(prev => ({
       ...prev,
       [section]: {
-        ...prev[section],
+        ...(prev[section] as Record<string, any> || {}),
         [field]: value,
       },
     }));
@@ -427,7 +427,7 @@ export default function ConfigGenerator() {
               }}
             >
               {templates.map((template) => (
-                <SelectItem key={template.name} value={template.name}>
+                <SelectItem key={template.name}>
                   <div>
                     <div className="font-medium">{template.name}</div>
                     <div className="text-sm text-default-400">{template.description}</div>
@@ -495,7 +495,7 @@ export default function ConfigGenerator() {
                     }}
                   >
                     {ARCHITECTURES.map((arch) => (
-                      <SelectItem key={arch.key} value={arch.key}>
+                      <SelectItem key={arch.key}>
                         {arch.label}
                       </SelectItem>
                     ))}
@@ -600,7 +600,7 @@ export default function ConfigGenerator() {
                     }}
                   >
                     {OPTIMIZERS.map((opt) => (
-                      <SelectItem key={opt.key} value={opt.key}>
+                      <SelectItem key={opt.key}>
                         {opt.label}
                       </SelectItem>
                     ))}
@@ -614,7 +614,7 @@ export default function ConfigGenerator() {
                     }}
                   >
                     {SCHEDULERS.map((sched) => (
-                      <SelectItem key={sched.key} value={sched.key}>
+                      <SelectItem key={sched.key}>
                         {sched.label}
                       </SelectItem>
                     ))}
@@ -704,7 +704,7 @@ export default function ConfigGenerator() {
                     }}
                   >
                     {LOG_LEVELS.map((level) => (
-                      <SelectItem key={level.key} value={level.key}>
+                      <SelectItem key={level.key}>
                         {level.label}
                       </SelectItem>
                     ))}

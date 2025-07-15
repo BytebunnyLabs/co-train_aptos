@@ -12,6 +12,7 @@ import {
 import { handleError } from '../utils/error-handler'
 import { globalCache } from '../utils/performance'
 import { API_CONFIG, CACHE_CONFIG } from '../config'
+import cotrainCoreApi from './cotrain-core-api'
 
 // HTTP client with error handling and auth support
 class ApiClient {
@@ -403,7 +404,146 @@ export const smartApi = {
     if (!response.success) {
       return mockFallback.getContributors()
     }
-    return response.data ? { ...response, data: response.data } : mockFallback.getContributors()
+    return response
+  },
+
+  async getTrainingSession(sessionId: string): Promise<ApiResponse<TrainingSession>> {
+    try {
+      // Mock implementation for now
+      const mockSession: TrainingSession = {
+        id: sessionId,
+        name: `Training Session ${sessionId}`,
+        trainingOptionId: 'mock-option',
+        userId: 'mock-user',
+        startTime: new Date().toISOString(),
+        status: 'active',
+        progress: Math.random() * 100,
+        computeContributed: Math.random() * 1000,
+        tokensEarned: Math.random() * 100,
+        reputationEarned: Math.random() * 50,
+        metrics: {
+          accuracy: Math.random(),
+          loss: Math.random() * 0.5,
+          throughput: Math.random() * 100,
+          efficiency: Math.random() * 100,
+          uptime: 95 + Math.random() * 5,
+          errorRate: Math.random() * 5
+        },
+        participants: []
+      }
+      
+      return {
+        success: true,
+        data: mockSession,
+        timestamp: new Date().toISOString()
+      }
+    } catch (error) {
+      return {
+        success: false,
+        error: 'Failed to get training session',
+        timestamp: new Date().toISOString()
+      }
+    }
+  },
+
+  async joinTrainingSession(sessionId: string): Promise<ApiResponse<any>> {
+    try {
+      // Mock implementation for now
+      return {
+        success: true,
+        data: {
+          id: sessionId,
+          participant: {
+            id: 'user-1',
+            name: 'Current User',
+            joinedAt: new Date().toISOString()
+          }
+        },
+        timestamp: new Date().toISOString()
+      }
+    } catch (error) {
+      return {
+        success: false,
+        error: 'Failed to join training session',
+        timestamp: new Date().toISOString()
+      }
+    }
+  },
+
+  async getTrainingSessions(): Promise<ApiResponse<TrainingSession[]>> {
+    try {
+      // Mock implementation
+      return {
+        success: true,
+        data: [
+          {
+            id: 'session-1',
+            name: 'Training Session 1',
+            trainingOptionId: 'option-1',
+            userId: 'user-1',
+            startTime: new Date().toISOString(),
+            status: 'active' as const,
+            progress: 0.3,
+            computeContributed: 50,
+            tokensEarned: 25,
+            reputationEarned: 12,
+            metrics: {
+              accuracy: 0.92,
+              loss: 0.08,
+              throughput: 800,
+              efficiency: 0.85,
+              uptime: 0.97,
+              errorRate: 0.03
+            },
+            participants: []
+          }
+        ],
+        timestamp: new Date().toISOString()
+      }
+    } catch (error) {
+      return {
+        success: false,
+        error: 'Failed to get training sessions',
+        timestamp: new Date().toISOString()
+      }
+    }
+  },
+
+  async createTrainingSession(sessionData: any): Promise<ApiResponse<TrainingSession>> {
+    try {
+      // Mock implementation
+      return {
+        success: true,
+        data: {
+          id: 'session-' + Date.now(),
+          name: sessionData.name,
+          trainingOptionId: sessionData.trainingOptionId,
+          userId: 'user-1',
+          startTime: new Date().toISOString(),
+          status: 'active' as const,
+          progress: 0,
+          computeContributed: 0,
+          tokensEarned: 0,
+          reputationEarned: 0,
+          metrics: {
+            accuracy: 0,
+            loss: 0,
+            throughput: 0,
+            efficiency: 0,
+            uptime: 1,
+            errorRate: 0
+          },
+          participants: sessionData.participants || []
+        },
+        timestamp: new Date().toISOString()
+      }
+    } catch (error) {
+      return {
+        success: false,
+        error: 'Failed to create training session',
+        timestamp: new Date().toISOString()
+      }
+    }
   }
 }
 
@@ -447,3 +587,6 @@ export default apiClient
 
 // Export individual clients
 export { apiClient, authApiClient }
+
+// Export CotrainCore API
+export { cotrainCoreApi }

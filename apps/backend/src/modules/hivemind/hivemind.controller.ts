@@ -26,6 +26,13 @@ export class StartTrainingSessionDto {
   modelConfig: any;
 }
 
+export class StartDistributedTrainingDto {
+  sessionId: string;
+  modelConfig: any;
+  trainingConfig: any;
+  participants: string[];
+}
+
 export class DistributeRewardsDto {
   sessionId: number;
   totalRewardPool: number;
@@ -198,15 +205,87 @@ export class HivemindController {
   @ApiOperation({ summary: 'Start training session' })
   @ApiResponse({ status: 200, description: 'Training session started' })
   async startTrainingSession(@Body() startSessionDto: StartTrainingSessionDto) {
+    // Legacy method - kept for backward compatibility
     try {
-      await this.hivemindService.startTrainingSession(
-        startSessionDto.sessionId,
-        startSessionDto.modelConfig,
-      );
+      // Convert to new distributed training format
+      await this.hivemindService.startDistributedTraining({
+        sessionId: startSessionDto.sessionId.toString(),
+        modelConfig: startSessionDto.modelConfig,
+        trainingConfig: {},
+        participants: [],
+      });
       return { message: 'Training session started successfully' };
     } catch (error) {
       throw new HttpException(
         `Failed to start training session: ${error.message}`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  @Post('training/distributed/start')
+  @ApiOperation({ summary: 'Start distributed training session with CotrainCore' })
+  @ApiResponse({ status: 200, description: 'Distributed training session started' })
+  async startDistributedTraining(@Body() startDistributedDto: StartDistributedTrainingDto) {
+    try {
+      await this.hivemindService.startDistributedTraining(startDistributedDto);
+      return { 
+        message: 'Distributed training session started successfully',
+        sessionId: startDistributedDto.sessionId 
+      };
+    } catch (error) {
+      throw new HttpException(
+        `Failed to start distributed training: ${error.message}`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  @Post('training/distributed/stop/:sessionId')
+  @ApiOperation({ summary: 'Stop distributed training session' })
+  @ApiParam({ name: 'sessionId', description: 'Training session ID' })
+  @ApiResponse({ status: 200, description: 'Distributed training session stopped' })
+  async stopDistributedTraining(@Param('sessionId') sessionId: string) {
+    try {
+      await this.hivemindService.stopDistributedTraining(sessionId);
+      return { message: 'Distributed training session stopped successfully' };
+    } catch (error) {
+      throw new HttpException(
+        `Failed to stop distributed training: ${error.message}`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  @Get('training/distributed/status/:sessionId')
+  @ApiOperation({ summary: 'Get distributed training session status' })
+  @ApiParam({ name: 'sessionId', description: 'Training session ID' })
+  @ApiResponse({ status: 200, description: 'Training session status' })
+  async getDistributedTrainingStatus(@Param('sessionId') sessionId: string) {
+    try {
+      const status = await this.hivemindService.getTrainingSessionStatus(sessionId);
+      return { sessionId, status };
+    } catch (error) {
+      throw new HttpException(
+        `Failed to get training session status: ${error.message}`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  @Post('training/legacy/start')
+  @ApiOperation({ summary: 'Start legacy training session (deprecated)' })
+  @ApiResponse({ status: 200, description: 'Legacy training session started' })
+  async startLegacyTrainingSession(@Body() startSessionDto: StartTrainingSessionDto) {
+    try {
+      await this.hivemindService.startTrainingSession(
+        startSessionDto.sessionId,
+        startSessionDto.modelConfig
+      );
+      return { message: 'Legacy training session started successfully' };
+    } catch (error) {
+      throw new HttpException(
+        `Failed to start legacy training session: ${error.message}`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }

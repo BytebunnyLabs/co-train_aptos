@@ -54,7 +54,9 @@ export function useOfflineQueue(options: UseOfflineQueueOptions = {}) {
           url: action.url,
           method: action.method,
           headers: action.headers,
-          body: action.body
+          body: action.body,
+          timestamp: action.timestamp,
+          description: action.description
         });
       } catch (error) {
         console.error('Failed to queue offline action:', error);

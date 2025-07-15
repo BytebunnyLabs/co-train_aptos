@@ -10,6 +10,7 @@
   ],
   "scripts": {
     "dev": "pnpm --parallel --filter './apps/*' dev",
+    "dev:all": "docker-compose -f docker-compose.dev.yml up",
     "dev:backend": "pnpm --filter '@cotrain/backend' dev",
     "dev:frontend": "pnpm --filter '@cotrain/frontend' dev",
     "dev:docs": "pnpm --filter '@cotrain/docs' dev",
@@ -56,11 +57,12 @@
     "contracts:build": "cd contracts && aptos move compile",
     "contracts:test": "cd contracts && aptos move test",
     "contracts:deploy": "cd contracts && aptos move publish",
-    "dev:hivemind": "docker-compose up hivemind-service",
-    "dev:all-with-hivemind": "docker-compose up",
-    "build:hivemind": "docker-compose build hivemind-service",
-    "logs:hivemind": "docker-compose logs -f hivemind-service",
-    "test:hivemind": "cd apps/hivemind-service && python -m pytest"
+
+    "dev:cotrain-core": "docker-compose up cotrain-core",
+    "dev:cotrain-core-dev": "docker-compose -f docker-compose.dev.yml up cotrain-core-dev",
+    "build:cotrain-core": "docker-compose build cotrain-core",
+    "logs:cotrain-core": "docker-compose logs -f cotrain-core",
+    "test:cotrain-core": "cd CotrainCore && python -m pytest"
   },
   "devDependencies": {
     "@types/jest": "^29.5.8",

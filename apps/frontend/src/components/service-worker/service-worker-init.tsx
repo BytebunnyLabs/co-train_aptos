@@ -14,13 +14,13 @@ export function ServiceWorkerInit() {
       
       // Register with a small delay to avoid blocking the main thread
       setTimeout(() => {
-        serviceWorkerManager.register().then((registration) => {
+        serviceWorkerManager.register().then((registration: ServiceWorkerRegistration | null) => {
           if (registration) {
             console.log('Service Worker registered successfully');
           } else {
             console.log('Service Worker registration failed or not supported');
           }
-        }).catch((error) => {
+        }).catch((error: Error) => {
           console.error('Service Worker registration error:', error);
         });
       }, 1000);

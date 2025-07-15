@@ -3,6 +3,8 @@ import { P2PNetworkService } from './services/p2p-network.service';
 import { ContributionTrackerService } from './services/contribution-tracker.service';
 import { DHTManagerService } from './services/dht-manager.service';
 import { BlockchainService } from '../blockchain/blockchain.service';
+import { CotrainCoreService } from '../cotrain-core/services/cotrain-core.service';
+import { TrainingExecutorService } from '../cotrain-core/services/training-executor.service';
 
 export interface P2PNode {
   nodeId: string;
@@ -34,6 +36,8 @@ export class HivemindService {
     private readonly contributionTracker: ContributionTrackerService,
     private readonly dhtManager: DHTManagerService,
     private readonly blockchainService: BlockchainService,
+    private readonly cotrainCoreService: CotrainCoreService,
+    private readonly trainingExecutorService: TrainingExecutorService,
   ) {}
 
   async initializeP2PNetwork(port: number = 8080): Promise<void> {
@@ -43,6 +47,59 @@ export class HivemindService {
       this.logger.log('Hivemind P2P network initialized successfully');
     } catch (error) {
       this.logger.error('Failed to initialize P2P network:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * 启动分布式训练会话
+   */
+  async startDistributedTraining(sessionConfig: {
+    sessionId: string;
+    modelConfig: any;
+    trainingConfig: any;
+    participants: string[];
+  }): Promise<void> {
+    try {
+      // 通过CotrainCore启动训练进程
+      await this.trainingExecutorService.startTraining({
+        sessionId: sessionConfig.sessionId,
+        modelConfig: sessionConfig.modelConfig,
+        trainingConfig: {
+          ...sessionConfig.trainingConfig,
+          distributed: true,
+          participants: sessionConfig.participants,
+        },
+      });
+
+      this.logger.log(`Started distributed training session ${sessionConfig.sessionId}`);
+    } catch (error) {
+      this.logger.error('Failed to start distributed training:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * 停止分布式训练会话
+   */
+  async stopDistributedTraining(sessionId: string): Promise<void> {
+    try {
+      await this.trainingExecutorService.stopTraining(sessionId);
+      this.logger.log(`Stopped distributed training session ${sessionId}`);
+    } catch (error) {
+      this.logger.error('Failed to stop distributed training:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * 获取训练会话状态
+   */
+  async getTrainingSessionStatus(sessionId: string): Promise<any> {
+    try {
+      return await this.trainingExecutorService.getTrainingStatus(sessionId);
+    } catch (error) {
+      this.logger.error('Failed to get training session status:', error);
       throw error;
     }
   }

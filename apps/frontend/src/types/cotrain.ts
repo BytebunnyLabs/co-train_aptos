@@ -142,6 +142,7 @@ export interface PaginatedResponse<T> extends ApiResponse<T[]> {
 // Training Session Types
 export interface TrainingSession {
   id: string
+  name?: string
   trainingOptionId: string
   userId: string
   startTime: string
@@ -152,6 +153,7 @@ export interface TrainingSession {
   tokensEarned: number
   reputationEarned: number
   metrics: TrainingMetrics
+  participants?: any[]
 }
 
 export interface TrainingMetrics {

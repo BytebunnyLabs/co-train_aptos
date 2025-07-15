@@ -15,6 +15,9 @@ packages:
   - 'apps/docs'
   - 'apps/storybook'
   
+  # Core Services
+  - 'CotrainCore'
+  
   # Shared packages and libraries
   - 'packages/*'
   - 'packages/ui'

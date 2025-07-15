@@ -4,6 +4,7 @@
 export const API_CONFIG = {
   BASE_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000',
   BACKEND_URL: process.env.NEXT_PUBLIC_API_URL?.replace('/api/v1', '') || 'http://localhost:3001',
+  COTRAIN_CORE_URL: process.env.NEXT_PUBLIC_COTRAIN_CORE_URL || 'http://localhost:8002',
   TIMEOUT: 10000,
   RETRY_ATTEMPTS: 3,
   RETRY_DELAY: 1000,

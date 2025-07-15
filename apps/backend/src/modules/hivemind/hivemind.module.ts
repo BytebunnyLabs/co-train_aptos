@@ -8,9 +8,10 @@ import { ContributionTrackerService } from './services/contribution-tracker.serv
 import { DHTManagerService } from './services/dht-manager.service';
 import { RewardDistributorService } from './services/reward-distributor.service';
 import { BlockchainModule } from '../blockchain/blockchain.module';
+import { CotrainCoreModule } from '../cotrain-core/cotrain-core.module';
 
 @Module({
-  imports: [BlockchainModule],
+  imports: [BlockchainModule, CotrainCoreModule],
   controllers: [HivemindController, NetworkApiController, HivemindApiController],
   providers: [
     HivemindService,
