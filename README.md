@@ -345,7 +345,7 @@ Deployment supports:
 
 ### Production Deployment
 
-1. **Frontend**: Deploy to Vercel (see [DEPLOYMENT.md](./DEPLOYMENT.md))
+1. **Frontend**: Deploy to Vercel (see [Deployment Guide](./docs/deployment/vercel.md))
 2. **Backend**: Deploy to your preferred cloud provider
 3. **Database**: Use managed PostgreSQL and Redis services
 4. **Smart Contracts**: Deploy to Aptos mainnet
@@ -395,7 +395,8 @@ docker-compose up --build
 - [Backend Guide](./apps/backend/README.md)
 - [Smart Contracts](./move/README.md)
 - [Integration Guide](./INTEGRATION.md)
-- [Deployment Guide](./DEPLOYMENT.md)
+- [Deployment Guide](./docs/deployment/vercel.md)
+- [Quick Start Guide](./docs/quick-start.md)
 
 ## 🔍 Monitoring & Analytics
 

@@ -199,6 +199,229 @@ Your pull request must:
 
 ### PR Template
 
+When creating a pull request, please use this template:
+
+```markdown
+## Description
+Brief description of changes
+
+## Type of Change
+- [ ] Bug fix (non-breaking change which fixes an issue)
+- [ ] New feature (non-breaking change which adds functionality)
+- [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
+- [ ] Documentation update
+
+## Testing
+- [ ] Unit tests pass
+- [ ] Integration tests pass
+- [ ] Manual testing completed
+
+## Checklist
+- [ ] Code follows project style guidelines
+- [ ] Self-review completed
+- [ ] Documentation updated
+- [ ] No breaking changes (or breaking changes documented)
+```
+
+## Performance Best Practices
+
+### Frontend Optimization
+
+```typescript
+// ✅ Good: Use React.memo for expensive components
+const ExpensiveComponent = React.memo(({ data }: { data: ComplexData }) => {
+  const processedData = useMemo(() => {
+    return processComplexData(data);
+  }, [data]);
+
+  return <div>{/* Render processed data */}</div>;
+});
+
+// ✅ Good: Use proper loading states
+const DataComponent = () => {
+  const { data, loading, error } = useQuery(GET_DATA);
+  
+  if (loading) return <Spinner />;
+  if (error) return <ErrorMessage error={error} />;
+  
+  return <DataDisplay data={data} />;
+};
+```
+
+### Backend Optimization
+
+```typescript
+// ✅ Good: Use proper caching
+@Injectable()
+export class DataService {
+  constructor(
+    @InjectRedis() private readonly redis: Redis,
+    private readonly repository: DataRepository
+  ) {}
+
+  async getData(id: string): Promise<Data> {
+    const cached = await this.redis.get(`data:${id}`);
+    if (cached) {
+      return JSON.parse(cached);
+    }
+
+    const data = await this.repository.findById(id);
+    await this.redis.setex(`data:${id}`, 3600, JSON.stringify(data));
+    
+    return data;
+  }
+}
+```
+
+## Testing Guidelines
+
+### Unit Testing Examples
+
+```typescript
+// ✅ Good: Test component behavior
+describe('Button Component', () => {
+  it('should call onClick when clicked', () => {
+    const mockOnClick = jest.fn();
+    render(<Button onClick={mockOnClick}>Click me</Button>);
+    
+    fireEvent.click(screen.getByRole('button'));
+    expect(mockOnClick).toHaveBeenCalledTimes(1);
+  });
+
+  it('should be disabled when disabled prop is true', () => {
+    render(<Button onClick={jest.fn()} disabled>Click me</Button>);
+    
+    expect(screen.getByRole('button')).toBeDisabled();
+  });
+});
+```
+
+### Integration Testing
+
+```typescript
+// ✅ Good: Test API endpoints
+describe('Users API', () => {
+  beforeEach(async () => {
+    await setupTestDatabase();
+  });
+
+  afterEach(async () => {
+    await cleanupTestDatabase();
+  });
+
+  it('should create a new user', async () => {
+    const userData = {
+      email: 'test@example.com',
+      password: 'password123'
+    };
+
+    const response = await request(app)
+      .post('/users')
+      .send(userData)
+      .expect(201);
+
+    expect(response.body).toHaveProperty('id');
+    expect(response.body.email).toBe(userData.email);
+  });
+});
+```
+
+## Code Standards
+
+### TypeScript Guidelines
+
+```typescript
+// ✅ Good: Use explicit types
+interface UserProfile {
+  id: string;
+  name: string;
+  email: string;
+}
+
+// ❌ Bad: Avoid 'any' type
+const userData: any = getUserData();
+
+// ✅ Good: Use proper error handling
+try {
+  const result = await apiCall();
+  return result;
+} catch (error) {
+  logger.error('API call failed:', error);
+  throw new Error('Failed to fetch data');
+}
+```
+
+### React Component Guidelines
+
+```tsx
+// ✅ Good: Use proper component structure
+interface ButtonProps {
+  children: React.ReactNode;
+  onClick: () => void;
+  variant?: 'primary' | 'secondary';
+  disabled?: boolean;
+}
+
+export const Button: React.FC<ButtonProps> = ({
+  children,
+  onClick,
+  variant = 'primary',
+  disabled = false
+}) => {
+  return (
+    <button
+      className={`btn btn-${variant}`}
+      onClick={onClick}
+      disabled={disabled}
+      type="button"
+    >
+      {children}
+    </button>
+  );
+};
+```
+
+### API Development Guidelines
+
+```typescript
+// ✅ Good: Use proper validation
+@Controller('users')
+export class UsersController {
+  @Post()
+  @UsePipes(new ValidationPipe())
+  async createUser(@Body() createUserDto: CreateUserDto) {
+    return this.usersService.create(createUserDto);
+  }
+}
+
+// ✅ Good: Use DTOs for validation
+export class CreateUserDto {
+  @IsEmail()
+  @IsNotEmpty()
+  email: string;
+
+  @IsString()
+  @MinLength(8)
+  password: string;
+}
+```
+
+### Smart Contract Guidelines
+
+```move
+// ✅ Good: Use proper error handling
+public fun transfer_tokens(
+    account: &signer,
+    to: address,
+    amount: u64
+) acquires TokenStore {
+    assert!(amount > 0, ERROR_INVALID_AMOUNT);
+    assert!(exists<TokenStore>(signer::address_of(account)), ERROR_NO_STORE);
+    
+    // Implementation...
+}
+```
+
 ```markdown
 ## Description
 Brief description of what this PR does.

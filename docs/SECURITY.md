@@ -162,41 +162,73 @@ During a security incident, we will:
 
 ## Bug Bounty Program
 
-We are considering implementing a bug bounty program to reward security researchers who help us improve our security. Details will be announced when the program launches.
+We maintain a responsible disclosure program to reward security researchers who help us improve our security.
 
-### Scope (Planned)
+### Reward Structure
+
+- **Critical**: $500 - $2,000 USD
+- **High**: $200 - $500 USD
+- **Medium**: $50 - $200 USD
+- **Low**: $25 - $50 USD
+- **Informational**: Recognition and thanks
+
+### Scope
 
 - Web applications (frontend and backend)
-- API endpoints
-- Smart contracts
+- API endpoints and authentication systems
+- Smart contracts and blockchain components
 - Infrastructure components
-- Mobile applications (when available)
+- Database security
+- Third-party integrations
 
 ### Out of Scope
 
 - Social engineering attacks
-- Physical attacks
+- Physical attacks against CoTrain facilities
 - Denial of service attacks
-- Spam or content injection
-- Issues in third-party services
+- Spam or content injection without security impact
+- Issues in third-party services beyond our control
 - Previously reported vulnerabilities
+- Vulnerabilities in development/staging environments
+- Self-XSS attacks
 
 ## Security Contact Information
 
 - **Primary Contact**: security@cotrain.ai
-- **PGP Key**: [Available on request]
+- **PGP Key**: [Request via security@cotrain.ai]
 - **Response Time**: Within 48 hours
 - **Escalation**: If no response within 72 hours, contact conduct@cotrain.ai
 
-## Security Resources
+## Security Training and Resources
 
+### For Developers
 - [OWASP Top 10](https://owasp.org/www-project-top-ten/)
+- [OWASP Web Security Testing Guide](https://owasp.org/www-project-web-security-testing-guide/)
+- [Node.js Security Best Practices](https://nodejs.org/en/docs/guides/security/)
+- [TypeScript Security Guidelines](https://typescript-eslint.io/rules/?=security)
+
+### For Blockchain Development
+- [Aptos Security Best Practices](https://aptos.dev/guides/move-guides/move-security-guidelines/)
+- [Move Language Security Patterns](https://aptos.dev/move/move-on-aptos/)
+- [Smart Contract Security Verification](https://github.com/aptos-labs/aptos-core/tree/main/aptos-move)
+
+### General Security
 - [NIST Cybersecurity Framework](https://www.nist.gov/cyberframework)
 - [CWE/SANS Top 25](https://cwe.mitre.org/top25/archive/2023/2023_top25_list.html)
-- [Aptos Security Best Practices](https://aptos.dev/guides/move-guides/move-security-guidelines/)
-- [Node.js Security Best Practices](https://nodejs.org/en/docs/guides/security/)
+- [SANS Secure Coding Practices](https://www.sans.org/white-papers/2172/)
+
+## Security Hall of Fame
+
+We recognize and thank the following security researchers who have responsibly disclosed vulnerabilities:
+
+*No submissions yet - be the first to help secure CoTrain!*
 
 ## Acknowledgments
+
+This security policy is inspired by industry best practices and the following resources:
+- [GitHub Security Policy Template](https://docs.github.com/en/code-security/getting-started/adding-a-security-policy-to-your-repository)
+- [OWASP Security Policies](https://owasp.org/www-community/Security_Policies)
+- [HackerOne Disclosure Guidelines](https://www.hackerone.com/disclosure-guidelines)
 
 We would like to thank the following individuals and organizations for their contributions to our security:
 

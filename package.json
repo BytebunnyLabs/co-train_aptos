@@ -5,15 +5,14 @@
   "private": true,
   "workspaces": [
     "apps/*",
-    "packages/*",
-    "libs/*"
+    "packages/*"
   ],
   "scripts": {
     "dev": "pnpm --parallel --filter './apps/*' dev",
     "dev:all": "docker-compose -f docker-compose.dev.yml up",
     "dev:backend": "pnpm --filter '@cotrain/backend' dev",
     "dev:frontend": "pnpm --filter '@cotrain/frontend' dev",
-    "dev:docs": "pnpm --filter '@cotrain/docs' dev",
+    "dev:petals": "pnpm --filter '@cotrain/petals' dev",
     "build": "bash scripts/build/build-all.sh",
     "build:packages": "pnpm --filter './packages/*' build",
     "build:apps": "pnpm --filter './apps/*' build",
@@ -54,9 +53,9 @@
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down",
     "docker:logs": "docker-compose logs -f",
-    "contracts:build": "cd contracts && aptos move compile",
-    "contracts:test": "cd contracts && aptos move test",
-    "contracts:deploy": "cd contracts && aptos move publish",
+    "contracts:build": "cd move && aptos move compile",
+    "contracts:test": "cd move && aptos move test",
+    "contracts:deploy": "cd move && aptos move publish",
 
     "dev:cotrain-core": "docker-compose up cotrain-core",
     "dev:cotrain-core-dev": "docker-compose -f docker-compose.dev.yml up cotrain-core-dev",

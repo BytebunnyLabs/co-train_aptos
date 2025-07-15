@@ -7,7 +7,7 @@ module.exports = {
   rootDir: '.',
 
   // A list of paths to directories that Jest should use to search for files in
-  roots: ['<rootDir>/apps', '<rootDir>/packages', '<rootDir>/libs'],
+  roots: ['<rootDir>/apps', '<rootDir>/packages'],
 
   // The test environment that will be used for testing
   testEnvironment: 'jsdom',
@@ -33,7 +33,7 @@ module.exports = {
     '<rootDir>/out/',
     '<rootDir>/coverage/',
     '<rootDir>/storybook-static/',
-    '<rootDir>/contracts/',
+    '<rootDir>/move/',
     '<rootDir>/.turbo/',
     '<rootDir>/.vercel/',
     '<rootDir>/.netlify/',
@@ -91,8 +91,8 @@ module.exports = {
     '^@cotrain/hooks/(.*)$': '<rootDir>/packages/hooks/src/$1',
     '^@cotrain/stores$': '<rootDir>/packages/stores/src/index.ts',
     '^@cotrain/stores/(.*)$': '<rootDir>/packages/stores/src/$1',
-    '^@cotrain/contracts$': '<rootDir>/contracts/src/index.ts',
-    '^@cotrain/contracts/(.*)$': '<rootDir>/contracts/src/$1',
+    '^@cotrain/move$': '<rootDir>/move/src/index.ts',
+    '^@cotrain/move/(.*)$': '<rootDir>/move/src/$1',
   },
 
   // An array of directory names to be searched recursively up from the requiring module's location
@@ -130,7 +130,7 @@ module.exports = {
     '!**/pnpm-workspace.yaml',
     '!**/.eslintrc.js',
     '!**/.prettierrc',
-    '!**/contracts/**',
+    '!**/move/**',
     '!**/*.move',
     '!**/Move.toml',
   ],

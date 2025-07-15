@@ -404,7 +404,7 @@ docker-compose up -d
 - [API Reference](./API.md)
 - [Smart Contract Documentation](./CONTRACTS.md)
 - [Frontend Integration Guide](./FRONTEND.md)
-- [Deployment Guide](./DEPLOYMENT.md)
+- [Deployment Guide](./deployment/vercel.md)
 
 ### Community
 - GitHub Issues: Report bugs and feature requests

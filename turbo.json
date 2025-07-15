@@ -218,11 +218,11 @@
     },
     "contracts:build": {
       "inputs": [
-        "contracts/**/*.move",
-        "Move.toml",
-        "sources/**"
+        "move/**/*.move",
+        "move/Move.toml",
+        "move/sources/**"
       ],
-      "outputs": ["build/**", "artifacts/**"],
+      "outputs": ["move/build/**", "move/artifacts/**"],
       "env": [
         "APTOS_*"
       ]
@@ -230,9 +230,9 @@
     "contracts:test": {
       "dependsOn": ["contracts:build"],
       "inputs": [
-        "contracts/**/*.move",
-        "tests/**/*.move",
-        "Move.toml"
+        "move/**/*.move",
+        "move/tests/**/*.move",
+        "move/Move.toml"
       ],
       "outputs": [],
       "env": [

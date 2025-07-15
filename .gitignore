@@ -482,3 +482,7 @@ speed-measure-plugin.json
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
+
+# Docs
+# Docs
+.docs/
