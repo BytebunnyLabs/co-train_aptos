@@ -133,12 +133,6 @@ pnpm db:seed            # Seed database with sample data
 pnpm db:status          # Check database status
 ```
 
-### Smart Contracts
-```bash
-pnpm contracts:build    # Compile Move contracts
-pnpm contracts:test     # Test Move contracts
-pnpm contracts:deploy   # Deploy contracts to network
-```
 
 ### Deployment
 ```bash
@@ -175,78 +169,6 @@ The setup script will guide you through:
 4. Running initial migrations
 5. Creating sample data
 
-## 🏛️ Smart Contracts
-
-The platform uses Aptos Move smart contracts for:
-
-- **Training Sessions**: Manage collaborative training rounds
-- **Contributions**: Track data and compute contributions
-- **Rewards**: Distribute tokens based on contributions
-- **Governance**: Community voting on platform decisions
-
-### Contract Development
-
-```bash
-cd move
-aptos move compile      # Compile contracts
-aptos move test         # Run contract tests
-aptos move publish      # Deploy to network
-```
-
-### Key Functions
-
-```move
-// Create a new training session
-public entry fun create_training_session(
-    creator: &signer,
-    session_id: u64,
-    reward_amount: u64
-)
-
-// Register as a participant
-public entry fun register_participant(
-    participant: &signer,
-    session_id: u64
-)
-
-// Submit contribution score
-public entry fun submit_contribution(
-    participant: &signer,
-    session_id: u64,
-    score: u64
-)
-
-// Complete session and distribute rewards
-public entry fun complete_session_and_distribute(
-    creator: &signer,
-    session_id: u64
-)
-```
-
-## 🧪 Testing
-
-Comprehensive testing setup with:
-
-- **Unit Tests**: Jest for individual components
-- **Integration Tests**: API and database testing
-- **E2E Tests**: Playwright for full user flows
-- **Contract Tests**: Move testing framework
-
-### Running Tests
-
-```bash
-# Run specific test types
-pnpm test:unit
-pnpm test:integration
-pnpm test:e2e
-
-# Run tests for specific packages
-pnpm --filter '@cotrain/frontend' test
-pnpm --filter '@cotrain/backend' test
-
-# Watch mode for development
-pnpm test:watch
-```
 
 ## 📦 Package Structure
 
